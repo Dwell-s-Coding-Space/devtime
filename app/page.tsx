@@ -6,8 +6,9 @@ interface Todo {
   title: string;
   completed: boolean;
 }
+
 export default async function Home() {
-  const data = await clientApi.clientFetch<Todo[]>('/todos', 5000);
+  const data = await clientApi.get<Todo[]>('/todos');
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">

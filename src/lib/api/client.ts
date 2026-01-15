@@ -6,6 +6,15 @@ const isErrorWithName = (e: unknown, name: string): e is Error => {
   return e instanceof Error && e.name === name;
 };
 
+type RequestOptionsWithoutBody = Omit<RequestInit, 'body'> & {
+  timeout?: number;
+};
+
+type RequestOptionsWithBody<TBody = unknown> = Omit<RequestInit, 'body'> & {
+  timeout?: number;
+  body?: TBody;
+};
+
 class Api {
   private baseUrl;
   private options;
@@ -15,11 +24,12 @@ class Api {
     this.options = baseOptions || {};
   }
 
-  public clientFetch = async <T>(
+  private request = async <T>(
     path: string,
-    timeout?: number,
-    options?: RequestInit,
+    options?: RequestOptionsWithBody,
   ) => {
+    const { timeout = 5000, body, ...init } = options || {};
+
     const normalizedPath = isAbsoluteUrl(path)
       ? path
       : path.startsWith('/')
@@ -27,20 +37,19 @@ class Api {
       : `${this.baseUrl}/${path}`;
 
     const mergedHeaders = new Headers(this.options.headers);
-    new Headers(options?.headers).forEach((value, key) =>
+    new Headers(init.headers).forEach((value, key) =>
       mergedHeaders.set(key, value),
     );
-
-    const _timeout = timeout || 5000;
 
     try {
       const res = await fetch(normalizedPath, {
         ...this.options,
-        ...options,
+        ...init,
         headers: mergedHeaders,
-        signal: options?.signal
-          ? AbortSignal.any([options.signal, AbortSignal.timeout(_timeout)])
-          : AbortSignal.timeout(_timeout),
+        body: body ? JSON.stringify(body) : undefined,
+        signal: init.signal
+          ? AbortSignal.any([init.signal, AbortSignal.timeout(timeout)])
+          : AbortSignal.timeout(timeout),
       });
 
       if (!res.ok) {
@@ -79,6 +88,42 @@ class Api {
       throw new Error(JSON.stringify({ status: 0, message: 'Unknown Error' }));
     }
   };
+
+  // public methods
+  get<TResponse>(
+    path: string,
+    options?: RequestOptionsWithoutBody,
+  ): Promise<TResponse> {
+    return this.request<TResponse>(path, { ...options, method: 'GET' });
+  }
+
+  post<TResponse, TBody = unknown>(
+    path: string,
+    options?: RequestOptionsWithBody<TBody>,
+  ): Promise<TResponse> {
+    return this.request<TResponse>(path, { ...options, method: 'POST' });
+  }
+
+  put<TResponse, TBody = unknown>(
+    path: string,
+    options?: RequestOptionsWithBody<TBody>,
+  ): Promise<TResponse> {
+    return this.request<TResponse>(path, { ...options, method: 'PUT' });
+  }
+
+  patch<TResponse, TBody = unknown>(
+    path: string,
+    options?: RequestOptionsWithBody<TBody>,
+  ): Promise<TResponse> {
+    return this.request<TResponse>(path, { ...options, method: 'PATCH' });
+  }
+
+  delete<TResponse>(
+    path: string,
+    options?: RequestOptionsWithoutBody,
+  ): Promise<TResponse> {
+    return this.request<TResponse>(path, { ...options, method: 'DELETE' });
+  }
 }
 
 export default Api;
