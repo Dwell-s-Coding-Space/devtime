@@ -8,3 +8,8 @@ export const paginationSchema = z.object({
   hasNext: asBoolean(),
   hasPrev: asBoolean(),
 });
+
+export interface BaseResponse {
+  success: true;
+  message: string;
+}
