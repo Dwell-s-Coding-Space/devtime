@@ -10,7 +10,8 @@ import { asArray } from '@/src/lib/schema/primitives/object';
 import { asDateOrNull } from '@/src/lib/schema/primitives/date';
 
 /**
- * stats response
+ * 사용자의 공부 기록 통계 조회
+ * get /stats
  */
 
 const weekdayStudyTimeSchema = z.object({
@@ -31,8 +32,11 @@ const studyStatResponseSchema = z.object({
   weekdayStudyTime: weekdayStudyTimeSchema,
 });
 
+export type GetStudyStatResponse = z.infer<typeof studyStatResponseSchema>;
+
 /**
- * /heatmap response
+ * 학습 히트맵 데이터 조회
+ * get /heatmap
  */
 
 const heatmapItemSchema = z.object({
@@ -45,8 +49,11 @@ const heatmapListResponseSchema = z.object({
   heatmap: asArray(heatmapItemSchema),
 });
 
+export type GetHeatmapListResponse = z.infer<typeof heatmapListResponseSchema>;
+
 /**
- * study-log list response
+ * 학습 기록 목록 조회
+ * get /study-logs
  */
 
 const studyLogItemSchema = z.object({
@@ -67,8 +74,11 @@ const studyLogListResponseSchema = z.object({
   }),
 });
 
+export type StudyLogListResponse = z.infer<typeof studyLogListResponseSchema>;
+
 /**
- * study-log detail response
+ * 특정 학습 기록 상세 정보
+ * get /study-logs/:id
  */
 
 const taskItemSchema = z.object({
@@ -77,24 +87,22 @@ const taskItemSchema = z.object({
   isCompleted: asBoolean(),
 });
 
-const studyLogDetailSchema = z.object({
-  id: z.string(),
-  date: asDateOrNull(),
-  todayGoal: z.string(),
-  studyTime: z.number(),
-  tasks: asArray(taskItemSchema),
-  review: z.string(),
-  completionRate: z.number(),
-});
+const studyLogDetailSchema = studyLogItemSchema
+  .omit({
+    incompleteTasks: true,
+    totalTasks: true,
+  })
+  .extend({
+    tasks: asArray(taskItemSchema),
+    review: z.string(),
+  });
 
 const studyLogDetailResponseSchema = z.object({
   success: z.literal(true),
   data: studyLogDetailSchema,
 });
 
-export type StudyStatResponse = z.infer<typeof studyStatResponseSchema>;
-export type HeatmapListResponse = z.infer<typeof heatmapListResponseSchema>;
-export type StudyLogListResponse = z.infer<typeof studyLogListResponseSchema>;
-export type StudyLogDetailResponse = z.infer<
+export type TaskItem = z.infer<typeof taskItemSchema>;
+export type GetStudyLogDetailResponse = z.infer<
   typeof studyLogDetailResponseSchema
 >;

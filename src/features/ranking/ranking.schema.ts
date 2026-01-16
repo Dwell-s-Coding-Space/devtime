@@ -3,21 +3,15 @@ import z from 'zod';
 import { paginationSchema } from '@/src/lib/schema/common.schema';
 import { asInt, asNonNegative } from '@/src/lib/schema/primitives/number';
 import { asArray } from '@/src/lib/schema/primitives/object';
+import { profileSchema } from '@/src/features/mypage/mypage.schema';
 
 /**
- * ranking response
+ * 전체 유저의 학습 시간 랭킹 조회
+ * get /rankings
  */
 
-const techStackSchema = z.object({
-  id: z.number(),
-  name: z.string(),
-});
-
-const profileSchema = z.object({
-  career: z.string(),
-  purpose: z.string(),
-  profileImage: z.string(),
-  techStacks: asArray(techStackSchema),
+const rankingProfileSchema = profileSchema.omit({
+  goal: true,
 });
 
 const rankingItemSchema = z.object({
@@ -26,7 +20,7 @@ const rankingItemSchema = z.object({
   nickname: z.string(),
   totalStudyTime: asNonNegative(),
   averageStudyTime: asNonNegative(),
-  profile: profileSchema,
+  profile: rankingProfileSchema,
 });
 
 const rankingListResponseSchema = z.object({
@@ -37,4 +31,4 @@ const rankingListResponseSchema = z.object({
   }),
 });
 
-export type RankingListResponse = z.infer<typeof rankingListResponseSchema>;
+export type GetRankingListResponse = z.infer<typeof rankingListResponseSchema>;
