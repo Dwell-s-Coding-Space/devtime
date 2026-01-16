@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { asDateOrNull } from '@/src/lib/schema/primitives/date';
+import { asArray } from '@/src/lib/schema/primitives/object';
 import z from 'zod';
 
 /**
@@ -9,7 +11,7 @@ const profileSchema = z.object({
   career: z.string(),
   purpose: z.string(),
   goal: z.string(),
-  techStacks: z.array(z.string()),
+  techStacks: asArray(z.string()),
   profileImage: z.string(),
 });
 
@@ -27,11 +29,11 @@ const techStackItemSchema = z.object({
   id: z.number(),
   name: z.string(),
   createdAt: z.string(),
-  updatedAt: z.string(),
+  updatedAt: asDateOrNull(),
 });
 
 const techStackListResponseSchema = z.object({
-  results: z.array(techStackItemSchema),
+  results: asArray(techStackItemSchema),
 });
 
 export type ProfileResponse = z.infer<typeof profileResponseSchema>;
