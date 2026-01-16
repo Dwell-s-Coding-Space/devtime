@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import z from 'zod';
-import { paginationSchema } from '@/src/shared/common.schema';
+import { paginationSchema } from '@/src/lib/schema/common.schema';
+import { asInt, asNonNegative } from '@/src/lib/schema/primitives/number';
+import { asArray } from '@/src/lib/schema/primitives/object';
 
 /**
  * ranking response
@@ -15,24 +17,24 @@ const profileSchema = z.object({
   career: z.string(),
   purpose: z.string(),
   profileImage: z.string(),
-  techStacks: z.array(techStackSchema),
+  techStacks: asArray(techStackSchema),
 });
 
 const rankingItemSchema = z.object({
-  rank: z.number(),
+  rank: asInt(),
   userId: z.string(),
   nickname: z.string(),
-  totalStudyTime: z.number(),
-  averageStudyTime: z.number(),
+  totalStudyTime: asNonNegative(),
+  averageStudyTime: asNonNegative(),
   profile: profileSchema,
 });
 
 const rankingListResponseSchema = z.object({
   success: z.literal(true),
-  data: {
-    rankings: z.array(rankingItemSchema),
+  data: z.object({
+    rankings: asArray(rankingItemSchema),
     pagination: paginationSchema,
-  },
+  }),
 });
 
 export type RankingListResponse = z.infer<typeof rankingListResponseSchema>;

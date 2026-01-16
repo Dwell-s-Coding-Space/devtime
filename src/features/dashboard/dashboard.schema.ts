@@ -1,26 +1,33 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { paginationSchema } from '@/src/shared/common.schema';
 import z from 'zod';
+import { paginationSchema } from '@/src/lib/schema/common.schema';
+import { asBoolean } from '@/src/lib/schema/primitives/boolean';
+import {
+  asClampedNumber,
+  asNonNegative,
+} from '@/src/lib/schema/primitives/number';
+import { asArray } from '@/src/lib/schema/primitives/object';
+import { asDateOrNull } from '@/src/lib/schema/primitives/date';
 
 /**
  * stats response
  */
 
 const weekdayStudyTimeSchema = z.object({
-  Monday: z.number(),
-  Tuesday: z.number(),
-  Wednesday: z.number(),
-  Thursday: z.number(),
-  Friday: z.number(),
-  Saturday: z.number(),
-  Sunday: z.number(),
+  Monday: asNonNegative(),
+  Tuesday: asNonNegative(),
+  Wednesday: asNonNegative(),
+  Thursday: asNonNegative(),
+  Friday: asNonNegative(),
+  Saturday: asNonNegative(),
+  Sunday: asNonNegative(),
 });
 
 const studyStatResponseSchema = z.object({
-  consecutiveDays: z.number(),
-  totalStudyTime: z.number(),
-  averageDailyStudyTime: z.number(),
-  taskCompletionRate: z.number(),
+  consecutiveDays: asNonNegative(),
+  totalStudyTime: asNonNegative(),
+  averageDailyStudyTime: asNonNegative(),
+  taskCompletionRate: asNonNegative(),
   weekdayStudyTime: weekdayStudyTimeSchema,
 });
 
@@ -29,13 +36,13 @@ const studyStatResponseSchema = z.object({
  */
 
 const heatmapItemSchema = z.object({
-  date: z.string(),
-  studyTimeHours: z.number(),
-  colorLevel: z.number(),
+  date: asDateOrNull(),
+  studyTimeHours: asNonNegative(),
+  colorLevel: asClampedNumber(0, 5),
 });
 
 const heatmapListResponseSchema = z.object({
-  heatmap: z.array(heatmapItemSchema),
+  heatmap: asArray(heatmapItemSchema),
 });
 
 /**
@@ -44,20 +51,20 @@ const heatmapListResponseSchema = z.object({
 
 const studyLogItemSchema = z.object({
   id: z.string(),
-  date: z.string(),
+  date: asDateOrNull(),
   todayGoal: z.string(),
-  studyTime: z.number(),
-  totalTasks: z.number(),
-  incompleteTasks: z.number(),
+  studyTime: asNonNegative(),
+  totalTasks: asNonNegative(),
+  incompleteTasks: asNonNegative(),
   completionRate: z.number(),
 });
 
 const studyLogListResponseSchema = z.object({
   success: z.literal(true),
-  data: {
-    studyLogs: z.array(studyLogItemSchema),
+  data: z.object({
+    studyLogs: asArray(studyLogItemSchema),
     pagination: paginationSchema,
-  },
+  }),
 });
 
 /**
@@ -67,15 +74,15 @@ const studyLogListResponseSchema = z.object({
 const taskItemSchema = z.object({
   id: z.string(),
   content: z.string(),
-  isCompleted: z.boolean(),
+  isCompleted: asBoolean(),
 });
 
 const studyLogDetailSchema = z.object({
   id: z.string(),
-  date: z.string(),
+  date: asDateOrNull(),
   todayGoal: z.string(),
   studyTime: z.number(),
-  tasks: z.array(taskItemSchema),
+  tasks: asArray(taskItemSchema),
   review: z.string(),
   completionRate: z.number(),
 });
