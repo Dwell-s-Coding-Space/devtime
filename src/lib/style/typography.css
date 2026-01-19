@@ -1,0 +1,118 @@
+/* heading */
+@utility heading-b {
+  @apply font-bold leading-[30px] text-[24px];
+}
+
+@utility heading-s {
+  @apply font-semibold leading-[30px] text-[24px];
+}
+
+@utility heading-m {
+  @apply font-medium leading-[30px] text-[24px];
+}
+
+@utility heading-r {
+  @apply font-normal leading-[30px] text-[24px];
+}
+
+/* title */
+@utility title-b {
+  @apply font-bold leading-[24px] text-[20px];
+}
+
+@utility title-s {
+  @apply font-semibold leading-[24px] text-[20px];
+}
+
+@utility title-m {
+  @apply font-medium leading-[24px] text-[20px];
+}
+
+@utility title-r {
+  @apply font-normal leading-[24px] text-[20px];
+}
+
+/* sub-title */
+@utility subtitle-b {
+  @apply font-bold leading-[22px] text-[18px];
+}
+
+@utility subtitle-s {
+  @apply font-semibold leading-[22px] text-[18px];
+}
+
+@utility subtitle-m {
+  @apply font-medium leading-[22px] text-[18px];
+}
+
+@utility subtitle-r {
+  @apply font-normal leading-[22px] text-[18px];
+}
+
+/* body */
+@utility body-b {
+  @apply font-bold leading-[20px] text-[16px];
+}
+
+@utility body-s {
+  @apply font-semibold leading-[20px] text-[16px];
+}
+
+@utility body-m {
+  @apply font-medium leading-[20px] text-[16px];
+}
+
+@utility body-r {
+  @apply font-normal leading-[20px] text-[16px];
+}
+
+/* body-small */
+@utility body-small-b {
+  @apply font-bold leading-[18px] text-[14px];
+}
+
+@utility body-small-s {
+  @apply font-semibold leading-[18px] text-[14px];
+}
+
+@utility body-small-m {
+  @apply font-medium leading-[18px] text-[14px];
+}
+
+@utility body-small-r {
+  @apply font-normal leading-[18px] text-[14px];
+}
+
+/* caption */
+@utility caption-b {
+  @apply font-bold leading-[16px] text-[12px];
+}
+
+@utility caption-s {
+  @apply font-semibold leading-[16px] text-[12px];
+}
+
+@utility caption-m {
+  @apply font-medium leading-[16px] text-[12px];
+}
+
+@utility caption-r {
+  @apply font-normal leading-[16px] text-[12px];
+}
+
+/* label */
+@utility label-b {
+  @apply font-bold leading-[12px] text-[10px];
+}
+
+@utility label-s {
+  @apply font-semibold leading-[12px] text-[10px];
+}
+
+@utility label-m {
+  @apply font-medium leading-[12px] text-[10px];
+}
+
+@utility label-r {
+  @apply font-normal leading-[12px] text-[10px];
+}
