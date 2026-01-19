@@ -1,16 +1,14 @@
-import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
-import './globals.css';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
+import { Metadata } from "next";
+import localFont from "next/font/local";
+import "./globals.css";
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
+const pretendardVariable = localFont({
+  src: '../src/lib/style/fonts/PretendardVariable.woff2',
+  weight: '100 900',
+  display: 'swap',
+  variable: '--font-pretendard'
+})
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -23,8 +21,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
+    <html lang="ko">
+      <body
+        className={`${pretendardVariable.variable}`}
+      >
+        {children}
+      </body>
     </html>
   );
 }
