@@ -1,4 +1,5 @@
 import { clientApi } from '@/src/lib/api/client';
+import Button from '@/src/shared/components/button/Button';
 
 interface Todo {
   userId: number;
@@ -12,7 +13,7 @@ export default async function Home() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white sm:items-start">
+      {/* <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white sm:items-start">
         {data?.map(item => (
           <div key={item.id}>
             <div className="heading-s">{item.title}</div>
@@ -22,7 +23,14 @@ export default async function Home() {
             <div className="label-s">{item.title}</div>
           </div>
         ))}
-      </main>
+      </main> */}
+      <Button variant='primary'>Button</Button>
+      <Button variant='primary' disabled>Button</Button>
+      <Button variant='secondary'>Button</Button>
+      <Button variant='secondary' disabled>Button</Button>
+      <Button variant='tertiary'>Button</Button>
+      <Button variant='tertiary' disabled>Button</Button>
+      <Button variant='tertiary' className="bg-indigo text-white">Button</Button>
     </div>
   );
 }
