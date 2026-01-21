@@ -66,20 +66,20 @@
   @apply font-normal leading-[20px] text-[16px];
 }
 
-/* body-small */
-@utility body-small-b {
+/* label */
+@utility label-b {
   @apply font-bold leading-[18px] text-[14px];
 }
 
-@utility body-small-s {
+@utility label-s {
   @apply font-semibold leading-[18px] text-[14px];
 }
 
-@utility body-small-m {
+@utility label-m {
   @apply font-medium leading-[18px] text-[14px];
 }
 
-@utility body-small-r {
+@utility label-r {
   @apply font-normal leading-[18px] text-[14px];
 }
 
@@ -98,21 +98,4 @@
 
 @utility caption-r {
   @apply font-normal leading-[16px] text-[12px];
-}
-
-/* label */
-@utility label-b {
-  @apply font-bold leading-[12px] text-[10px];
-}
-
-@utility label-s {
-  @apply font-semibold leading-[12px] text-[10px];
-}
-
-@utility label-m {
-  @apply font-medium leading-[12px] text-[10px];
-}
-
-@utility label-r {
-  @apply font-normal leading-[12px] text-[10px];
 }
