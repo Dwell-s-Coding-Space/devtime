@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import z from 'zod';
 import { PostSignUpBody } from '@/src/features/auth/auth.schema';
 import { BaseResponse } from '@/src/lib/schema/common.schema';
 import { asDateOrNull } from '@/src/lib/schema/primitives/date';
 import { asArray } from '@/src/lib/schema/primitives/object';
-import z from 'zod';
 
 /**
  * 회원정보 조회
@@ -15,7 +15,7 @@ export const profileSchema = z.object({
   purpose: z.string(),
   goal: z.string(),
   techStacks: asArray(z.string()),
-  profileImage: z.string(),
+  profileImage: z.string().nullable(),
 });
 
 const profileResponseSchema = z.object({
@@ -41,8 +41,8 @@ export type PostProfileBody = Profile;
 
 export type PutProfileBody = Partial<
   Pick<PostSignUpBody, 'password'> &
-    Pick<GetProfileResponse, 'nickname'> &
-    Profile
+  Pick<GetProfileResponse, 'nickname'> &
+  Profile
 >;
 
 /**
@@ -50,7 +50,7 @@ export type PutProfileBody = Partial<
  * get /tech-stacks
  */
 
-const techStackItemSchema = z.object({
+export const techStackItemSchema = z.object({
   id: z.number(),
   name: z.string(),
   createdAt: asDateOrNull(),
@@ -74,5 +74,5 @@ export type GetTechStackListResponse = z.infer<
 export type PostTechStackBody = Pick<TechStackItem, 'name'>;
 
 export interface PostTechStackResponse extends Pick<BaseResponse, 'message'> {
-  techstack: TechStackItem;
+  techStack: TechStackItem;
 }
