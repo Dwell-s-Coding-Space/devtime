@@ -1,14 +1,13 @@
-import Link from "next/link";
-import Image from "next/image";
+import Link from 'next/link';
+import Image from 'next/image';
 
-const IS_LOGGED_IN = false
+const IS_LOGGED_IN = false;
 
 const Navbar = () => {
   const isLoggedIn = IS_LOGGED_IN;
 
-
   return (
-    <div className="flex items-center justify-between mb-10">
+    <div className="mb-10 flex items-center justify-between">
       <div className="flex items-center gap-12">
         <Image src="./logo-horizontal.svg" alt="logo" width={148} height={40} unoptimized />
         <div className="flex items-center gap-9">
@@ -23,7 +22,7 @@ const Navbar = () => {
 
       {isLoggedIn ? (
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-background-primary-dark" />
+          <div className="bg-background-primary-dark h-10 w-10 rounded-full" />
           <span className="body-b text-text-secondary">DevTime</span>
         </div>
       ) : (
@@ -38,6 +37,6 @@ const Navbar = () => {
       )}
     </div>
   );
-}
+};
 
 export default Navbar;
