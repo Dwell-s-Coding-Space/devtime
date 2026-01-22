@@ -22,5 +22,4 @@ export const asStringOrNull = () =>
 /**
  * 빈 문자열의 경우 fallback으로 표현
  */
-export const asDisplayString = (fallback = '—') =>
-  asString('').transform(s => (s ? s : fallback));
+export const asDisplayString = (fallback = '—') => asString('').transform(s => (s ? s : fallback));

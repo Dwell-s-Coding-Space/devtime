@@ -40,9 +40,7 @@ export type PostProfileBody = Profile;
  */
 
 export type PutProfileBody = Partial<
-  Pick<PostSignUpBody, 'password'> &
-    Pick<GetProfileResponse, 'nickname'> &
-    Profile
+  Pick<PostSignUpBody, 'password'> & Pick<GetProfileResponse, 'nickname'> & Profile
 >;
 
 /**
@@ -62,9 +60,7 @@ const techStackListResponseSchema = z.object({
 });
 
 export type TechStackItem = z.infer<typeof techStackItemSchema>;
-export type GetTechStackListResponse = z.infer<
-  typeof techStackListResponseSchema
->;
+export type GetTechStackListResponse = z.infer<typeof techStackListResponseSchema>;
 
 /**
  * 기술 스택 추가

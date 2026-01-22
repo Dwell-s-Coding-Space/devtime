@@ -24,22 +24,17 @@ class Api {
     this.options = baseOptions || {};
   }
 
-  private request = async <T>(
-    path: string,
-    options?: RequestOptionsWithBody,
-  ) => {
+  private request = async <T>(path: string, options?: RequestOptionsWithBody) => {
     const { timeout = 5000, body, ...init } = options || {};
 
     const normalizedPath = isAbsoluteUrl(path)
       ? path
       : path.startsWith('/')
-      ? `${this.baseUrl}${path}`
-      : `${this.baseUrl}/${path}`;
+        ? `${this.baseUrl}${path}`
+        : `${this.baseUrl}/${path}`;
 
     const mergedHeaders = new Headers(this.options.headers);
-    new Headers(init.headers).forEach((value, key) =>
-      mergedHeaders.set(key, value),
-    );
+    new Headers(init.headers).forEach((value, key) => mergedHeaders.set(key, value));
 
     try {
       const res = await fetch(normalizedPath, {
@@ -59,7 +54,7 @@ class Api {
           JSON.stringify({
             status: res.status,
             message: errorBody?.message || res.statusText || 'Request Failed',
-          }),
+          })
         );
       }
 
@@ -72,9 +67,7 @@ class Api {
       return data;
     } catch (e: unknown) {
       if (isErrorWithName(e, 'TimeoutError')) {
-        throw new Error(
-          JSON.stringify({ status: 408, message: 'Request Timeout' }),
-        );
+        throw new Error(JSON.stringify({ status: 408, message: 'Request Timeout' }));
       }
 
       if (isErrorWithName(e, 'AbortError')) {
@@ -90,38 +83,32 @@ class Api {
   };
 
   // public methods
-  get<TResponse>(
-    path: string,
-    options?: RequestOptionsWithoutBody,
-  ): Promise<TResponse> {
+  get<TResponse>(path: string, options?: RequestOptionsWithoutBody): Promise<TResponse> {
     return this.request<TResponse>(path, { ...options, method: 'GET' });
   }
 
   post<TResponse, TBody = unknown>(
     path: string,
-    options?: RequestOptionsWithBody<TBody>,
+    options?: RequestOptionsWithBody<TBody>
   ): Promise<TResponse> {
     return this.request<TResponse>(path, { ...options, method: 'POST' });
   }
 
   put<TResponse, TBody = unknown>(
     path: string,
-    options?: RequestOptionsWithBody<TBody>,
+    options?: RequestOptionsWithBody<TBody>
   ): Promise<TResponse> {
     return this.request<TResponse>(path, { ...options, method: 'PUT' });
   }
 
   patch<TResponse, TBody = unknown>(
     path: string,
-    options?: RequestOptionsWithBody<TBody>,
+    options?: RequestOptionsWithBody<TBody>
   ): Promise<TResponse> {
     return this.request<TResponse>(path, { ...options, method: 'PATCH' });
   }
 
-  delete<TResponse>(
-    path: string,
-    options?: RequestOptionsWithoutBody,
-  ): Promise<TResponse> {
+  delete<TResponse>(path: string, options?: RequestOptionsWithoutBody): Promise<TResponse> {
     return this.request<TResponse>(path, { ...options, method: 'DELETE' });
   }
 }

@@ -21,19 +21,15 @@ export const postTimerStart = (reqBody: PostTimerStartBody) => {
 };
 
 export const putTimerUpdate = (id: string, reqBody: PutTimerUpdateBody) => {
-  return clientApi.put<PutTimerUpdateResponse, PutTimerUpdateBody>(
-    `/timers/${id}`,
-    { body: reqBody },
-  );
+  return clientApi.put<PutTimerUpdateResponse, PutTimerUpdateBody>(`/timers/${id}`, {
+    body: reqBody,
+  });
 };
 
 export const postTimerStop = (id: string, reqBody: PostTimerStopBody) => {
-  return clientApi.post<PostTimerStopResponse, PostTimerStopBody>(
-    `/timers/${id}/stop`,
-    {
-      body: reqBody,
-    },
-  );
+  return clientApi.post<PostTimerStopResponse, PostTimerStopBody>(`/timers/${id}/stop`, {
+    body: reqBody,
+  });
 };
 
 export const deleteTimer = (id: string) => {

@@ -30,8 +30,7 @@ export const getTechStacks = () => {
 };
 
 export const postTechStacks = (reqBody: PostTechStackBody) => {
-  return clientApi.post<PostTechStackResponse, PostTechStackBody>(
-    '/tech-stacks',
-    { body: reqBody },
-  );
+  return clientApi.post<PostTechStackResponse, PostTechStackBody>('/tech-stacks', {
+    body: reqBody,
+  });
 };

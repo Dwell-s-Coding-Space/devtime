@@ -2,10 +2,7 @@
 import z from 'zod';
 import { paginationSchema } from '@/src/lib/schema/common.schema';
 import { asBoolean } from '@/src/lib/schema/primitives/boolean';
-import {
-  asClampedNumber,
-  asNonNegative,
-} from '@/src/lib/schema/primitives/number';
+import { asClampedNumber, asNonNegative } from '@/src/lib/schema/primitives/number';
 import { asArray } from '@/src/lib/schema/primitives/object';
 import { asDateOrNull } from '@/src/lib/schema/primitives/date';
 
@@ -103,6 +100,4 @@ const studyLogDetailResponseSchema = z.object({
 });
 
 export type TaskItem = z.infer<typeof taskItemSchema>;
-export type GetStudyLogDetailResponse = z.infer<
-  typeof studyLogDetailResponseSchema
->;
+export type GetStudyLogDetailResponse = z.infer<typeof studyLogDetailResponseSchema>;

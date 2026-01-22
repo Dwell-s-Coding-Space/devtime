@@ -22,5 +22,4 @@ export const asArrayFromAny = <T extends ZodType>(item: T) =>
  * object : fallback {}
  */
 
-export const asRecord = <V extends ZodType>(value: V) =>
-  z.record(z.string(), value).catch({});
+export const asRecord = <V extends ZodType>(value: V) => z.record(z.string(), value).catch({});

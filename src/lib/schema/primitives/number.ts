@@ -8,14 +8,12 @@ export const asNumber = (fallback = 0) => z.coerce.number().catch(fallback);
 /**
  * 정수
  */
-export const asInt = (fallback = 0) =>
-  asNumber(fallback).transform(n => Math.trunc(n));
+export const asInt = (fallback = 0) => asNumber(fallback).transform(n => Math.trunc(n));
 
 /**
  * 0 이상만
  */
-export const asNonNegative = (fallback = 0) =>
-  asNumber(fallback).transform(n => (n < 0 ? 0 : n));
+export const asNonNegative = (fallback = 0) => asNumber(fallback).transform(n => (n < 0 ? 0 : n));
 
 /**
  * 범위

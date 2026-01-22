@@ -2,7 +2,7 @@ import z, { ZodType } from 'zod';
 
 export const fetchWithValidation = async <T>(
   shema: ZodType<T>,
-  fetcher: () => Promise<unknown>,
+  fetcher: () => Promise<unknown>
 ): Promise<T> => {
   const data = await fetcher();
   const result = shema.safeParse(data);
@@ -13,7 +13,7 @@ export const fetchWithValidation = async <T>(
         status: 422,
         message: 'Invlaid response from server',
         errors: z.flattenError(result.error).fieldErrors,
-      }),
+      })
     );
   }
 
