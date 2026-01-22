@@ -10,10 +10,12 @@ import { profileSchema, techStackItemSchema } from '@/src/features/mypage/mypage
  * get /rankings
  */
 
-const rankingProfileSchema = profileSchema.omit({
-  goal: true,
-  techStacks: true
-}).extend({ techStacks: asArray(techStackItemSchema.pick({ id: true, name: true })) });
+const rankingProfileSchema = profileSchema
+  .omit({
+    goal: true,
+    techStacks: true,
+  })
+  .extend({ techStacks: asArray(techStackItemSchema.pick({ id: true, name: true })) });
 
 const rankingItemSchema = z.object({
   rank: asInt(),

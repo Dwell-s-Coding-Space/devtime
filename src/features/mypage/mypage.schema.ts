@@ -40,9 +40,7 @@ export type PostProfileBody = Profile;
  */
 
 export type PutProfileBody = Partial<
-  Pick<PostSignUpBody, 'password'> &
-  Pick<GetProfileResponse, 'nickname'> &
-  Profile
+  Pick<PostSignUpBody, 'password'> & Pick<GetProfileResponse, 'nickname'> & Profile
 >;
 
 /**
