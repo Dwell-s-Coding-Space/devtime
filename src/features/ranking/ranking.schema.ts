@@ -3,7 +3,7 @@ import z from 'zod';
 import { paginationSchema } from '@/src/lib/schema/common.schema';
 import { asInt, asNonNegative } from '@/src/lib/schema/primitives/number';
 import { asArray } from '@/src/lib/schema/primitives/object';
-import { profileSchema } from '@/src/features/mypage/mypage.schema';
+import { profileSchema, techStackItemSchema } from '@/src/features/mypage/mypage.schema';
 
 /**
  * 전체 유저의 학습 시간 랭킹 조회
@@ -12,7 +12,8 @@ import { profileSchema } from '@/src/features/mypage/mypage.schema';
 
 const rankingProfileSchema = profileSchema.omit({
   goal: true,
-});
+  techStacks: true
+}).extend({ techStacks: asArray(techStackItemSchema.pick({ id: true, name: true })) });
 
 const rankingItemSchema = z.object({
   rank: asInt(),
