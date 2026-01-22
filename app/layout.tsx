@@ -1,14 +1,13 @@
-
-import { Metadata } from "next";
-import localFont from "next/font/local";
-import "./globals.css";
+import { Metadata } from 'next';
+import localFont from 'next/font/local';
+import './globals.css';
 
 const pretendardVariable = localFont({
   src: '../src/lib/style/fonts/PretendardVariable.woff2',
   weight: '100 900',
   display: 'swap',
-  variable: '--font-pretendard'
-})
+  variable: '--font-pretendard',
+});
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -22,10 +21,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body
-        className={`${pretendardVariable.variable}`}
-      >
-        {children}
+      <body className={`${pretendardVariable.variable}`}>
+        <div className="flex min-h-screen flex-col">{children}</div>
       </body>
     </html>
   );
