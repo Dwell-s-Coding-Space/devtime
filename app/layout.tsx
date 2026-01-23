@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import localFont from 'next/font/local';
+import Provider from '@/src/lib/Provider';
 import './globals.css';
 
 const pretendardVariable = localFont({
@@ -22,7 +23,9 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className={`${pretendardVariable.variable}`}>
-        <div className="flex min-h-screen flex-col">{children}</div>
+        <Provider>
+          <div className="flex min-h-screen flex-col">{children}</div>
+        </Provider>
       </body>
     </html>
   );
