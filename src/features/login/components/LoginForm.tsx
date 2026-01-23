@@ -2,12 +2,15 @@
 
 import z from 'zod';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
+import { useMutation } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import Button from '@/src/shared/components/button/Button';
 import TextField from '@/src/shared/components/text-field/TextField';
 import { emailSchema, passwordSchema } from '../../signup/components/SignUpForm';
+import { postAuthLogin } from '../../auth/auth.api';
 
 const loginFormSchema = z.object({
   email: emailSchema,
@@ -17,9 +20,26 @@ const loginFormSchema = z.object({
 type LoginFormValues = z.infer<typeof loginFormSchema>;
 
 const LoginForm = () => {
+  const { push } = useRouter();
+
+  const { mutate } = useMutation({
+    mutationFn: postAuthLogin,
+    onSuccess: res => {
+      if (res.success) {
+        alert('로그인 성공');
+        push('/');
+
+        return;
+      }
+
+      console.error(res.message);
+    },
+    onError: err => console.error(err),
+  });
+
   const {
     register,
-    formState: { errors },
+    formState: { errors, isValid },
     handleSubmit,
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
@@ -27,7 +47,7 @@ const LoginForm = () => {
   });
 
   const onSubmit = (data: LoginFormValues) => {
-    alert(JSON.stringify(data));
+    mutate(data);
   };
 
   return (
@@ -49,7 +69,7 @@ const LoginForm = () => {
         />
       </div>
       <div className="flex w-full flex-col gap-6">
-        <Button type="submit" variant="primary">
+        <Button type="submit" variant="primary" disabled={!isValid}>
           로그인
         </Button>
         <Link href={'/signup'} className="label-m text-text-primary text-center">
