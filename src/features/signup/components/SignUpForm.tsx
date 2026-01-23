@@ -5,66 +5,30 @@ import Link from 'next/link';
 import { useEffect } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { DevTool } from '@hookform/devtools';
-
 import Button from '@/src/shared/components/button/Button';
 import TextField from '@/src/shared/components/text-field/TextField';
-import { TERMS_OF_SERVICE } from '@/src/features/signup/constants';
+import { TERMS_OF_SERVICE } from '../constants';
 
 const password_regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 
 const signUpSchema = z
   .object({
-    email: z.string(),
-    nickname: z.string(),
-    password: z.string(),
-    confirmPassword: z.string(),
+    email: z.email('이메일 형식으로 작성해 주세요.'),
+    nickname: z.string().min(1, '닉네임을 입력해 주세요.'),
+    password: z
+      .string()
+      .regex(password_regex, '비밀번호는 8자 이상, 영문과 숫자 조합이어야 합니다.'),
+    confirmPassword: z.string().min(1, '비밀번호 확인을 입력해 주세요.'),
     agreeToTerms: z.boolean(),
   })
   .superRefine((data, ctx) => {
-    // 이메일 검증
-    if (!data.email || !z.email().safeParse(data.email).success) {
-      ctx.addIssue({
-        code: 'custom',
-        message: '이메일 형식으로 작성해 주세요',
-        path: ['email'],
-      });
-    }
+    // ✅ superRefine가 "실제로 도는지" 확인용 로그
+    console.log('[superRefine] 실행됨', {
+      nickname: data.nickname,
+      password: data.password,
+      confirmPassword: data.confirmPassword,
+    });
 
-    // 닉네임 검증
-    if (!data.nickname) {
-      ctx.addIssue({
-        code: 'custom',
-        message: '닉네임을 입력해 주세요.',
-        path: ['nickname'],
-      });
-    }
-
-    // 비밀번호 검증
-    if (!password_regex.test(data.password)) {
-      ctx.addIssue({
-        code: 'custom',
-        message: '비밀번호는 8자 이상, 영문과 숫자 조합이어야 합니다.',
-        path: ['password'],
-      });
-    }
-
-    // 비밀번호 확인 검증
-    if (!data.confirmPassword) {
-      ctx.addIssue({
-        code: 'custom',
-        message: '비밀번호 확인을 입력해 주세요.',
-        path: ['confirmPassword'],
-      });
-    } else if (data.confirmPassword !== data.password) {
-      ctx.addIssue({
-        code: 'custom',
-        message: '비밀번호가 일치하지 않습니다.',
-        path: ['confirmPassword'],
-      });
-    }
-
-    // 이용약관 검증
     if (data.agreeToTerms !== true) {
       ctx.addIssue({
         code: 'custom',
@@ -72,7 +36,17 @@ const signUpSchema = z
         path: ['agreeToTerms'],
       });
     }
+
+    if (data.password && data.confirmPassword && data.password !== data.confirmPassword) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['confirmPassword'],
+        message: '비밀번호가 일치하지 않습니다.',
+      });
+    }
   });
+
+type SignUpFormValues = z.infer<typeof signUpSchema>;
 
 const SignUpForm = () => {
   const {
@@ -81,7 +55,7 @@ const SignUpForm = () => {
     control,
     trigger,
     formState: { errors, isValid },
-  } = useForm({
+  } = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpSchema),
     mode: 'all',
   });
@@ -95,7 +69,7 @@ const SignUpForm = () => {
     }
   }, [trigger, password, confirmPassword]);
 
-  const onSubmit = (data: unknown) => {
+  const onSubmit = (data: SignUpFormValues) => {
     console.log('on submit');
     alert(JSON.stringify(data));
   };
@@ -154,8 +128,6 @@ const SignUpForm = () => {
           <span className="body-b">로그인 바로가기</span>
         </Link>
       </div>
-
-      <DevTool control={control} />
     </form>
   );
 };
