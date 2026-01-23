@@ -115,6 +115,6 @@ class Api {
 
 export default Api;
 
-export const clientApi = new Api(process?.env?.BASE_URL || '', {
+export const clientApi = new Api(process.env.NEXT_PUBLIC_BASE_URL || '', {
   headers: { 'Content-Type': 'application/json' },
 });
