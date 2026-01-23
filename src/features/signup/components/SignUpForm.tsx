@@ -3,10 +3,14 @@
 import z from 'zod';
 import Link from 'next/link';
 import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
+
 import Button from '@/src/shared/components/button/Button';
 import TextField from '@/src/shared/components/text-field/TextField';
+import { postSignUp } from '../../auth/auth.api';
 import { TERMS_OF_SERVICE } from '../constants';
 
 const password_regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
@@ -49,6 +53,7 @@ const signUpSchema = z
 type SignUpFormValues = z.infer<typeof signUpSchema>;
 
 const SignUpForm = () => {
+  const { replace } = useRouter();
   const {
     register,
     handleSubmit,
@@ -63,6 +68,20 @@ const SignUpForm = () => {
   const password = useWatch({ control, name: 'password' });
   const confirmPassword = useWatch({ control, name: 'confirmPassword' });
 
+  const { mutate } = useMutation({
+    mutationFn: postSignUp,
+    onSuccess: res => {
+      if (res.success) {
+        alert('회원가입에 성공하였습니다.');
+        replace('/login');
+        return;
+      }
+
+      console.error('err', res.message);
+    },
+    onError: err => console.error('err', err),
+  });
+
   useEffect(() => {
     if (password && confirmPassword) {
       trigger('confirmPassword');
@@ -71,7 +90,8 @@ const SignUpForm = () => {
 
   const onSubmit = (data: SignUpFormValues) => {
     console.log('on submit');
-    alert(JSON.stringify(data));
+    // alert(JSON.stringify(data));
+    mutate({ ...data });
   };
 
   return (
