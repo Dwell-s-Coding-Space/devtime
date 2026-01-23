@@ -2,15 +2,14 @@
 
 import z from 'zod';
 import Link from 'next/link';
-import { useEffect } from 'react';
+import { useEffect, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
 
 import Button from '@/src/shared/components/button/Button';
 import TextField from '@/src/shared/components/text-field/TextField';
-import { postSignUp } from '../../auth/auth.api';
+import { signupAction } from '../../auth/auth.action';
 import { TERMS_OF_SERVICE } from '../constants';
 
 const password_regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
@@ -32,13 +31,6 @@ const signUpSchema = z
     agreeToTerms: agreeToTermsSchema,
   })
   .superRefine((data, ctx) => {
-    // ✅ superRefine가 "실제로 도는지" 확인용 로그
-    console.log('[superRefine] 실행됨', {
-      nickname: data.nickname,
-      password: data.password,
-      confirmPassword: data.confirmPassword,
-    });
-
     if (data.agreeToTerms !== true) {
       ctx.addIssue({
         code: 'custom',
@@ -56,15 +48,18 @@ const signUpSchema = z
     }
   });
 
-type SignUpFormValues = z.infer<typeof signUpSchema>;
+export type SignUpFormValues = z.infer<typeof signUpSchema>;
 
 const SignUpForm = () => {
   const { replace } = useRouter();
+  const [isPending, startTransition] = useTransition();
+
   const {
     register,
     handleSubmit,
     control,
     trigger,
+    setError,
     formState: { errors, isValid },
   } = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpSchema),
@@ -74,20 +69,6 @@ const SignUpForm = () => {
   const password = useWatch({ control, name: 'password' });
   const confirmPassword = useWatch({ control, name: 'confirmPassword' });
 
-  const { mutate } = useMutation({
-    mutationFn: postSignUp,
-    onSuccess: res => {
-      if (res.success) {
-        alert('회원가입에 성공하였습니다.');
-        replace('/login');
-        return;
-      }
-
-      console.error('err', res.message);
-    },
-    onError: err => console.error('err', err),
-  });
-
   useEffect(() => {
     if (password && confirmPassword) {
       trigger('confirmPassword');
@@ -95,9 +76,16 @@ const SignUpForm = () => {
   }, [trigger, password, confirmPassword]);
 
   const onSubmit = (data: SignUpFormValues) => {
-    console.log('on submit');
-    // alert(JSON.stringify(data));
-    mutate({ ...data });
+    startTransition(async () => {
+      const result = await signupAction(data);
+
+      if (result.success) {
+        alert('회원가입에 성공하였습니다.');
+        replace('/login');
+      } else {
+        setError('root', { message: result.message });
+      }
+    });
   };
 
   return (
@@ -147,7 +135,7 @@ const SignUpForm = () => {
 
       <div className="flex flex-col gap-6">
         <Button className="w-full" type="submit" disabled={!isValid}>
-          회원가입
+          {isPending ? '회원가입 중...' : '회원가입'}
         </Button>
         <Link href="/login" className="text-text-primary flex items-center justify-center gap-3">
           <span className="body-r">회원이신가요?</span>

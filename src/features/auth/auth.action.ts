@@ -2,7 +2,8 @@
 
 import { cookies } from 'next/headers';
 import { LoginFormValues } from '../login/components/LoginForm';
-import { postAuthLogin } from './auth.api';
+import { SignUpFormValues } from '../signup/components/SignUpForm';
+import { postAuthLogin, postSignUp } from './auth.api';
 
 export async function loginAction(data: LoginFormValues) {
   const result = await postAuthLogin(data);
@@ -19,4 +20,14 @@ export async function loginAction(data: LoginFormValues) {
   });
 
   return { success: true, message: '로그인 성공' };
+}
+
+export async function signupAction(data: SignUpFormValues) {
+  const result = await postSignUp(data);
+
+  if (!result.success) {
+    return { success: false, message: result.message };
+  }
+
+  return { success: true, message: result.message };
 }
