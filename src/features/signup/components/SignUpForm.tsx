@@ -15,15 +15,21 @@ import { TERMS_OF_SERVICE } from '../constants';
 
 const password_regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 
+export const emailSchema = z.email('이메일 형식으로 작성해 주세요.');
+export const nicknameSchema = z.string().min(1, '닉네임을 입력해 주세요.');
+export const passwordSchema = z
+  .string()
+  .regex(password_regex, '비밀번호는 8자 이상, 영문과 숫자 조합이어야 합니다.');
+export const confirmPasswordSchema = z.string().min(1, '비밀번호 확인을 입력해 주세요.');
+export const agreeToTermsSchema = z.boolean();
+
 const signUpSchema = z
   .object({
-    email: z.email('이메일 형식으로 작성해 주세요.'),
-    nickname: z.string().min(1, '닉네임을 입력해 주세요.'),
-    password: z
-      .string()
-      .regex(password_regex, '비밀번호는 8자 이상, 영문과 숫자 조합이어야 합니다.'),
-    confirmPassword: z.string().min(1, '비밀번호 확인을 입력해 주세요.'),
-    agreeToTerms: z.boolean(),
+    email: emailSchema,
+    nickname: nicknameSchema,
+    password: passwordSchema,
+    confirmPassword: confirmPasswordSchema,
+    agreeToTerms: agreeToTermsSchema,
   })
   .superRefine((data, ctx) => {
     // ✅ superRefine가 "실제로 도는지" 확인용 로그
