@@ -1,6 +1,6 @@
-import { clientApi } from '@/src/lib/api/client';
+import type Api from '@/src/lib/api/core';
 import { GetRankingListResponse } from '@/src/features/ranking/ranking.schema';
 
-export const getRankings = () => {
-  return clientApi.get<GetRankingListResponse>('/rankings');
-};
+export const createRankingApi = (api: Api) => ({
+  getList: () => api.get<GetRankingListResponse>('/rankings'),
+});
