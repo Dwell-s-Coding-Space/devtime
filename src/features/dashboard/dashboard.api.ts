@@ -1,4 +1,4 @@
-import { clientApi } from '@/src/lib/api/client';
+import type Api from '@/src/lib/api/core';
 import { BaseResponse } from '@/src/lib/schema/common.schema';
 import {
   GetHeatmapListResponse,
@@ -7,22 +7,10 @@ import {
   StudyLogListResponse,
 } from './dashboard.schema';
 
-export const getStats = () => {
-  return clientApi.get<GetStudyStatResponse>('/stats');
-};
-
-export const getHeatmap = () => {
-  return clientApi.get<GetHeatmapListResponse>('/heatmap');
-};
-
-export const getStudyLogs = () => {
-  return clientApi.get<StudyLogListResponse>('/study-logs');
-};
-
-export const getStudyLogDetail = (id: string) => {
-  return clientApi.get<GetStudyLogDetailResponse>(`/study-logs/${id}`);
-};
-
-export const deleteStudyLog = (id: string) => {
-  return clientApi.delete<BaseResponse>(`/study-logs/${id}`);
-};
+export const createDashboardApi = (api: Api) => ({
+  getStats: () => api.get<GetStudyStatResponse>('/stats'),
+  getHeatmap: () => api.get<GetHeatmapListResponse>('/heatmap'),
+  getStudyLogs: () => api.get<StudyLogListResponse>('/study-logs'),
+  getStudyLogDetail: (id: string) => api.get<GetStudyLogDetailResponse>(`/study-logs/${id}`),
+  deleteStudyLog: (id: string) => api.delete<BaseResponse>(`/study-logs/${id}`),
+});
