@@ -30,7 +30,7 @@ const RankingItem = ({ data }: RankingItemProps) => {
           <span className="title-b">{rank}위</span>
         </div>
         {profileImage ? (
-          <Image src={profileImage} alt="profile" width={80} height={80} />
+          <Image src={''} alt="profile" width={80} height={80} />
         ) : (
           <div className="bg-background-disabled h-20 w-20 rounded-full" />
         )}
