@@ -1,18 +1,22 @@
-// import { getRankings } from "@/src/features/ranking/ranking.api";
+'use client';
+
+import { useQuery } from '@tanstack/react-query';
 import { cn } from '@/src/lib/utils';
+import { clientApi } from '@/src/lib/api/client';
 import RankingItem from '@/src/features/ranking/components/RankingItem';
-import { MOCK_RANKING_DATA } from '@/src/features/ranking/ranking.mock';
+import { createRankingApi } from '@/src/features/ranking/ranking.api';
 
 const RANKING_OPTION_MAP = {
   '총 학습 시간': 'total',
   '일 평균 학습 시간': 'avg',
 };
 
-export default async function Ranking() {
-  // const data = await getRankings()
-  const {
-    data: { rankings },
-  } = MOCK_RANKING_DATA;
+export default function Ranking() {
+  const { data } = useQuery({
+    queryKey: ['ranking'],
+    queryFn: createRankingApi(clientApi).getList,
+  });
+
   const currentRankingOption = 'total';
 
   return (
@@ -40,7 +44,7 @@ export default async function Ranking() {
 
       {/* ranking list */}
       <div className="flex flex-col gap-3">
-        {rankings.map(ranking => (
+        {data?.data.rankings.map(ranking => (
           <RankingItem data={ranking} key={ranking.userId} />
         ))}
       </div>
