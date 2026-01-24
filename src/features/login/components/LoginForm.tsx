@@ -42,6 +42,7 @@ const LoginForm = () => {
         push('/');
       } else {
         setError('root', { message: result.message });
+        alert(`로그인에 실패하였습니다\n${result.message}`);
       }
     });
   };
@@ -58,6 +59,7 @@ const LoginForm = () => {
         />
         <TextField
           label="비밀번호"
+          type="password"
           placeholder="비밀번호를 입력해 주세요."
           {...register('password')}
           messageType={errors.password && 'error'}
