@@ -84,6 +84,7 @@ const SignUpForm = () => {
         replace('/login');
       } else {
         setError('root', { message: result.message });
+        alert(`회원가입에 실패하였습니다\n${result.message}`);
       }
     });
   };
