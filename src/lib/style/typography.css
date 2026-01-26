@@ -99,3 +99,7 @@
 @utility caption-r {
   @apply text-[12px] leading-[16px] font-normal;
 }
+
+@utility timer {
+  @apply font-digital-numbers text-[152px] leading-[200px] font-normal;
+}
