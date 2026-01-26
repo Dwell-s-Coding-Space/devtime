@@ -1,15 +1,17 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { cookies } from 'next/headers';
 
-const IS_LOGGED_IN = false;
-
-const Navbar = () => {
-  const isLoggedIn = IS_LOGGED_IN;
+const Navbar = async () => {
+  const accessToken = (await cookies()).get('accessToken')?.value;
+  const isLoggedIn = accessToken ? true : false;
 
   return (
     <div className="mb-10 flex items-center justify-between">
       <div className="flex items-center gap-12">
-        <Image src="./logo-horizontal.svg" alt="logo" width={148} height={40} unoptimized />
+        <Link href={'/home'}>
+          <Image src="./logo-horizontal.svg" alt="logo" width={148} height={40} unoptimized />
+        </Link>
         <div className="flex items-center gap-9">
           <Link href={'/dashboard'}>
             <span className="text-text-secondary body-s">대시보드</span>
