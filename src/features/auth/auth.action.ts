@@ -23,6 +23,13 @@ export async function loginAction(data: LoginFormValues) {
       path: '/',
     });
 
+    cookieStore.set('refreshToken', result.refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+    });
+
     return { success: true, message: '로그인 성공' };
   } catch (e) {
     const error = e instanceof Error ? JSON.parse(e.message) : { message: '알 수 없는 오류' };

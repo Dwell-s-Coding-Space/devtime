@@ -39,7 +39,7 @@ const LoginForm = () => {
 
       if (result.success) {
         alert('로그인 성공');
-        push('/');
+        push('/home');
       } else {
         setError('root', { message: result.message });
         alert(`로그인에 실패하였습니다\n${result.message}`);
