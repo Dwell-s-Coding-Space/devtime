@@ -6,6 +6,13 @@ import { LoginFormValues } from '../login/components/LoginForm';
 import { SignUpFormValues } from '../signup/components/SignUpForm';
 import { createAuthApi } from './auth.api';
 
+export async function checkIsLoggedIn() {
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get('accessToken')?.value;
+
+  return !!accessToken;
+}
+
 export async function loginAction(data: LoginFormValues) {
   try {
     const serverApi = await createServerApi();
