@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import localFont from 'next/font/local';
 import Provider from '@/src/lib/Provider';
 import './globals.css';
+import Modal from '@/src/shared/components/modal/Modal';
 
 const pretendardVariable = localFont({
   src: '../src/lib/style/fonts/PretendardVariable.woff2',
@@ -28,12 +29,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko">
-      <body className={`${pretendardVariable.variable} ${digitalNumbers.variable}`}>
-        <Provider>
+    <Provider>
+      <html lang="ko">
+        <body className={`${pretendardVariable.variable} ${digitalNumbers.variable}`}>
           <div className="flex min-h-screen flex-col">{children}</div>
-        </Provider>
-      </body>
-    </html>
+          <Modal />
+        </body>
+      </html>
+    </Provider>
   );
 }
