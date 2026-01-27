@@ -2,8 +2,10 @@ import { ComponentProps } from 'react';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/src/lib/utils';
 
+export type ButtonVariant = 'primary' | 'secondary' | 'tertiary';
+
 interface ButtonProps extends ComponentProps<'button'> {
-  variant?: 'primary' | 'secondary' | 'tertiary';
+  variant?: ButtonVariant;
 }
 
 const ButtonVariants = cva('h-[48px] px-4 py-3 rounded-[5px] subtitle-s', {
