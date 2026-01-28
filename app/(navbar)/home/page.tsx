@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import TimerStart from '@/src/shared/assets/svg/timer-start.svg';
 import TimerPause from '@/src/shared/assets/svg/timer-pause.svg';
 import { checkIsLoggedIn } from '@/src/features/auth/auth.action';
+import TodoModal from '@/src/features/timer/components/TodoModal';
 import { useModal } from '@/src/lib/store/modalSlice';
 
 const TimerStop = () => {
@@ -17,6 +18,7 @@ export default function Home() {
   const router = useRouter();
   const [mode, setMode] = useState<TimerMode>('start');
   const onOpen = useModal(state => state.onOpen);
+  const [isTodoModalOpen, setIsTodoModalOpen] = useState(false);
 
   const handleStartClick = async () => {
     const isLoggedIn = await checkIsLoggedIn();
@@ -35,6 +37,8 @@ export default function Home() {
 
       return isConfirmClicked ? router.push('/login') : null;
     }
+
+    setIsTodoModalOpen(true);
   };
 
   return (
@@ -96,6 +100,14 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {isTodoModalOpen && (
+        <TodoModal
+          onClose={() => setIsTodoModalOpen(false)}
+          onConfirm={() => setIsTodoModalOpen(false)}
+          onCancel={() => setIsTodoModalOpen(false)}
+        />
+      )}
     </div>
   );
 }
