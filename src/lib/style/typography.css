@@ -103,3 +103,7 @@
 @utility timer {
   @apply font-digital-numbers text-[152px] leading-[200px] font-normal;
 }
+
+@utility heading-dashboard {
+  @apply text-[36px] leading-[46px] font-bold;
+}
