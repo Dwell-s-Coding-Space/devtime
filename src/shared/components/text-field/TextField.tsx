@@ -1,11 +1,15 @@
 import { ComponentProps } from 'react';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/src/lib/utils';
+import Input from './Input';
+import Label from './Label';
 
 interface FieldProps extends ComponentProps<'input'> {
   label: string;
   message?: string;
   messageType?: 'error' | 'informative' | 'success';
+  innerButton?: React.ReactNode;
+  outerButton?: React.ReactNode;
 }
 
 const MessageVariants = cva('caption-m', {
@@ -22,29 +26,22 @@ const TextField = ({
   label,
   message,
   messageType,
-  id: inputId,
-  className,
-  ...rest
+  innerButton,
+  outerButton,
+  ...inputProps
 }: FieldProps) => {
   return (
     <div className="flex flex-col gap-2">
-      <label htmlFor={inputId} className="label-m text-text-g600">
-        {label}
-      </label>
-      <input
-        id={inputId}
-        className={cn(
-          'bg-background-gray-light placeholder:body-m placeholder:text-text-disabled-300 body-m text-text-g800 rounded-[5px] px-4 py-3',
-          messageType === 'error' && 'outline-feedback-negative outline',
-          className
-        )}
-        {...rest}
-      />
+      <Label htmlFor={inputProps.id}>{label}</Label>
+      <div className="flex items-center gap-3">
+        <Input innerButton={innerButton} hasError={messageType === 'error'} {...inputProps} />
+        {outerButton}
+      </div>
       {message ? (
         <span className={cn(MessageVariants({ variant: messageType }))}>{message}</span>
-      ) : (
+      ) : messageType ? (
         <div className="h-4" />
-      )}
+      ) : null}
     </div>
   );
 };
