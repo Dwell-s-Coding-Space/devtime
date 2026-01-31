@@ -69,3 +69,10 @@ export type PostTimerStopResponse = Pick<BaseResponse, 'message'> & {
  */
 
 export type DeleteTimerResponse = Pick<BaseResponse, 'message'>;
+
+/**
+ * 할 일 업데이트
+ * put /:studyLogId/tasks
+ */
+export type PutTasksUpdateBody = Pick<PostTimerStopBody, 'tasks'>;
+export type PutTasksUpdateResponse = BaseResponse;
