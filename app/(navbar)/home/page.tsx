@@ -17,22 +17,19 @@ import { createDashboardApi } from '@/src/features/dashboard/dashboard.api';
 import TimerStartModal from '@/src/features/timer/components/TimerStartModal';
 import TimerRunningModal from '@/src/features/timer/components/TimerRunningModal';
 import TimerStopModal from '@/src/features/timer/components/TimerStopModal';
+import { ModalType, TimerStatus } from '@/src/features/timer/timer.types';
 
 const TimerStop = () => {
   return <div className="h-25 w-25 rounded-[8px] bg-current" />;
 };
 
-export type TaskMode = 'check' | 'view' | 'edit';
-export type TaskModal = 'start' | 'stop' | 'in-progress';
-export type TimerMode = 'idle' | 'running' | 'pause';
-
 export default function Home() {
   const router = useRouter();
-  const [mode, setMode] = useState<TimerMode>('idle');
+  const [mode, setMode] = useState<TimerStatus>('idle');
 
   const onOpen = useModal(state => state.onOpen);
   const [isTodoModalOpen, setIsTodoModalOpen] = useState(false);
-  const [taskModalType, setTaskModalType] = useState<TaskModal>('start');
+  const [taskModalType, setTaskModalType] = useState<ModalType>('start');
 
   const { data } = useQuery({
     queryKey: ['current timer'],
@@ -110,7 +107,7 @@ export default function Home() {
                 <TimerStart />
               </button>
               <button
-                disabled={mode === 'pause' || mode === 'idle'}
+                disabled={mode === 'paused' || mode === 'idle'}
                 className="disabled:text-background-primary-light text-content-primary"
               >
                 <TimerPause />
@@ -132,7 +129,7 @@ export default function Home() {
                   className="bg-background-white flex h-16 w-16 items-center justify-center rounded-full"
                   onClick={() => {
                     setIsTodoModalOpen(true);
-                    setTaskModalType('in-progress');
+                    setTaskModalType('running');
                   }}
                 >
                   <TodoIcon className="text-text-primary h-12 w-12" />
@@ -154,7 +151,7 @@ export default function Home() {
           {taskModalType === 'start' && (
             <TimerStartModal onClose={() => setIsTodoModalOpen(false)} />
           )}
-          {taskModalType === 'in-progress' && (
+          {taskModalType === 'running' && (
             <TimerRunningModal
               onClose={() => setIsTodoModalOpen(false)}
               data={studyLogData?.data}
