@@ -1,39 +1,26 @@
 import { useEffect, useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
 import Button from '@/src/shared/components/button/Button';
 import Portal from '@/src/shared/components/modal/Portal';
-import TodoItem from './TaskModal/TaskItem';
-import { useMutation } from '@tanstack/react-query';
 import { clientApi } from '@/src/lib/api/client';
+import type { TaskMode } from '@/app/(navbar)/home/page';
+import { type TaskItem } from '../../dashboard/dashboard.schema';
 import { createTimerApi } from '../timer.api';
-import { TimerMode } from '@/app/(navbar)/home/page';
 import Goal from './TaskModal/Goal';
-import TextField from '@/src/shared/components/text-field/TextField';
 import AddTaskItem from './TaskModal/AddTaskItem';
 import TaskList from './TaskModal/TaskList';
 
-/**
- *   타이머 상태 :
- * not-started : 재생버튼만 활성화 ->투두 모달 : start
- * running : 일시정지, 스탑 버튼만 활성화  -> 투두 모달 : running
- * paused : 재생, 스탑 버튼만 활성화 -> 투두 모달 : running
- *                             -> 투두 모달 : stop
- */
-
-const TaskItem = () => {};
-
-interface TaskModalProps {
+export interface TaskModalProps {
   onClose: () => void;
-  onConfirm: () => void;
-  onCancel: () => void;
-  mode: TimerMode;
+  onConfirm?: () => void;
+  onCancel?: () => void;
+  changeTaskMode?: (newMode: TaskMode) => void;
 }
 
-const TaskModal = ({ onClose, onConfirm, onCancel, mode }: TaskModalProps) => {
+const TimerStartModal = ({ onClose }: TaskModalProps) => {
   const [goal, setGoal] = useState('');
   const [newTodo, setNewTodo] = useState('');
-  const [todos, setTodos] = useState<string[]>([]);
-
-  console.log('mode', mode);
+  const [todos, setTodos] = useState<TaskItem[]>([]);
 
   const { mutate } = useMutation({
     mutationFn: createTimerApi(clientApi).postStart,
@@ -55,22 +42,32 @@ const TaskModal = ({ onClose, onConfirm, onCancel, mode }: TaskModalProps) => {
 
   const handleAddTodo = () => {
     if (!newTodo) return;
-    if (todos.some(todo => todo === newTodo)) {
+    if (todos.some(todo => todo.content === newTodo)) {
       alert('이미 같은 할 일이 존재합니다.');
       return;
     }
-    setTodos(prev => [...prev, newTodo]);
+
+    setTodos(prev => [...prev, { id: `id-${newTodo}`, content: newTodo, isCompleted: false }]);
     setNewTodo('');
   };
 
   const onTimerStart = () => {
-    mutate({ todayGoal: goal, tasks: todos });
+    mutate({ todayGoal: goal, tasks: todos.map(todo => todo.content) });
+  };
+
+  const handleTaskItemUpdate = (data: Partial<TaskItem>) => {
+    const updatedTodos = todos.map(todo => (todo.id === data.id ? { ...todo, ...data } : todo));
+    setTodos(updatedTodos);
+  };
+
+  const handleTaskItemDelete = (id: string) => {
+    const updatedTodos = todos.filter(todo => todo.id !== id);
+    setTodos(updatedTodos);
   };
 
   return (
     <Portal>
       <div
-        // onClick={onClose}
         className="bg-dim-b50 fixed top-0 left-0 z-50 flex h-screen w-full items-center justify-center overflow-hidden"
         style={{
           paddingBlock: `clamp(30px, calc(126 / 1080 * 100vh), 126px)`,
@@ -83,14 +80,20 @@ const TaskModal = ({ onClose, onConfirm, onCancel, mode }: TaskModalProps) => {
             onChange={e => setNewTodo(e.target.value)}
             onKeyDown={e => {
               if (e.key !== 'Enter') return;
-              console.log('enter');
               handleAddTodo();
             }}
             onClick={handleAddTodo}
           />
-          <TaskList tasks={todos} mode="edit" />
+
+          <TaskList
+            tasks={todos}
+            mode="edit"
+            handleChange={handleTaskItemUpdate}
+            handleDelete={handleTaskItemDelete}
+          />
+
           <div className="flex items-center justify-end gap-4">
-            <Button variant="tertiary" onClick={onCancel}>
+            <Button variant="tertiary" onClick={onClose}>
               취소
             </Button>
             <Button variant="secondary" onClick={onTimerStart}>
@@ -103,4 +106,4 @@ const TaskModal = ({ onClose, onConfirm, onCancel, mode }: TaskModalProps) => {
   );
 };
 
-export default TaskModal;
+export default TimerStartModal;
