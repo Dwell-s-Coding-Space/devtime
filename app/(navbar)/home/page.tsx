@@ -2,28 +2,51 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
+
+import { cn } from '@/src/lib/utils';
+import { useModal } from '@/src/lib/store/modalSlice';
+import { clientApi } from '@/src/lib/api/client';
 import TimerStart from '@/src/shared/assets/svg/timer-start.svg';
 import TimerPause from '@/src/shared/assets/svg/timer-pause.svg';
+import ResetIcon from '@/src/shared/assets/svg/reset.svg';
+import TodoIcon from '@/src/shared/assets/svg/todo.svg';
 import { checkIsLoggedIn } from '@/src/features/auth/auth.action';
-import TodoModal from '@/src/features/timer/components/TodoModal';
-import { useModal } from '@/src/lib/store/modalSlice';
+import { createTimerApi } from '@/src/features/timer/timer.api';
+import { createDashboardApi } from '@/src/features/dashboard/dashboard.api';
+import TimerStartModal from '@/src/features/timer/components/TimerStartModal';
+import TimerRunningModal from '@/src/features/timer/components/TimerRunningModal';
+import TimerStopModal from '@/src/features/timer/components/TimerStopModal';
 
 const TimerStop = () => {
   return <div className="h-25 w-25 rounded-[8px] bg-current" />;
 };
 
-type TimerMode = 'start' | 'stop' | 'pause';
+export type TaskMode = 'check' | 'view' | 'edit';
+export type TaskModal = 'start' | 'stop' | 'in-progress';
+export type TimerMode = 'idle' | 'running' | 'pause';
 
 export default function Home() {
   const router = useRouter();
-  const [mode, setMode] = useState<TimerMode>('start');
+  const [mode, setMode] = useState<TimerMode>('idle');
+
   const onOpen = useModal(state => state.onOpen);
   const [isTodoModalOpen, setIsTodoModalOpen] = useState(false);
+  const [taskModalType, setTaskModalType] = useState<TaskModal>('start');
+
+  const { data } = useQuery({
+    queryKey: ['current timer'],
+    queryFn: createTimerApi(clientApi).getCurrent,
+  });
+
+  const { data: studyLogData } = useQuery({
+    queryKey: ['timer', data?.studyLogId],
+    queryFn: () => createDashboardApi(clientApi).getStudyLogDetail(data?.studyLogId || ''),
+    enabled: !!data?.studyLogId,
+  });
 
   const handleStartClick = async () => {
     const isLoggedIn = await checkIsLoggedIn();
-
-    console.log('isLoggedIn', isLoggedIn);
 
     if (!isLoggedIn) {
       const isConfirmClicked = await onOpen({
@@ -77,36 +100,74 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="flex justify-center gap-20">
-            <button
-              disabled={mode !== 'start'}
-              onClick={handleStartClick}
-              className="disabled:text-background-primary-light text-content-primary"
-            >
-              <TimerStart />
-            </button>
-            <button
-              disabled={mode !== 'pause'}
-              className="disabled:text-background-primary-light text-content-primary"
-            >
-              <TimerPause />
-            </button>
-            <button
-              disabled={mode !== 'stop'}
-              className="disabled:text-background-primary-light text-content-primary"
-            >
-              <TimerStop />
-            </button>
+          <div className={cn({ 'flex items-center justify-end gap-[134px]': !!data })}>
+            <div className="flex justify-center gap-20">
+              <button
+                disabled={mode !== 'idle'}
+                onClick={handleStartClick}
+                className="disabled:text-background-primary-light text-content-primary"
+              >
+                <TimerStart />
+              </button>
+              <button
+                disabled={mode === 'pause' || mode === 'idle'}
+                className="disabled:text-background-primary-light text-content-primary"
+              >
+                <TimerPause />
+              </button>
+              <button
+                disabled={mode !== 'idle'}
+                className="disabled:text-background-primary-light text-content-primary"
+                onClick={() => {
+                  setIsTodoModalOpen(true);
+                  setTaskModalType('stop');
+                }}
+              >
+                <TimerStop />
+              </button>
+            </div>
+            {data && (
+              <div className="flex items-center gap-6">
+                <button
+                  className="bg-background-white flex h-16 w-16 items-center justify-center rounded-full"
+                  onClick={() => {
+                    setIsTodoModalOpen(true);
+                    setTaskModalType('in-progress');
+                  }}
+                >
+                  <TodoIcon className="text-text-primary h-12 w-12" />
+                </button>
+                <button
+                  className="bg-background-white flex h-16 w-16 items-center justify-center rounded-full"
+                  onClick={() => {}}
+                >
+                  <ResetIcon className="text-text-primary h-12 w-12" />
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
 
       {isTodoModalOpen && (
-        <TodoModal
-          onClose={() => setIsTodoModalOpen(false)}
-          onConfirm={() => setIsTodoModalOpen(false)}
-          onCancel={() => setIsTodoModalOpen(false)}
-        />
+        <>
+          {taskModalType === 'start' && (
+            <TimerStartModal onClose={() => setIsTodoModalOpen(false)} />
+          )}
+          {taskModalType === 'in-progress' && (
+            <TimerRunningModal
+              onClose={() => setIsTodoModalOpen(false)}
+              data={studyLogData?.data}
+            />
+          )}
+          {taskModalType === 'stop' && (
+            <TimerStopModal
+              onClose={() => setIsTodoModalOpen(false)}
+              data={studyLogData?.data}
+              timerId={data?.timerId}
+            />
+          )}
+        </>
       )}
     </div>
   );
