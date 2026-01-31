@@ -1,13 +1,12 @@
 import { ComponentProps } from 'react';
 import { cn } from '@/src/lib/utils';
-import CheckedIcon from '@/src/shared/assets/svg/checked.svg';
+import CheckIcon from '@/src/shared/assets/svg/check.svg';
 
 interface CheckboxProps extends Omit<ComponentProps<'input'>, 'type'> {
   text?: string;
 }
 
 const Checkbox = ({ checked, className, ...props }: CheckboxProps) => {
-  console.log('checked', checked);
   return (
     <label className="h-fit w-fit cursor-pointer">
       <input type="checkbox" className="sr-only" checked={checked} {...props} />
@@ -20,9 +19,7 @@ const Checkbox = ({ checked, className, ...props }: CheckboxProps) => {
           className
         )}
       >
-        {checked && (
-          <CheckedIcon className={cn({ 'text-text-white h-[10px] w-[13px]': checked })} />
-        )}
+        {checked && <CheckIcon className={cn({ 'text-text-white': checked })} />}
       </div>
     </label>
   );
