@@ -1,5 +1,4 @@
-import { ChangeEvent, MouseEvent, useState } from 'react';
-import { TaskMode } from '@/app/(navbar)/home/page';
+import { ChangeEvent, useState } from 'react';
 import { cn } from '@/src/lib/utils';
 import SymbolIcon from '@/src/shared/assets/svg/symbol.svg';
 import EditIcon from '@/src/shared/assets/svg/edit.svg';
@@ -7,6 +6,7 @@ import TrashIcon from '@/src/shared/assets/svg/trash.svg';
 import CheckIcon from '@/src/shared/assets/svg/check.svg';
 import Checkbox from '@/src/shared/components/checkbox/Checkbox';
 import type { TaskItem as TaskItemType } from '@/src/features/dashboard/dashboard.schema';
+import { TaskMode } from '../../timer.types';
 
 interface TaskItemProps {
   task: TaskItemType;
@@ -18,28 +18,16 @@ interface TaskItemProps {
 const TaskItem = ({ task, mode, handleChange, handleDelete }: TaskItemProps) => {
   const checkboxId = `task-checkbox-${task.id}`;
 
-  const [isEdit, setIsEdit] = useState(false);
-  const [value, setValue] = useState(task.content || '');
+  const [isEditing, setIsEditing] = useState(false);
+  const [editValue, setEditValue] = useState(task.content || '');
 
   const handleCheck = (e: ChangeEvent<HTMLInputElement>) => {
-    if (!handleChange) return;
-
-    handleChange({ ...task, isCompleted: e.target.checked });
+    handleChange?.({ ...task, isCompleted: e.target.checked });
   };
 
-  const handleEdit = (e: MouseEvent<HTMLButtonElement>) => {
-    setIsEdit(true);
-  };
-
-  const handleRealEdit = () => {
-    if (!handleChange) return;
-    handleChange({ ...task, content: value });
-    setIsEdit(false);
-  };
-
-  const onDelete = () => {
-    if (!handleDelete) return;
-    handleDelete(task.id);
+  const handleEditConfirm = () => {
+    handleChange?.({ ...task, content: editValue });
+    setIsEditing(false);
   };
 
   return (
@@ -52,24 +40,23 @@ const TaskItem = ({ task, mode, handleChange, handleDelete }: TaskItemProps) => 
       <SymbolIcon className="text-background-white/50 h-5 w-[42px]" />
 
       <input
-        value={value}
-        onChange={e => setValue(e.target.value)}
-        readOnly={isEdit ? false : true}
-        className="body-s text-text-white flex-1"
+        value={editValue}
+        onChange={e => setEditValue(e.target.value)}
+        readOnly={!isEditing}
+        className="body-s text-text-white flex-1 bg-transparent"
       />
 
       {mode === 'edit' &&
-        (isEdit ? (
-          <button onClick={handleRealEdit}>
+        (isEditing ? (
+          <button onClick={handleEditConfirm}>
             <CheckIcon className="h-6 w-6 text-white" />
           </button>
         ) : (
           <>
-            <button onClick={handleEdit}>
+            <button onClick={() => setIsEditing(true)}>
               <EditIcon className="h-6 w-6 text-white" />
             </button>
-
-            <button onClick={onDelete}>
+            <button onClick={() => handleDelete?.(task.id)}>
               <TrashIcon className="h-6 w-6 text-white" />
             </button>
           </>
