@@ -6,6 +6,7 @@ import {
   PostTimerStartResponse,
   PostTimerStopBody,
   PostTimerStopResponse,
+  PutTasksUpdateBody,
   PutTimerUpdateBody,
   PutTimerUpdateResponse,
 } from '@/src/features/timer/timer.schema';
@@ -16,13 +17,17 @@ export const createTimerApi = (api: Api) => ({
     api.post<PostTimerStartResponse, PostTimerStartBody>('/timers', {
       body: reqBody,
     }),
-  putUpdate: (id: string, reqBody: PutTimerUpdateBody) =>
+  putUpdate: ({ id, reqBody }: { id: string; reqBody: PutTimerUpdateBody }) =>
     api.put<PutTimerUpdateResponse, PutTimerUpdateBody>(`/timers/${id}`, {
       body: reqBody,
     }),
-  postStop: (id: string, reqBody: PostTimerStopBody) =>
+  postStop: ({ id, reqBody }: { id: string; reqBody: PostTimerStopBody }) =>
     api.post<PostTimerStopResponse, PostTimerStopBody>(`/timers/${id}/stop`, {
       body: reqBody,
     }),
   deleteCurrent: (id: string) => api.delete<DeleteTimerResponse>(`/timers/${id}`),
+  putTasks: ({ studyLogId, reqBody }: { studyLogId: string; reqBody: PutTasksUpdateBody }) =>
+    api.put<PutTimerUpdateResponse, PutTasksUpdateBody>(`/${studyLogId}/tasks`, {
+      body: reqBody,
+    }),
 });
