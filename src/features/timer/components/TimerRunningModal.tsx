@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import type { TaskMode } from '@/app/(navbar)/home/page';
 import { clientApi } from '@/src/lib/api/client';
 import { GetStudyLogDetailResponse } from '../../dashboard/dashboard.schema';
 import { createTimerApi } from '../timer.api';
-import { TaskModalProps } from '../timer.types';
+import type { TaskModalProps, TaskMode } from '../timer.types';
 import { useTasks } from '../hooks';
 import { AddTaskItem, TaskList, TaskModalLayout, TaskModalFooter } from './TaskModal';
 

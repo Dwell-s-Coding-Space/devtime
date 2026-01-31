@@ -1,8 +1,8 @@
 import { ComponentProps } from 'react';
-import type { TaskMode } from '@/app/(navbar)/home/page';
 import { cn } from '@/src/lib/utils';
 import EditIcon from '@/src/shared/assets/svg/edit.svg';
 import type { TaskItem as TaskItemType } from '@/src/features/dashboard/dashboard.schema';
+import type { TaskMode } from '../../timer.types';
 import TaskItem from './TaskItem';
 
 interface TaskListProps extends ComponentProps<'div'> {
