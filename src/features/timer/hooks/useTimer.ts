@@ -19,8 +19,9 @@ const useTimer = () => {
   };
 
   const stopTimer = () => {
-    if (!timerIntervalId) return;
-    clearTimeout(timerIntervalId);
+    if (timerIntervalId) {
+      clearTimeout(timerIntervalId);
+    }
     setTimerIntervalId(null);
     setTime(0);
   };

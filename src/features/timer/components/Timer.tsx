@@ -2,8 +2,11 @@ import TimerStartIcon from '@/src/shared/assets/svg/timer-start.svg';
 import TimerPauseIcon from '@/src/shared/assets/svg/timer-pause.svg';
 import { formatTime } from '../utils/formatTime';
 import useTimer from '../hooks/useTimer';
+import { useState } from 'react';
+import { TimerStatus } from '../timer.types';
 
 const Timer = () => {
+  const [mode, setMode] = useState<TimerStatus>('idle');
   const { time, startTimer, pauseTimer, stopTimer } = useTimer();
 
   const { hours, minutes, seconds } = formatTime(time);
@@ -39,19 +42,31 @@ const Timer = () => {
 
       <div className="flex justify-center gap-20">
         <button
-          onClick={startTimer}
+          onClick={() => {
+            startTimer();
+            setMode('running');
+          }}
+          disabled={mode === 'running'}
           className="disabled:text-background-primary-light text-content-primary"
         >
           <TimerStartIcon />
         </button>
         <button
-          onClick={pauseTimer}
+          onClick={() => {
+            pauseTimer();
+            setMode('paused');
+          }}
+          disabled={mode === 'paused' || mode === 'idle'}
           className="disabled:text-background-primary-light text-content-primary"
         >
           <TimerPauseIcon />
         </button>
         <button
-          onClick={stopTimer}
+          onClick={() => {
+            stopTimer();
+            setMode('idle');
+          }}
+          disabled={mode === 'idle'}
           className="disabled:text-background-primary-light text-content-primary"
         >
           <div className="h-25 w-25 rounded-[8px] bg-current" />
