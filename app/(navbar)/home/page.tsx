@@ -1,14 +1,15 @@
 'use client';
 
+import { cn } from '@/src/lib/utils';
 import TimerStartModal from '@/src/features/timer/components/TimerStartModal';
 import TimerRunningModal from '@/src/features/timer/components/TimerRunningModal';
 import TimerStopModal from '@/src/features/timer/components/TimerStopModal';
 import useTimer from '@/src/features/timer/hooks/useTimer';
+import useTimerPage from '@/src/features/timer/hooks/useTimerPage';
 import TimerHeader from '@/src/features/timer/components/TimerHeader';
 import TimerSubController from '@/src/features/timer/components/TimerSubController';
 import TimerController from '@/src/features/timer/components/TimerController';
 import TimerDisplay from '@/src/features/timer/components/TimerDisplay';
-import useTimerPage from '@/src/features/timer/hooks/useTimerPage';
 
 export default function Home() {
   const { time, startTimer, pauseTimer, stopTimer, mode } = useTimer();
@@ -33,20 +34,19 @@ export default function Home() {
     <div className="mx-auto max-w-[1032px]">
       <div className="my-[96px] flex flex-col items-center gap-[50px]">
         <TimerHeader />
-
-        <div className="relative">
+        <div className="flex flex-col gap-20">
           <TimerDisplay time={time} />
-          <TimerController
-            mode={mode}
-            onStart={handleStart}
-            onPause={handlePause}
-            onStop={handleStop}
-          />
-          {timerData && (
-            <div className="absolute right-0 bottom-0 flex items-center gap-6">
+          <div className={cn({ 'flex items-center justify-end gap-[154px]': !!timerData })}>
+            <TimerController
+              mode={mode}
+              onStart={handleStart}
+              onPause={handlePause}
+              onStop={handleStop}
+            />
+            {timerData && (
               <TimerSubController handleDelete={handleDelete} handleTask={handleTask} />
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
 
