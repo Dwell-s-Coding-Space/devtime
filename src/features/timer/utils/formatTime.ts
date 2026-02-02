@@ -1,7 +1,8 @@
-const SECONDS_IN_MINUTE = 60;
-const MINUTE_IN_HOUR = 60;
+export const MS_IN_SECONDS = 1000;
+export const SECONDS_IN_MINUTE = 60;
+export const MINUTE_IN_HOUR = 60;
 
-const SECONDS_IN_HOUR = SECONDS_IN_MINUTE * MINUTE_IN_HOUR;
+export const SECONDS_IN_HOUR = SECONDS_IN_MINUTE * MINUTE_IN_HOUR;
 
 export const formatTime = (time: number) => {
   let _time = time;
