@@ -1,14 +1,17 @@
 import TimerStartIcon from '@/src/shared/assets/svg/timer-start.svg';
 import TimerPauseIcon from '@/src/shared/assets/svg/timer-pause.svg';
 import { formatTime } from '../utils/formatTime';
-import useTimer from '../hooks/useTimer';
-import { useState } from 'react';
 import { TimerStatus } from '../timer.types';
 
-const Timer = () => {
-  const [mode, setMode] = useState<TimerStatus>('idle');
-  const { time, startTimer, pauseTimer, stopTimer } = useTimer();
+interface TimerProps {
+  time: number;
+  mode: TimerStatus;
+  onStart: () => void;
+  onPause: () => void;
+  onStop: () => void;
+}
 
+const Timer = ({ onStart, onPause, onStop, time, mode }: TimerProps) => {
   const { hours, minutes, seconds } = formatTime(time);
 
   return (
@@ -42,30 +45,21 @@ const Timer = () => {
 
       <div className="flex justify-center gap-20">
         <button
-          onClick={() => {
-            startTimer();
-            setMode('running');
-          }}
+          onClick={onStart}
           disabled={mode === 'running'}
           className="disabled:text-background-primary-light text-content-primary"
         >
           <TimerStartIcon />
         </button>
         <button
-          onClick={() => {
-            pauseTimer();
-            setMode('paused');
-          }}
+          onClick={onPause}
           disabled={mode === 'paused' || mode === 'idle'}
           className="disabled:text-background-primary-light text-content-primary"
         >
           <TimerPauseIcon />
         </button>
         <button
-          onClick={() => {
-            stopTimer();
-            setMode('idle');
-          }}
+          onClick={onStop}
           disabled={mode === 'idle'}
           className="disabled:text-background-primary-light text-content-primary"
         >
