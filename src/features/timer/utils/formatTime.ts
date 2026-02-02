@@ -11,12 +11,12 @@ export const formatTime = (time: number) => {
     seconds: 0,
   };
 
-  if (_time > SECONDS_IN_HOUR) {
+  if (_time >= SECONDS_IN_HOUR) {
     result.hours = Math.floor(_time / SECONDS_IN_HOUR);
     _time %= SECONDS_IN_HOUR;
   }
 
-  if (_time > SECONDS_IN_MINUTE) {
+  if (_time >= SECONDS_IN_MINUTE) {
     result.minutes = Math.floor(_time / SECONDS_IN_MINUTE);
     _time %= SECONDS_IN_MINUTE;
   }
