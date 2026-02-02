@@ -2,13 +2,10 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { cn } from '@/src/lib/utils';
 import { useModal } from '@/src/lib/store/modalSlice';
 import { clientApi } from '@/src/lib/api/client';
-import TimerStart from '@/src/shared/assets/svg/timer-start.svg';
-import TimerPause from '@/src/shared/assets/svg/timer-pause.svg';
 import ResetIcon from '@/src/shared/assets/svg/reset.svg';
 import TodoIcon from '@/src/shared/assets/svg/todo.svg';
 import { checkIsLoggedIn } from '@/src/features/auth/auth.action';
@@ -17,19 +14,24 @@ import { createDashboardApi } from '@/src/features/dashboard/dashboard.api';
 import TimerStartModal from '@/src/features/timer/components/TimerStartModal';
 import TimerRunningModal from '@/src/features/timer/components/TimerRunningModal';
 import TimerStopModal from '@/src/features/timer/components/TimerStopModal';
-import { ModalType, TimerStatus } from '@/src/features/timer/timer.types';
-
-const TimerStop = () => {
-  return <div className="h-25 w-25 rounded-[8px] bg-current" />;
-};
+import { ModalType } from '@/src/features/timer/timer.types';
+import Timer from '@/src/features/timer/components/Timer';
+import useTimer from '@/src/features/timer/hooks/useTimer';
+import TimerHeader from '@/src/features/timer/components/TimerHeader';
 
 export default function Home() {
   const router = useRouter();
-  const [mode, setMode] = useState<TimerStatus>('idle');
+  const queryClient = useQueryClient();
 
   const onOpen = useModal(state => state.onOpen);
   const [isTodoModalOpen, setIsTodoModalOpen] = useState(false);
   const [taskModalType, setTaskModalType] = useState<ModalType>('start');
+  const { time, startTimer, pauseTimer, stopTimer, mode } = useTimer();
+
+  const { data: isLoggedIn } = useQuery({
+    queryKey: ['auth'],
+    queryFn: checkIsLoggedIn,
+  });
 
   const { data } = useQuery({
     queryKey: ['current timer'],
@@ -42,7 +44,20 @@ export default function Home() {
     enabled: !!data?.studyLogId,
   });
 
-  const handleStartClick = async () => {
+  const { mutate: deleteMutate } = useMutation({
+    mutationFn: createTimerApi(clientApi).deleteCurrent,
+    onSuccess: () => {
+      alert('성공적으로 삭제되었습니다.');
+      queryClient.removeQueries({ queryKey: ['current timer'] });
+      queryClient.removeQueries({ queryKey: ['timer'] });
+      stopTimer();
+    },
+    onError: () => {
+      alert('삭제하는 과정에서 에러가 발생했습니다.\n다시 시도 해주세요.');
+    },
+  });
+
+  const handleStart = async () => {
     const isLoggedIn = await checkIsLoggedIn();
 
     if (!isLoggedIn) {
@@ -58,98 +73,79 @@ export default function Home() {
       return isConfirmClicked ? router.push('/login') : null;
     }
 
+    if (studyLogData) {
+      startTimer();
+    } else {
+      setTaskModalType('start');
+      setIsTodoModalOpen(true);
+    }
+  };
+
+  const handlePause = () => {
+    pauseTimer();
+  };
+
+  const handleStop = () => {
+    pauseTimer();
+    setTaskModalType('stop');
     setIsTodoModalOpen(true);
   };
 
+  const handleTask = () => {
+    setIsTodoModalOpen(true);
+    setTaskModalType('running');
+  };
+
+  const handleDelete = async () => {
+    if (!data?.timerId) return;
+
+    const isConfirmClicked = await onOpen({
+      title: '기록을 초기화 하시겠습니까?',
+      description: '진행되던 타이머 기록은 삭제되고, 복구가 불가능합니다. 계속 초기화 할까요?',
+      buttons: [
+        { label: '취소', variant: 'secondary', action: 'cancel' },
+        { label: '초기화하기', variant: 'primary', action: 'confirm' },
+      ],
+    });
+
+    return isConfirmClicked ? deleteMutate(data?.timerId) : null;
+  };
   return (
     <div className="mx-auto max-w-[1032px]">
       <div className="my-[96px] flex flex-col items-center gap-[50px]">
-        <div className="text-text-secondary flex flex-col gap-2.5 text-center">
-          <h1 className="text-[72px] leading-[86px] font-bold">WELCOME</h1>
-          <span className="label-r">DevTime을 사용하려면 로그인이 필요합니다.</span>
-        </div>
+        <TimerHeader />
 
-        <div className="flex flex-col gap-20">
-          <div className="flex gap-12">
-            <div className="text-text-primary border-primary flex h-[298px] w-[264px] flex-col gap-9 rounded-[12px] border bg-[linear-gradient(135deg,rgba(76,121,255,0)_0%,rgba(76,121,255,0.2)_100%)] p-2 pb-9 text-center">
-              <span className="timer">00</span>
-              <span className="label-s">HOURS</span>
-            </div>
-
-            <div className="flex flex-col justify-center gap-16">
-              <div className="bg-background-primary h-6 w-6 rounded-full" />
-              <div className="bg-background-primary h-6 w-6 rounded-full" />
-            </div>
-
-            <div className="text-text-primary border-primary flex h-[298px] w-[264px] flex-col gap-9 rounded-[12px] border bg-[linear-gradient(135deg,rgba(76,121,255,0)_0%,rgba(76,121,255,0.2)_100%)] p-2 pb-9 text-center">
-              <span className="timer">00</span>
-              <span className="label-s">MINUTES</span>
-            </div>
-
-            <div className="flex flex-col justify-center gap-16">
-              <div className="bg-background-primary h-6 w-6 rounded-full" />
-              <div className="bg-background-primary h-6 w-6 rounded-full" />
-            </div>
-
-            <div className="text-text-primary border-primary flex h-[298px] w-[264px] flex-col gap-9 rounded-[12px] border bg-[linear-gradient(135deg,rgba(76,121,255,0)_0%,rgba(76,121,255,0.2)_100%)] p-2 pb-9 text-center">
-              <span className="timer">00</span>
-              <span className="label-s">SECONDS</span>
-            </div>
-          </div>
-
-          <div className={cn({ 'flex items-center justify-end gap-[134px]': !!data })}>
-            <div className="flex justify-center gap-20">
+        <div className="relative">
+          <Timer
+            onStart={handleStart}
+            onPause={handlePause}
+            onStop={handleStop}
+            time={time}
+            mode={mode}
+          />
+          {data && (
+            <div className="absolute right-0 bottom-0 flex items-center gap-6">
               <button
-                disabled={mode !== 'idle'}
-                onClick={handleStartClick}
-                className="disabled:text-background-primary-light text-content-primary"
+                className="bg-background-white flex h-16 w-16 items-center justify-center rounded-full"
+                onClick={handleTask}
               >
-                <TimerStart />
+                <TodoIcon className="text-text-primary h-12 w-12" />
               </button>
               <button
-                disabled={mode === 'paused' || mode === 'idle'}
-                className="disabled:text-background-primary-light text-content-primary"
+                className="bg-background-white flex h-16 w-16 items-center justify-center rounded-full"
+                onClick={handleDelete}
               >
-                <TimerPause />
-              </button>
-              <button
-                disabled={mode !== 'idle'}
-                className="disabled:text-background-primary-light text-content-primary"
-                onClick={() => {
-                  setIsTodoModalOpen(true);
-                  setTaskModalType('stop');
-                }}
-              >
-                <TimerStop />
+                <ResetIcon className="text-text-primary h-12 w-12" />
               </button>
             </div>
-            {data && (
-              <div className="flex items-center gap-6">
-                <button
-                  className="bg-background-white flex h-16 w-16 items-center justify-center rounded-full"
-                  onClick={() => {
-                    setIsTodoModalOpen(true);
-                    setTaskModalType('running');
-                  }}
-                >
-                  <TodoIcon className="text-text-primary h-12 w-12" />
-                </button>
-                <button
-                  className="bg-background-white flex h-16 w-16 items-center justify-center rounded-full"
-                  onClick={() => {}}
-                >
-                  <ResetIcon className="text-text-primary h-12 w-12" />
-                </button>
-              </div>
-            )}
-          </div>
+          )}
         </div>
       </div>
 
       {isTodoModalOpen && (
         <>
           {taskModalType === 'start' && (
-            <TimerStartModal onClose={() => setIsTodoModalOpen(false)} />
+            <TimerStartModal onClose={() => setIsTodoModalOpen(false)} startTimer={startTimer} />
           )}
           {taskModalType === 'running' && (
             <TimerRunningModal
@@ -162,6 +158,7 @@ export default function Home() {
               onClose={() => setIsTodoModalOpen(false)}
               data={studyLogData?.data}
               timerId={data?.timerId}
+              stopTimer={stopTimer}
             />
           )}
         </>
