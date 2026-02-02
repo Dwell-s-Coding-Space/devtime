@@ -22,7 +22,7 @@ const useTimer = () => {
     const id = setInterval(updateTime, 1000);
 
     return () => clearInterval(id);
-  }, [startedAt, mode, pausedDuration]);
+  }, [mode]);
 
   const startTimer = () => {
     if (mode === 'idle') {
