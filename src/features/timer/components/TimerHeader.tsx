@@ -24,15 +24,13 @@ const TimerHeader = () => {
 
   return (
     <>
-      {/* Not Logged In */}
-      {!isLoggedIn && (
+      {!isLoggedIn ? (
+        // Not Logged In
         <div className="text-text-secondary flex flex-col gap-2.5 text-center">
           <h1 className="text-[72px] leading-[86px] font-bold">WELCOME</h1>
           <span className="label-r">DevTime을 사용하려면 로그인이 필요합니다.</span>
         </div>
-      )}
-
-      {studyLogData?.data.todayGoal ? (
+      ) : studyLogData?.data.todayGoal ? (
         // Has Goal
         <h1 className="text-text-secondary text-center text-[72px] leading-[86px] font-bold">
           {studyLogData.data.todayGoal}
