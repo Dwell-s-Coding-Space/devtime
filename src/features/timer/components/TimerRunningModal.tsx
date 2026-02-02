@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { clientApi } from '@/src/lib/api/client';
 import { GetStudyLogDetailResponse } from '../../dashboard/dashboard.schema';
+import { useTasks } from '../hooks';
 import { createTimerApi } from '../timer.api';
 import type { TaskModalProps, TaskMode } from '../timer.types';
-import { useTasks } from '../hooks';
 import { AddTaskItem, TaskList, TaskModalLayout, TaskModalFooter } from './TaskModal';
 
 export interface TimerRunningModalProps extends TaskModalProps {
@@ -36,7 +36,11 @@ const TimerRunningModal = ({ onClose, data }: TimerRunningModalProps) => {
     onSuccess: () => {
       alert('성공적으로 저장하였습니다.');
       queryClient.invalidateQueries({ queryKey: ['timer', data?.id] });
-      onClose();
+      if (taskMode === 'check') {
+        onClose();
+      } else {
+        setTaskMode('check');
+      }
     },
   });
 
@@ -54,7 +58,12 @@ const TimerRunningModal = ({ onClose, data }: TimerRunningModalProps) => {
       <AddTaskItem
         value={newTaskContent}
         onChange={e => setNewTaskContent(e.target.value)}
-        onKeyDown={e => e.key === 'Enter' && addTask()}
+        onKeyDown={e => {
+          if (e.key === 'Enter' && !e.nativeEvent.isComposing) {
+            e.preventDefault();
+            addTask();
+          }
+        }}
         onClick={addTask}
       />
       <TaskList
