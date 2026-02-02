@@ -5,7 +5,8 @@ export const MINUTE_IN_HOUR = 60;
 export const SECONDS_IN_HOUR = SECONDS_IN_MINUTE * MINUTE_IN_HOUR;
 
 export const formatTime = (time: number) => {
-  let _time = time;
+  let _time = Math.floor(time / MS_IN_SECONDS);
+
   const result = {
     hours: 0,
     minutes: 0,

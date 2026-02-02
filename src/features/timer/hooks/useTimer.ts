@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { TimerStatus } from '../timer.types';
-import { MS_IN_SECONDS } from '../utils/formatTime';
 
 const useTimer = () => {
-  const [time, setTime] = useState(0);
+  const [time, setTime] = useState(0); //ms단위
   const [mode, setMode] = useState<TimerStatus>('idle');
 
   const startedAt = useRef<number>(null);
@@ -12,8 +11,8 @@ const useTimer = () => {
 
   const updateTime = () => {
     if (!startedAt.current) return;
-    const differenceInMs = Date.now() - startedAt.current - pausedDuration.current;
-    setTime(Math.floor(differenceInMs / MS_IN_SECONDS));
+    const elapsedMs = Date.now() - startedAt.current - pausedDuration.current;
+    setTime(elapsedMs);
   };
 
   useEffect(() => {
