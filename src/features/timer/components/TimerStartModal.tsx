@@ -1,12 +1,17 @@
 import { useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { clientApi } from '@/src/lib/api/client';
 import { createTimerApi } from '../timer.api';
 import type { TaskModalProps } from '../timer.types';
 import { useTasks } from '../hooks';
 import { TaskModalFooter, TaskModalLayout, Goal, AddTaskItem, TaskList } from './TaskModal';
 
-const TimerStartModal = ({ onClose }: TaskModalProps) => {
+interface TimerStartModalProps extends TaskModalProps {
+  startTimer: () => void;
+}
+
+const TimerStartModal = ({ onClose, startTimer }: TimerStartModalProps) => {
+  const queryClient = useQueryClient();
   const [goal, setGoal] = useState('');
   const { newTaskContent, setNewTaskContent, tasks, addTask, deleteTask, updateTask } = useTasks(
     {}
@@ -19,6 +24,9 @@ const TimerStartModal = ({ onClose }: TaskModalProps) => {
     },
     onSuccess: () => {
       alert('타이머가 성공적으로 시작하였습니다.');
+      startTimer();
+      queryClient.invalidateQueries({ queryKey: ['current timer'] });
+      queryClient.invalidateQueries({ queryKey: ['timer'] });
       onClose();
     },
   });
@@ -33,7 +41,12 @@ const TimerStartModal = ({ onClose }: TaskModalProps) => {
       <AddTaskItem
         value={newTaskContent}
         onChange={e => setNewTaskContent(e.target.value)}
-        onKeyDown={e => e.key === 'Enter' && addTask()}
+        onKeyDown={e => {
+          if (e.key === 'Enter' && !e.nativeEvent.isComposing) {
+            e.preventDefault();
+            addTask();
+          }
+        }}
         onClick={addTask}
       />
       <TaskList tasks={tasks} mode="edit" handleChange={updateTask} handleDelete={deleteTask} />

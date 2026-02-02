@@ -11,9 +11,10 @@ import { TaskModalFooter, TaskModalLayout, AddTaskItem, TaskList } from './TaskM
 export interface TimerStopModalProps extends TaskModalProps {
   data?: GetStudyLogDetailResponse['data'];
   timerId?: string;
+  stopTimer: () => void;
 }
 
-const TimerStopModal = ({ onClose, data, timerId }: TimerStopModalProps) => {
+const TimerStopModal = ({ onClose, data, timerId, stopTimer }: TimerStopModalProps) => {
   const queryClient = useQueryClient();
   const [taskMode, setTaskMode] = useState<TaskMode>('check');
   const [reflection, setReflection] = useState('');
@@ -38,7 +39,7 @@ const TimerStopModal = ({ onClose, data, timerId }: TimerStopModalProps) => {
     onSuccess: () => {
       alert('성공적으로 저장하였습니다.');
       queryClient.invalidateQueries({ queryKey: ['timer', data?.id] });
-      onClose();
+      setTaskMode('check');
     },
   });
 
@@ -49,7 +50,9 @@ const TimerStopModal = ({ onClose, data, timerId }: TimerStopModalProps) => {
     },
     onSuccess: () => {
       alert('성공적으로 공부를 완료하였습니다.');
-      queryClient.invalidateQueries({ queryKey: ['timer', data?.id] });
+      stopTimer();
+      queryClient.removeQueries({ queryKey: ['current timer'] });
+      queryClient.removeQueries({ queryKey: ['timer'] });
       onClose();
     },
   });
@@ -84,7 +87,12 @@ const TimerStopModal = ({ onClose, data, timerId }: TimerStopModalProps) => {
       <AddTaskItem
         value={newTaskContent}
         onChange={e => setNewTaskContent(e.target.value)}
-        onKeyDown={e => e.key !== 'Enter' && addTask()}
+        onKeyDown={e => {
+          if (e.key === 'Enter' && !e.nativeEvent.isComposing) {
+            e.preventDefault();
+            addTask();
+          }
+        }}
         onClick={addTask}
       />
 
