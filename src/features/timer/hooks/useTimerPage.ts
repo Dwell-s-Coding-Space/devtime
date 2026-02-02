@@ -19,8 +19,7 @@ const useTimerPage = ({
   const queryClient = useQueryClient();
 
   const onOpen = useModal(state => state.onOpen);
-  const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
-  const [taskModalType, setTaskModalType] = useState<ModalType>('start');
+  const [taskModalType, setTaskModalType] = useState<ModalType | null>(null);
 
   const { data: isLoggedIn } = useQuery({
     queryKey: ['auth'],
@@ -52,12 +51,11 @@ const useTimerPage = ({
   });
 
   const openTaskModal = (type: ModalType) => {
-    setIsTaskModalOpen(true);
     setTaskModalType(type);
   };
 
   const closeTaskModal = () => {
-    setIsTaskModalOpen(false);
+    setTaskModalType(null);
   };
 
   const handleStart = async () => {
@@ -111,7 +109,6 @@ const useTimerPage = ({
 
   return {
     taskModalType,
-    isTaskModalOpen,
     timerData,
     studyLogData,
     handleDelete,

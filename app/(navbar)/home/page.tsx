@@ -14,7 +14,6 @@ import TimerDisplay from '@/src/features/timer/components/TimerDisplay';
 export default function Home() {
   const { time, startTimer, pauseTimer, stopTimer, mode } = useTimer();
   const {
-    isTaskModalOpen,
     taskModalType,
     timerData,
     studyLogData,
@@ -50,23 +49,19 @@ export default function Home() {
         </div>
       </div>
 
-      {isTaskModalOpen && (
-        <>
-          {taskModalType === 'start' && (
-            <TimerStartModal onClose={closeTaskModal} startTimer={startTimer} />
-          )}
-          {taskModalType === 'running' && (
-            <TimerRunningModal onClose={closeTaskModal} data={studyLogData?.data} />
-          )}
-          {taskModalType === 'stop' && (
-            <TimerStopModal
-              onClose={closeTaskModal}
-              data={studyLogData?.data}
-              timerId={timerData?.timerId}
-              stopTimer={stopTimer}
-            />
-          )}
-        </>
+      {taskModalType === 'start' && (
+        <TimerStartModal onClose={closeTaskModal} startTimer={startTimer} />
+      )}
+      {taskModalType === 'running' && (
+        <TimerRunningModal onClose={closeTaskModal} data={studyLogData?.data} />
+      )}
+      {taskModalType === 'stop' && (
+        <TimerStopModal
+          onClose={closeTaskModal}
+          data={studyLogData?.data}
+          timerId={timerData?.timerId}
+          stopTimer={stopTimer}
+        />
       )}
     </div>
   );
