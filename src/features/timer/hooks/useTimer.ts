@@ -24,6 +24,17 @@ const useTimer = () => {
     return () => clearInterval(id);
   }, [mode]);
 
+  useEffect(() => {
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible' && mode === 'running') {
+        updateTime();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => document.removeEventListener('visibilitychange', handleVisibility);
+  }, [mode]);
+
   const startTimer = () => {
     if (mode === 'idle') {
       startedAt.current = Date.now();
