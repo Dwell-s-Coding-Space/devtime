@@ -3,8 +3,8 @@ import Button from '@/src/shared/components/button/Button';
 interface TaskModalFooterProps {
   cancelText?: string;
   confirmText?: string;
-  onCancel: () => void;
-  onConfirm: () => void;
+  onCancel?: () => void;
+  onConfirm?: () => void;
 }
 
 const TaskModalFooter = ({
@@ -15,12 +15,16 @@ const TaskModalFooter = ({
 }: TaskModalFooterProps) => {
   return (
     <div className="flex items-center justify-end gap-4">
-      <Button variant="tertiary" onClick={onCancel}>
-        {cancelText}
-      </Button>
-      <Button variant="secondary" onClick={onConfirm}>
-        {confirmText}
-      </Button>
+      {onCancel && (
+        <Button variant="tertiary" onClick={onCancel}>
+          {cancelText}
+        </Button>
+      )}
+      {onConfirm && (
+        <Button variant="secondary" onClick={onConfirm}>
+          {confirmText}
+        </Button>
+      )}
     </div>
   );
 };
