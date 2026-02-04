@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { cookies } from 'next/headers';
+import Profile from './Profile';
 
 const Navbar = async () => {
   const accessToken = (await cookies()).get('accessToken')?.value;
@@ -23,10 +24,7 @@ const Navbar = async () => {
       </div>
 
       {isLoggedIn ? (
-        <div className="flex items-center gap-3">
-          <div className="bg-background-primary-dark h-10 w-10 rounded-full" />
-          <span className="body-b text-text-secondary">DevTime</span>
-        </div>
+        <Profile />
       ) : (
         <div className="flex items-center gap-12">
           <Link href={'/login'}>

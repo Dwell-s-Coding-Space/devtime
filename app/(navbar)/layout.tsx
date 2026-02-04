@@ -1,4 +1,4 @@
-import Navbar from '@/app/(navbar)/Navbar';
+import Navbar from '@/src/shared/components/navbar/Navbar';
 
 export default function LayoutWithNavbar({
   children,
