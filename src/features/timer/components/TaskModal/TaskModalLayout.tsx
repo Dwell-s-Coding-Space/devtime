@@ -1,14 +1,7 @@
-import { ReactNode, useEffect } from 'react';
+import { ReactNode } from 'react';
 import Portal from '@/src/shared/components/modal/Portal';
 
 const TaskModalLayout = ({ children }: { children: ReactNode }) => {
-  useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, []);
-
   return (
     <Portal>
       <div
