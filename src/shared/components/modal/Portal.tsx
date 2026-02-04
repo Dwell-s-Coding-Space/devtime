@@ -11,6 +11,13 @@ const Portal = ({ children }: { children: ReactNode }) => {
     setIsMounted(true);
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, []);
+
   if (!isMounted) return null;
 
   return createPortal(children, document.body);
