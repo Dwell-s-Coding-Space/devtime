@@ -13,7 +13,7 @@ const StatBox = ({ value, label, type }: StatBoxProps) => {
       <dd className="text-text-secondary flex items-end justify-end gap-1">
         {type === 'rate' && (
           <>
-            <span className="text-[36px] leading-[46px] font-bold">{value}</span>
+            <span className="text-[36px] leading-[46px] font-bold">{value.toFixed(0)}</span>
             <span className="body-m pb-[6px]">%</span>
           </>
         )}
