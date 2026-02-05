@@ -31,7 +31,7 @@ const ButtonVariants = cva('h-[48px] px-4 py-3 rounded-[5px] subtitle-s', {
 });
 
 const Button = ({ variant = 'primary', className, ...rest }: ButtonProps) => {
-  return <button className={cn(ButtonVariants({ variant }), className)} {...rest} />;
+  return <button type="button" className={cn(ButtonVariants({ variant }), className)} {...rest} />;
 };
 
 export default Button;
