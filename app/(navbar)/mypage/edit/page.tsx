@@ -24,7 +24,7 @@ import { clientApi } from '@/src/lib/api/client';
 
 export const CUSTOM_PURPOSE_LABEL = '기타' as const;
 export const CAREER_OPTIONS = ['경력 없음', '0 - 3년', '4 - 7년', '8 - 10년', '11년 이상'] as const;
-const PURPOSE_OPTIONS = [
+export const PURPOSE_OPTIONS = [
   '취업 준비',
   '이직 준비',
   '단순 개발 역량 향상',

@@ -4,6 +4,11 @@ import { PostSignUpBody } from '@/src/features/auth/auth.schema';
 import { BaseResponse } from '@/src/lib/schema/common.schema';
 import { asDateOrNull } from '@/src/lib/schema/primitives/date';
 import { asArray } from '@/src/lib/schema/primitives/object';
+import {
+  CAREER_OPTIONS,
+  CUSTOM_PURPOSE_LABEL,
+  PURPOSE_OPTIONS,
+} from '@/app/(navbar)/mypage/edit/page';
 
 /**
  * 회원정보 조회
@@ -11,7 +16,7 @@ import { asArray } from '@/src/lib/schema/primitives/object';
  */
 
 export const profileSchema = z.object({
-  career: z.string(),
+  career: z.enum(CAREER_OPTIONS),
   purpose: z.string(),
   goal: z.string(),
   techStacks: asArray(z.string()),
@@ -32,7 +37,20 @@ export type GetProfileResponse = z.infer<typeof profileResponseSchema>;
  * post /profile
  */
 
-export type PostProfileBody = Profile;
+export const profileBodySchema = z
+  .object({
+    career: z.enum(CAREER_OPTIONS),
+    purpose: z.union([
+      z.enum(PURPOSE_OPTIONS),
+      z.object({ type: z.literal(CUSTOM_PURPOSE_LABEL), detail: z.string() }),
+    ]),
+    goal: z.string(),
+    techStacks: asArray(z.string()),
+    profileImage: z.string().nullable(),
+  })
+  .partial();
+
+export type PostProfileBody = z.infer<typeof profileBodySchema>;
 
 /**
  * 회원정보 수정
