@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
+import { useModal } from '@/src/lib/store/modalSlice';
 import Button from '@/src/shared/components/button/Button';
 import TextField from '@/src/shared/components/text-field/TextField';
 import { emailSchema, passwordSchema } from '../../signup/components/SignUpForm';
@@ -21,13 +22,13 @@ export type LoginFormValues = z.infer<typeof loginFormSchema>;
 
 const LoginForm = () => {
   const { push } = useRouter();
+  const onOpen = useModal(state => state.onOpen);
   const [isPending, startTransition] = useTransition();
 
   const {
     register,
     formState: { errors, isValid },
     handleSubmit,
-    setError,
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
     mode: 'all',
@@ -38,11 +39,32 @@ const LoginForm = () => {
       const result = await loginAction(data);
 
       if (result.success) {
-        alert('로그인 성공');
-        push('/home');
+        if (result.isDuplicateLogin) {
+          await onOpen({
+            title: `중복 로그인이 불가능합니다.`,
+            description:
+              '다른 기기에 중복 로그인 된 상태입니다. [확인] 버튼을 누르면 다른 기기에서 강제 로그아웃되며, 진행중이던 타이머가 있다면 기록이 자동 삭제됩니다.',
+            buttons: [{ variant: 'primary', label: '확인', action: 'cancel' }],
+          });
+
+          return;
+        }
+
+        await onOpen({
+          title: `로그인에 성공하였습니다.`,
+          buttons: [{ variant: 'primary', label: '확인', action: 'cancel' }],
+        });
+
+        if (result.isFirstLogin) {
+          push('/profile-setting');
+        } else {
+          push('/home');
+        }
       } else {
-        setError('root', { message: result.message });
-        alert(`로그인에 실패하였습니다\n${result.message}`);
+        await onOpen({
+          title: `로그인 정보를 다시 확인해 주세요.\n${result.message}`,
+          buttons: [{ variant: 'primary', label: '확인', action: 'cancel' }],
+        });
       }
     });
   };
