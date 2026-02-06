@@ -3,9 +3,16 @@
 import Link from 'next/link';
 import UserIcon from '@/src/shared/assets/svg/user.svg';
 import LogoutIcon from '@/src/shared/assets/svg/logout.svg';
+import { useRouter } from 'next/navigation';
+import { logoutAction } from '@/src/features/auth/auth.action';
 
 const Profile = () => {
-  const handleLogout = () => console.log('로그아웃');
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await logoutAction();
+    router.push('/login');
+  };
 
   return (
     <div className="group relative flex w-fit cursor-pointer items-center gap-3">
