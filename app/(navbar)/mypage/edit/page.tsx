@@ -38,7 +38,7 @@ export const purposeSchema = z.optional(
   z.union([z.enum(PURPOSE_OPTIONS), z.literal(CUSTOM_PURPOSE_LABEL)])
 );
 export const purposeDetailSchema = z.optional(z.string());
-export const techStacksSchema = z.array(z.string());
+export const techStacksSchema = z.array(z.string()).optional();
 
 const profileEditSchema = z
   .object({
@@ -49,7 +49,7 @@ const profileEditSchema = z
     career: careerSchema,
     purpose: purposeSchema,
     purposeDetail: purposeDetailSchema,
-    // techStacks: techStacksSchema,
+    techStacks: techStacksSchema,
   })
   .superRefine((data, ctx) => {
     if (data.password && data.confirmPassword && data.password !== data.confirmPassword) {

@@ -80,12 +80,22 @@ export default function Mypage() {
             <dd
               className={cn(
                 'subtitle-s',
-                profileData?.profile?.techStacks ? 'text-text-g500' : 'text-text-disabled-300'
+                profileData?.profile?.techStacks
+                  ? 'text-text-g500 body-m'
+                  : 'text-text-disabled-300 subtitle-s'
               )}
             >
-              {profileData?.profile?.techStacks
-                ? profileData?.profile.techStacks.map(stack => <span key={stack}>{stack}</span>)
-                : '현재 공부 중인 또는 가지고 있는 개발 스택을 업데이트 해주세요.'}
+              {profileData?.profile?.techStacks ? (
+                <div className="flex flex-wrap gap-2">
+                  {profileData?.profile.techStacks.map(stack => (
+                    <span key={stack} className="bg-background-gray-dark rounded-[5px] px-2 py-1">
+                      {stack}
+                    </span>
+                  ))}
+                </div>
+              ) : (
+                '현재 공부 중인 또는 가지고 있는 개발 스택을 업데이트 해주세요.'
+              )}
             </dd>
           </div>
         </dl>
