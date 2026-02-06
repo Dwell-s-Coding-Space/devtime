@@ -3,8 +3,9 @@
 import z from 'zod';
 import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   CAREER_OPTIONS,
   careerSchema,
@@ -13,14 +14,19 @@ import {
   PURPOSE_OPTIONS,
   purposeDetailSchema,
   purposeSchema,
+  techStacksSchema,
 } from '@/app/(navbar)/mypage/edit/page';
+import { clientApi } from '@/src/lib/api/client';
 import { useModal } from '@/src/lib/store/modalSlice';
 import Button from '@/src/shared/components/button/Button';
 import Input from '@/src/shared/components/text-field/Input';
 import Label from '@/src/shared/components/text-field/Label';
 import Select from '@/src/shared/components/text-field/Select';
 import TextField from '@/src/shared/components/text-field/TextField';
+import AutoComplete from '@/src/shared/components/text-field/AutoComplete';
+import XIcon from '@/src/shared/assets/svg/x.svg';
 import { profileSettingAction } from '../../auth/auth.action';
+import { createMyPageApi } from '../../mypage/mypage.api';
 
 const profileSettingSchema = z
   .object({
@@ -28,7 +34,7 @@ const profileSettingSchema = z
     career: careerSchema,
     purpose: purposeSchema,
     purposeDetail: purposeDetailSchema,
-    // techStacks: techStacksSchema,
+    techStacks: techStacksSchema,
   })
   .superRefine((data, ctx) => {
     if (data.purpose === CUSTOM_PURPOSE_LABEL && !data.purposeDetail?.trim()) {
@@ -43,6 +49,7 @@ const profileSettingSchema = z
 export type ProfileSettingFormValues = z.infer<typeof profileSettingSchema>;
 
 const ProfileSettingForm = () => {
+  const queryClient = useQueryClient();
   const { replace } = useRouter();
   const [isPending, startTransition] = useTransition();
   const onOpen = useModal(state => state.onOpen);
@@ -51,10 +58,28 @@ const ProfileSettingForm = () => {
     register,
     control,
     handleSubmit,
+    getValues,
+    setValue,
     formState: { errors, isValid },
   } = useForm<ProfileSettingFormValues>({
     resolver: zodResolver(profileSettingSchema),
     mode: 'all',
+  });
+
+  const { data: techStacksData } = useQuery({
+    queryKey: ['techStacks'],
+    queryFn: createMyPageApi(clientApi).getTechStacks,
+    select: data => data.results.map(techStack => techStack.name),
+  });
+
+  const { mutateAsync: addTechStack } = useMutation({
+    mutationFn: createMyPageApi(clientApi).postTechStacks,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['techStacks'] });
+    },
+    onError: err => {
+      alert(`추가하는데 실패하였습니다.\n${err.message}`);
+    },
   });
 
   const handleSkip = async () => {
@@ -83,6 +108,8 @@ const ProfileSettingForm = () => {
       }
     });
   };
+
+  const techStacks = useWatch({ control, name: 'techStacks' });
 
   return (
     <form className="flex w-full max-w-[420px] flex-col gap-9" onSubmit={handleSubmit(onSubmit)}>
@@ -135,6 +162,39 @@ const ProfileSettingForm = () => {
           messageType={errors.goal && 'error'}
           message={errors.goal?.message}
         />
+
+        <div className="flex flex-col gap-2">
+          <Label>공부/사용 중인 기술 스택(선택)</Label>
+          <AutoComplete
+            placeholder="기술 스택을 검색해 등록해 주세요."
+            options={techStacksData || []}
+            onSelect={stack => {
+              const currentStacks = getValues('techStacks') || [];
+              if (!currentStacks?.includes(stack)) {
+                setValue('techStacks', [...currentStacks, stack]);
+              }
+            }}
+            onAdd={value => addTechStack({ name: value })}
+          />
+          <div className="flex flex-wrap items-center gap-2">
+            {techStacks?.map(stack => (
+              <div
+                className="text-text-primary bg-background-primary-light border-border-primary flex h-11 items-center gap-2 rounded-[5px] border p-3"
+                key={stack}
+              >
+                {stack}
+                <button
+                  onClick={() => {
+                    const filteredStacks = techStacks.filter(item => item !== stack);
+                    setValue('techStacks', filteredStacks);
+                  }}
+                >
+                  <XIcon className="h-5 w-5" />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       <div className="flex flex-col gap-6">
