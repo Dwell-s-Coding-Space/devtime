@@ -2,22 +2,30 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useMutation } from '@tanstack/react-query';
 import UserIcon from '@/src/shared/assets/svg/user.svg';
 import LogoutIcon from '@/src/shared/assets/svg/logout.svg';
-import { logoutAction } from '@/src/features/auth/auth.action';
+import { createAuthApi } from '@/src/features/auth/auth.api';
 import { ROUTES } from '../../constants/routes';
+import { clientApi } from '../../api/client';
 
 const Profile = () => {
   const router = useRouter();
 
+  const { mutate } = useMutation({
+    mutationFn: createAuthApi(clientApi).postLogout,
+    onSuccess: data => {
+      if (data.success) {
+        alert(data.message);
+        router.push(ROUTES.LOGIN);
+      } else {
+        alert(data.message);
+      }
+    },
+  });
+
   const handleLogout = async () => {
-    const result = await logoutAction();
-    if (result.success) {
-      alert(result.message);
-      router.push(ROUTES.LOGIN);
-    } else {
-      alert(result.message);
-    }
+    mutate();
   };
 
   return (
