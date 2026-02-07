@@ -9,9 +9,5 @@ export const ROUTES = {
   MYPAGE_EDIT: '/mypage/edit',
 } as const;
 
-export const PUBLIC_ROUTES = [
-  ROUTES.LOGIN,
-  ROUTES.SIGNUP,
-  ROUTES.PROFILE_SETTING,
-  ROUTES.HOME,
-] as const;
+export const GUEST_ONLY_ROUTES = [ROUTES.LOGIN, ROUTES.SIGNUP] as const;
+export const PUBLIC_ROUTES = [ROUTES.HOME] as const;
