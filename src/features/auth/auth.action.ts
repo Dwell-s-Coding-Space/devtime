@@ -92,7 +92,21 @@ export async function profileSettingAction(data: ProfileSettingFormValues) {
 }
 
 export async function logoutAction() {
-  const cookieStore = await cookies();
-  cookieStore.delete('accessToken');
-  cookieStore.delete('refreshToken');
+  try {
+    const serverApi = await createServerApi();
+    const result = await createAuthApi(serverApi).postLogout();
+
+    if (!result.success) {
+      return { success: false, message: result.message };
+    }
+
+    const cookieStore = await cookies();
+    cookieStore.delete('accessToken');
+    cookieStore.delete('refreshToken');
+
+    return { success: true, message: '로그아웃 성공' };
+  } catch (e) {
+    const error = e instanceof Error ? JSON.parse(e.message) : { message: '알 수 없는 오류' };
+    return { success: false, message: error.message };
+  }
 }
