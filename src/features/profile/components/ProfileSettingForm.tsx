@@ -1,7 +1,6 @@
 'use client';
 
 import z from 'zod';
-import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -26,7 +25,6 @@ import TextField from '@/src/shared/components/text-field/TextField';
 import AutoComplete from '@/src/shared/components/text-field/AutoComplete';
 import XIcon from '@/src/shared/assets/svg/x.svg';
 import { ROUTES } from '@/src/shared/constants/routes';
-import { profileSettingAction } from '../../auth/auth.action';
 import { createMyPageApi } from '../../mypage/mypage.api';
 
 const profileSettingSchema = z
@@ -52,7 +50,6 @@ export type ProfileSettingFormValues = z.infer<typeof profileSettingSchema>;
 const ProfileSettingForm = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
   const onOpen = useModalStore(state => state.onOpen);
 
   const {
@@ -83,6 +80,21 @@ const ProfileSettingForm = () => {
     },
   });
 
+  const { mutate: postProfile, isPending } = useMutation({
+    mutationFn: createMyPageApi(clientApi).postProfile,
+    onSuccess: data => {
+      if (data.success) {
+        alert('프로필 설정을 완료하였습니다.');
+        router.replace(ROUTES.HOME);
+      } else {
+        alert(`프로필 설정에 실패하였습니다\n${data.message}`);
+      }
+    },
+    onError: err => {
+      alert(`프로필 설정에 실패하였습니다\n${err.message}`);
+    },
+  });
+
   const handleSkip = async () => {
     const isConfirmed = await onOpen({
       title: '프로필 설정을 건너뛸까요?',
@@ -98,15 +110,11 @@ const ProfileSettingForm = () => {
   };
 
   const onSubmit = (data: ProfileSettingFormValues) => {
-    startTransition(async () => {
-      const result = await profileSettingAction(data);
+    const { purposeDetail, purpose, ...res } = data;
 
-      if (result.success) {
-        alert('프로필 설정을 완료하였습니다.');
-        router.replace(ROUTES.HOME);
-      } else {
-        alert(`프로필 설정에 실패하였습니다\n${result.message}`);
-      }
+    postProfile({
+      ...res,
+      purpose: purposeDetail ? { type: '기타', detail: purposeDetail } : purpose,
     });
   };
 
