@@ -2,7 +2,7 @@
 
 import z from 'zod';
 import Link from 'next/link';
-import { useEffect, useTransition } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,8 +10,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Button from '@/src/shared/components/button/Button';
 import TextField from '@/src/shared/components/text-field/TextField';
 import { ROUTES } from '@/src/shared/constants/routes';
-import { signupAction } from '../../auth/auth.action';
 import { TERMS_OF_SERVICE } from '../constants';
+import { useMutation } from '@tanstack/react-query';
+import { createAuthApi } from '../../auth/auth.api';
+import { clientApi } from '@/src/shared/api/client';
 
 const password_regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 
@@ -53,14 +55,27 @@ export type SignUpFormValues = z.infer<typeof signUpSchema>;
 
 const SignUpForm = () => {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: createAuthApi(clientApi).postSignUp,
+    onSuccess: data => {
+      if (data.success) {
+        alert('회원가입에 성공하였습니다.');
+        router.replace(ROUTES.LOGIN);
+      } else {
+        alert(`회원가입에 실패하였습니다\n${data.message}`);
+      }
+    },
+    onError: err => {
+      alert(`회원가입에 실패하였습니다\n${err.message}`);
+    },
+  });
 
   const {
     register,
     handleSubmit,
     control,
     trigger,
-    setError,
     formState: { errors, isValid },
   } = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpSchema),
@@ -77,17 +92,7 @@ const SignUpForm = () => {
   }, [trigger, password, confirmPassword]);
 
   const onSubmit = (data: SignUpFormValues) => {
-    startTransition(async () => {
-      const result = await signupAction(data);
-
-      if (result.success) {
-        alert('회원가입에 성공하였습니다.');
-        router.replace(ROUTES.LOGIN);
-      } else {
-        setError('root', { message: result.message });
-        alert(`회원가입에 실패하였습니다\n${result.message}`);
-      }
-    });
+    mutate(data);
   };
 
   return (
