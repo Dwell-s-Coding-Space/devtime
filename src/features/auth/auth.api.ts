@@ -17,7 +17,7 @@ export const createAuthApi = (api: Api) => ({
     api.post<BaseResponse, PostSignUpBody>('/signup', { body: reqBody }),
   postLogin: (reqBody: PostLoginBody) =>
     api.post<PostLoginResponse, PostLoginBody>('/auth/login', { body: reqBody }),
-  postLogout: () => api.post<BaseResponse>('/auth/logout'),
+  postLogout: () => api.post<BaseResponse>('/auth/logout', { body: {} }),
   postRefresh: (reqBody: PostRefreshBody) =>
     api.post<PostRefreshResponse, PostRefreshBody>('/auth/refresh', {
       body: reqBody,

@@ -10,8 +10,13 @@ const Profile = () => {
   const router = useRouter();
 
   const handleLogout = async () => {
-    await logoutAction();
-    router.push('/login');
+    const result = await logoutAction();
+    if (result.success) {
+      alert(result.message);
+      router.push('/login');
+    } else {
+      alert(result.message);
+    }
   };
 
   return (
