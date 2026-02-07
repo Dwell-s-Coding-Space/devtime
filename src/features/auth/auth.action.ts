@@ -1,10 +1,9 @@
 'use server';
 
-import { cookies } from 'next/headers';
+import { getTokens } from './auth.utils';
 
 export async function checkIsLoggedIn() {
-  const cookieStore = await cookies();
-  const accessToken = cookieStore.get('accessToken')?.value;
+  const { accessToken } = await getTokens();
 
   return !!accessToken;
 }
