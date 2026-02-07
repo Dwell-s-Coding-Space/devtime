@@ -2,8 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { PostLoginResponse } from '@/src/features/auth/auth.schema';
 import { setTokens } from '@/src/features/auth/auth.utils';
 import { API_ENDPOINTS } from '@/src/shared/constants/apiEndpoints';
-
-const BACKEND_URL = process.env.API_BASE_URL;
+import { BACKEND_URL } from '@/src/shared/constants/env';
 
 export async function POST(request: NextRequest) {
   const target = new URL(`${BACKEND_URL}${API_ENDPOINTS.LOGIN}`);
@@ -12,8 +11,9 @@ export async function POST(request: NextRequest) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: request.body,
+    // @ts-expect-error: duplex is required for ReadableStream body but missing from RequestInit type
     duplex: 'half',
-  } as RequestInit);
+  });
 
   if (!response.ok) {
     const errorBody = await response.json().catch(() => ({ message: response.statusText }));
