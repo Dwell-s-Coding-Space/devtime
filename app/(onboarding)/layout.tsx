@@ -1,7 +1,10 @@
-import SignUpForm from '@/src/features/signup/components/SignUpForm';
 import Image from 'next/image';
 
-export default async function SignUp() {
+export default function OnboardingLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <div className="flex flex-1">
       <div className="bg-background-primary flex flex-1 items-center justify-center">
@@ -24,7 +27,7 @@ export default async function SignUp() {
           paddingBottom: 'calc(150 / 1080 * 100vh)',
         }}
       >
-        <SignUpForm />
+        {children}
       </div>
     </div>
   );
