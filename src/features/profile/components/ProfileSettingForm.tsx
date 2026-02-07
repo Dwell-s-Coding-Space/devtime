@@ -25,6 +25,7 @@ import Select from '@/src/shared/components/text-field/Select';
 import TextField from '@/src/shared/components/text-field/TextField';
 import AutoComplete from '@/src/shared/components/text-field/AutoComplete';
 import XIcon from '@/src/shared/assets/svg/x.svg';
+import { ROUTES } from '@/src/shared/constants/routes';
 import { profileSettingAction } from '../../auth/auth.action';
 import { createMyPageApi } from '../../mypage/mypage.api';
 
@@ -50,7 +51,7 @@ export type ProfileSettingFormValues = z.infer<typeof profileSettingSchema>;
 
 const ProfileSettingForm = () => {
   const queryClient = useQueryClient();
-  const { replace } = useRouter();
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const onOpen = useModalStore(state => state.onOpen);
 
@@ -93,7 +94,7 @@ const ProfileSettingForm = () => {
       ],
     });
 
-    if (isConfirmed) replace('/home');
+    if (isConfirmed) router.replace(ROUTES.HOME);
   };
 
   const onSubmit = (data: ProfileSettingFormValues) => {
@@ -102,7 +103,7 @@ const ProfileSettingForm = () => {
 
       if (result.success) {
         alert('프로필 설정을 완료하였습니다.');
-        replace('/home');
+        router.replace(ROUTES.HOME);
       } else {
         alert(`프로필 설정에 실패하였습니다\n${result.message}`);
       }

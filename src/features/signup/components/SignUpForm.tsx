@@ -9,6 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import Button from '@/src/shared/components/button/Button';
 import TextField from '@/src/shared/components/text-field/TextField';
+import { ROUTES } from '@/src/shared/constants/routes';
 import { signupAction } from '../../auth/auth.action';
 import { TERMS_OF_SERVICE } from '../constants';
 
@@ -51,7 +52,7 @@ const signUpSchema = z
 export type SignUpFormValues = z.infer<typeof signUpSchema>;
 
 const SignUpForm = () => {
-  const { replace } = useRouter();
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   const {
@@ -81,7 +82,7 @@ const SignUpForm = () => {
 
       if (result.success) {
         alert('회원가입에 성공하였습니다.');
-        replace('/login');
+        router.replace(ROUTES.LOGIN);
       } else {
         setError('root', { message: result.message });
         alert(`회원가입에 실패하였습니다\n${result.message}`);
@@ -138,7 +139,10 @@ const SignUpForm = () => {
         <Button className="w-full" type="submit" disabled={!isValid}>
           {isPending ? '회원가입 중...' : '회원가입'}
         </Button>
-        <Link href="/login" className="text-text-primary flex items-center justify-center gap-3">
+        <Link
+          href={ROUTES.LOGIN}
+          className="text-text-primary flex items-center justify-center gap-3"
+        >
           <span className="body-r">회원이신가요?</span>
           <span className="body-b">로그인 바로가기</span>
         </Link>

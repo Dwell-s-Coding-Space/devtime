@@ -7,6 +7,7 @@ import { cn } from '@/src/shared/utils/cn';
 import { clientApi } from '@/src/shared/api/client';
 import UserIcon from '@/src/shared/assets/svg/user.svg';
 import EditIcon from '@/src/shared/assets/svg/edit.svg';
+import { ROUTES } from '@/src/shared/constants/routes';
 import { createMyPageApi } from '@/src/features/mypage/mypage.api';
 
 export default function Mypage() {
@@ -101,7 +102,7 @@ export default function Mypage() {
         </dl>
       </div>
 
-      <Link href={'/mypage/edit'} className="text-text-g600 flex h-fit items-center gap-2">
+      <Link href={ROUTES.MYPAGE_EDIT} className="text-text-g600 flex h-fit items-center gap-2">
         <EditIcon className="h-6 w-6" />
         <span className="label-m">회원정보 수정</span>
       </Link>

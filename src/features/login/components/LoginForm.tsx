@@ -10,6 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useModalStore } from '@/src/shared/store/useModalStore';
 import Button from '@/src/shared/components/button/Button';
 import TextField from '@/src/shared/components/text-field/TextField';
+import { ROUTES } from '@/src/shared/constants/routes';
 import { emailSchema, passwordSchema } from '../../signup/components/SignUpForm';
 import { loginAction } from '../../auth/auth.action';
 
@@ -21,7 +22,7 @@ const loginFormSchema = z.object({
 export type LoginFormValues = z.infer<typeof loginFormSchema>;
 
 const LoginForm = () => {
-  const { push } = useRouter();
+  const router = useRouter();
   const onOpen = useModalStore(state => state.onOpen);
   const [isPending, startTransition] = useTransition();
 
@@ -56,9 +57,9 @@ const LoginForm = () => {
         });
 
         if (result.isFirstLogin) {
-          push('/profile-setting');
+          router.push(ROUTES.PROFILE_SETTING);
         } else {
-          push('/home');
+          router.push(ROUTES.HOME);
         }
       } else {
         await onOpen({
@@ -92,7 +93,7 @@ const LoginForm = () => {
         <Button type="submit" variant="primary" disabled={!isValid}>
           {isPending ? '로그인 중...' : '로그인'}
         </Button>
-        <Link href={'/signup'} className="label-m text-text-primary text-center">
+        <Link href={ROUTES.SIGNUP} className="label-m text-text-primary text-center">
           회원가입
         </Link>
       </div>
