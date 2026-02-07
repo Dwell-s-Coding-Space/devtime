@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import z from 'zod';
-import { paginationSchema } from '@/src/lib/schema/common.schema';
-import { asBoolean } from '@/src/lib/schema/primitives/boolean';
-import { asClampedNumber, asNonNegative } from '@/src/lib/schema/primitives/number';
-import { asArray } from '@/src/lib/schema/primitives/object';
-import { asDateOrNull } from '@/src/lib/schema/primitives/date';
+import { paginationSchema } from '@/src/shared/schema/common.schema';
+import { asBoolean } from '@/src/shared/schema/primitives/boolean';
+import { asClampedNumber, asNonNegative } from '@/src/shared/schema/primitives/number';
+import { asArray } from '@/src/shared/schema/primitives/object';
+import { asDateOrNull } from '@/src/shared/schema/primitives/date';
 
 /**
  * 사용자의 공부 기록 통계 조회

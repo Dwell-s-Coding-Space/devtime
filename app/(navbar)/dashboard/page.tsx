@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { clientApi } from '@/src/lib/api/client';
+import { clientApi } from '@/src/shared/api/client';
 import StatBox from '@/src/features/dashboard/components/StatBox';
 import StudyLogList from '@/src/features/dashboard/components/StudyLogList';
 import WeeklyStatBar from '@/src/features/dashboard/components/WeeklyStatBar';

@@ -1,6 +1,6 @@
 import { createMyPageApi } from '@/src/features/mypage/mypage.api';
 
-import { createServerApi } from '@/src/lib/api/server';
+import { createServerApi } from '@/src/shared/api/server';
 
 export default async function Home() {
   const serverApi = await createServerApi();

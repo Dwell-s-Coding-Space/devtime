@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import z from 'zod';
-import { paginationSchema } from '@/src/lib/schema/common.schema';
-import { asInt, asNonNegative } from '@/src/lib/schema/primitives/number';
-import { asArray } from '@/src/lib/schema/primitives/object';
+import { paginationSchema } from '@/src/shared/schema/common.schema';
+import { asInt, asNonNegative } from '@/src/shared/schema/primitives/number';
+import { asArray } from '@/src/shared/schema/primitives/object';
 import { profileSchema, techStackItemSchema } from '@/src/features/mypage/mypage.schema';
 
 /**

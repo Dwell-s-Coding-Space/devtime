@@ -1,6 +1,6 @@
 import { useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
-import { clientApi } from '@/src/lib/api/client';
+import { clientApi } from '@/src/shared/api/client';
 import Pagination from '@/src/shared/components/pagination/Pagination';
 import { createDashboardApi } from '../dashboard.api';
 import StudyLogItem from './StudyLogItem';

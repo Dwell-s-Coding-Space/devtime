@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { useModal } from '@/src/lib/store/modalSlice';
+import { useModalStore } from '@/src/shared/store/useModalStore';
 import Button from '@/src/shared/components/button/Button';
 import TextField from '@/src/shared/components/text-field/TextField';
 import { emailSchema, passwordSchema } from '../../signup/components/SignUpForm';
@@ -22,7 +22,7 @@ export type LoginFormValues = z.infer<typeof loginFormSchema>;
 
 const LoginForm = () => {
   const { push } = useRouter();
-  const onOpen = useModal(state => state.onOpen);
+  const onOpen = useModalStore(state => state.onOpen);
   const [isPending, startTransition] = useTransition();
 
   const {

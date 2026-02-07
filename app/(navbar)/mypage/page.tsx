@@ -3,8 +3,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
-import { cn } from '@/src/lib/utils';
-import { clientApi } from '@/src/lib/api/client';
+import { cn } from '@/src/shared/utils/cn';
+import { clientApi } from '@/src/shared/api/client';
 import UserIcon from '@/src/shared/assets/svg/user.svg';
 import EditIcon from '@/src/shared/assets/svg/edit.svg';
 import { createMyPageApi } from '@/src/features/mypage/mypage.api';

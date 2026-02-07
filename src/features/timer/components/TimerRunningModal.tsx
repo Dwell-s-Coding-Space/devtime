@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { clientApi } from '@/src/lib/api/client';
+import { clientApi } from '@/src/shared/api/client';
 import { GetStudyLogDetailResponse } from '../../dashboard/dashboard.schema';
 import { useTasks } from '../hooks';
 import { createTimerApi } from '../timer.api';
