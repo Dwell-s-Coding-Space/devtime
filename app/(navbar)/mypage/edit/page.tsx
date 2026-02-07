@@ -19,9 +19,8 @@ import {
   passwordSchema,
 } from '@/src/features/signup/components/SignUpForm';
 import { useModalStore } from '@/src/shared/store/useModalStore';
-import { createMyPageApi } from '@/src/features/mypage/mypage.api';
-import { clientApi } from '@/src/shared/api/client';
 import { ROUTES } from '@/src/shared/constants/routes';
+import { mypageQueries } from '@/src/features/mypage/mypage.queries';
 
 export const CUSTOM_PURPOSE_LABEL = '기타' as const;
 export const CAREER_OPTIONS = ['경력 없음', '0 - 3년', '4 - 7년', '8 - 10년', '11년 이상'] as const;
@@ -77,16 +76,13 @@ export default function MypageEdit() {
   const onOpen = useModalStore(state => state.onOpen);
   const [isPending, startTransition] = useTransition();
 
-  const { data: profileData } = useQuery({
-    queryKey: ['profile'],
-    queryFn: createMyPageApi(clientApi).getProfile,
-  });
+  const { data: profileData } = useQuery(mypageQueries.profile());
 
   const { mutate: updateProfile } = useMutation({
-    mutationFn: createMyPageApi(clientApi).putProfile,
+    ...mypageQueries.updateProfile(),
     onSuccess: () => {
       alert('저장이 성공적으로 완료되었습니다.');
-      queryClient.invalidateQueries({ queryKey: ['profile'] });
+      queryClient.invalidateQueries({ queryKey: mypageQueries.profile().queryKey });
       router.push(ROUTES.MYPAGE);
     },
     onError: err => {

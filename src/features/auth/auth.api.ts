@@ -11,8 +11,10 @@ import {
 } from '@/src/features/auth/auth.schema';
 
 export const createAuthApi = (api: Api) => ({
-  getCheckEmail: () => api.get<GetCheckEmailResponse>('/signup/check-email'),
-  getCheckNickname: () => api.get<GetCheckNicknameResponse>('/signup/check-nickname'),
+  getCheckEmail: (email: string) =>
+    api.get<GetCheckEmailResponse>(`/signup/check-email?email=${email}`),
+  getCheckNickname: (nickname: string) =>
+    api.get<GetCheckNicknameResponse>(`/signup/check-nickname?nickname=${nickname}`),
   postSignUp: (reqBody: PostSignUpBody) =>
     api.post<BaseResponse, PostSignUpBody>('/signup', { body: reqBody }),
   postLogin: (reqBody: PostLoginBody) =>

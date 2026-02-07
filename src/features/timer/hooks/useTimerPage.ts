@@ -2,14 +2,13 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { clientApi } from '@/src/shared/api/client';
 import { useModalStore } from '@/src/shared/store/useModalStore';
 import { ROUTES } from '@/src/shared/constants/routes';
-import { createDashboardApi } from '../../dashboard/dashboard.api';
-import { checkIsLoggedIn } from '../../auth/auth.action';
-import { createTimerApi } from '../timer.api';
 import { ModalType } from '../timer.types';
 import useTimer from './useTimer';
+import { timerQueries } from '../timer.queries';
+import { dashboardQueries } from '../../dashboard/dashboard.queries';
+import { authQueries } from '../../auth/auth.queries';
 
 const useTimerPage = ({
   startTimer,
@@ -22,28 +21,21 @@ const useTimerPage = ({
   const onOpen = useModalStore(state => state.onOpen);
   const [taskModalType, setTaskModalType] = useState<ModalType | null>(null);
 
-  const { data: isLoggedIn } = useQuery({
-    queryKey: ['auth'],
-    queryFn: checkIsLoggedIn,
-  });
+  const { data: isLoggedIn } = useQuery(authQueries.checkIsLoggedIn());
 
-  const { data: timerData } = useQuery({
-    queryKey: ['current timer'],
-    queryFn: createTimerApi(clientApi).getCurrent,
-  });
+  const { data: timerData } = useQuery(timerQueries.current());
 
   const { data: studyLogData } = useQuery({
-    queryKey: ['timer', timerData?.studyLogId],
-    queryFn: () => createDashboardApi(clientApi).getStudyLogDetail(timerData?.studyLogId || ''),
+    ...dashboardQueries.studyLogDetail(timerData?.studyLogId || ''),
     enabled: !!timerData?.studyLogId,
   });
 
   const { mutate: deleteMutate } = useMutation({
-    mutationFn: createTimerApi(clientApi).deleteCurrent,
+    ...timerQueries.deleteTimer(),
     onSuccess: () => {
       alert('성공적으로 삭제되었습니다.');
-      queryClient.removeQueries({ queryKey: ['current timer'] });
-      queryClient.removeQueries({ queryKey: ['timer'] });
+      queryClient.removeQueries({ queryKey: timerQueries.current().queryKey });
+      queryClient.removeQueries({ queryKey: dashboardQueries.studyLogs({}).queryKey });
       stopTimer();
     },
     onError: () => {

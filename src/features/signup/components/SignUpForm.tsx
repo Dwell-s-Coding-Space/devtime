@@ -12,8 +12,7 @@ import TextField from '@/src/shared/components/text-field/TextField';
 import { ROUTES } from '@/src/shared/constants/routes';
 import { TERMS_OF_SERVICE } from '../constants';
 import { useMutation } from '@tanstack/react-query';
-import { createAuthApi } from '../../auth/auth.api';
-import { clientApi } from '@/src/shared/api/client';
+import { authQueries } from '../../auth/auth.queries';
 
 const password_regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 
@@ -57,7 +56,7 @@ const SignUpForm = () => {
   const router = useRouter();
 
   const { mutate, isPending } = useMutation({
-    mutationFn: createAuthApi(clientApi).postSignUp,
+    ...authQueries.signUp(),
     onSuccess: data => {
       if (data.success) {
         alert('회원가입에 성공하였습니다.');
