@@ -3,8 +3,8 @@
 import { MouseEvent, useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import TrashIcon from '@/src/shared/assets/svg/trash.svg';
-import { useModal } from '@/src/lib/store/modalSlice';
-import { clientApi } from '@/src/lib/api/client';
+import { useModalStore } from '@/src/shared/store/useModalStore';
+import { clientApi } from '@/src/shared/api/client';
 import { StudyLogListResponse } from '../dashboard.schema';
 import { createDashboardApi } from '../dashboard.api';
 import TaskViewModal from './TaskViewModal';
@@ -16,7 +16,7 @@ interface StudyLogItemProps {
 const StudyLogItem = ({ data }: StudyLogItemProps) => {
   const queryClient = useQueryClient();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const onOpen = useModal(state => state.onOpen);
+  const onOpen = useModalStore(state => state.onOpen);
 
   const { mutate: deleteMutate } = useMutation({
     mutationFn: createDashboardApi(clientApi).deleteStudyLog,

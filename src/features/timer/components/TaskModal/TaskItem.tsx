@@ -1,5 +1,5 @@
 import { ChangeEvent, useState } from 'react';
-import { cn } from '@/src/lib/utils';
+import { cn } from '@/src/shared/utils/cn';
 import SymbolIcon from '@/src/shared/assets/svg/symbol.svg';
 import EditIcon from '@/src/shared/assets/svg/edit.svg';
 import TrashIcon from '@/src/shared/assets/svg/trash.svg';

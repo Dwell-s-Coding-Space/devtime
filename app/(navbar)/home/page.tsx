@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/src/lib/utils';
+import { cn } from '@/src/shared/utils/cn';
 import TimerStartModal from '@/src/features/timer/components/TimerStartModal';
 import TimerRunningModal from '@/src/features/timer/components/TimerRunningModal';
 import TimerStopModal from '@/src/features/timer/components/TimerStopModal';

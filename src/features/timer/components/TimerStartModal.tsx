@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { clientApi } from '@/src/lib/api/client';
+import { clientApi } from '@/src/shared/api/client';
 import { createTimerApi } from '../timer.api';
 import type { TaskModalProps } from '../timer.types';
 import { useTasks } from '../hooks';

@@ -18,9 +18,9 @@ import {
   nicknameSchema,
   passwordSchema,
 } from '@/src/features/signup/components/SignUpForm';
-import { useModal } from '@/src/lib/store/modalSlice';
+import { useModalStore } from '@/src/shared/store/useModalStore';
 import { createMyPageApi } from '@/src/features/mypage/mypage.api';
-import { clientApi } from '@/src/lib/api/client';
+import { clientApi } from '@/src/shared/api/client';
 
 export const CUSTOM_PURPOSE_LABEL = '기타' as const;
 export const CAREER_OPTIONS = ['경력 없음', '0 - 3년', '4 - 7년', '8 - 10년', '11년 이상'] as const;
@@ -73,7 +73,7 @@ export type ProfileEditFormValues = z.infer<typeof profileEditSchema>;
 export default function MypageEdit() {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const onOpen = useModal(state => state.onOpen);
+  const onOpen = useModalStore(state => state.onOpen);
   const [isPending, startTransition] = useTransition();
 
   const { data: profileData } = useQuery({

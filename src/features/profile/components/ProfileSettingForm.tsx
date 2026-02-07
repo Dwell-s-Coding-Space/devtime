@@ -16,8 +16,8 @@ import {
   purposeSchema,
   techStacksSchema,
 } from '@/app/(navbar)/mypage/edit/page';
-import { clientApi } from '@/src/lib/api/client';
-import { useModal } from '@/src/lib/store/modalSlice';
+import { clientApi } from '@/src/shared/api/client';
+import { useModalStore } from '@/src/shared/store/useModalStore';
 import Button from '@/src/shared/components/button/Button';
 import Input from '@/src/shared/components/text-field/Input';
 import Label from '@/src/shared/components/text-field/Label';
@@ -52,7 +52,7 @@ const ProfileSettingForm = () => {
   const queryClient = useQueryClient();
   const { replace } = useRouter();
   const [isPending, startTransition] = useTransition();
-  const onOpen = useModal(state => state.onOpen);
+  const onOpen = useModalStore(state => state.onOpen);
 
   const {
     register,

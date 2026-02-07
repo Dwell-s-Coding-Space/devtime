@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import z from 'zod';
 import { PostSignUpBody } from '@/src/features/auth/auth.schema';
-import { BaseResponse } from '@/src/lib/schema/common.schema';
-import { asDateOrNull } from '@/src/lib/schema/primitives/date';
-import { asArray } from '@/src/lib/schema/primitives/object';
+import { BaseResponse } from '@/src/shared/schema/common.schema';
+import { asDateOrNull } from '@/src/shared/schema/primitives/date';
+import { asArray } from '@/src/shared/schema/primitives/object';
 import {
   CAREER_OPTIONS,
   CUSTOM_PURPOSE_LABEL,
