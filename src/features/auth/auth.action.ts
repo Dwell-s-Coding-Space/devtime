@@ -33,24 +33,3 @@ export async function signupAction(data: SignUpFormValues) {
     return { success: false, message: error.message };
   }
 }
-
-export async function profileSettingAction(data: ProfileSettingFormValues) {
-  try {
-    const serverApi = await createServerApi();
-    const result = await createMyPageApi(serverApi).postProfile({
-      goal: data.goal,
-      career: data.career,
-      purpose: data.purposeDetail ? { type: '기타', detail: data.purposeDetail } : data.purpose,
-      techStacks: data.techStacks,
-    });
-
-    if (!result.success) {
-      return { success: false, message: result.message };
-    }
-
-    return { success: true, message: result.message };
-  } catch (e) {
-    const error = e instanceof Error ? JSON.parse(e.message) : { message: '알 수 없는 오류' };
-    return { success: false, message: error.message };
-  }
-}
