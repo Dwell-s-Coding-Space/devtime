@@ -1,8 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { clientApi } from '@/src/shared/api/client';
 import { Goal, TaskList, TaskModalFooter, TaskModalLayout } from '../../timer/components/TaskModal';
 import { TaskModalProps } from '../../timer/timer.types';
-import { createDashboardApi } from '../dashboard.api';
+import { dashboardQueries } from '../dashboard.queries';
 
 interface TaskViewModalProps extends TaskModalProps {
   studyLogId: string;
@@ -10,8 +9,7 @@ interface TaskViewModalProps extends TaskModalProps {
 
 const TaskViewModal = ({ onClose, studyLogId }: TaskViewModalProps) => {
   const { data: studyLogData } = useQuery({
-    queryKey: ['study-log', studyLogId],
-    queryFn: () => createDashboardApi(clientApi).getStudyLogDetail(studyLogId || ''),
+    ...dashboardQueries.studyLogDetail(studyLogId || ''),
     enabled: !!studyLogId,
   });
 

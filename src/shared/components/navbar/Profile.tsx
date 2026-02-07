@@ -5,15 +5,14 @@ import { useRouter } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
 import UserIcon from '@/src/shared/assets/svg/user.svg';
 import LogoutIcon from '@/src/shared/assets/svg/logout.svg';
-import { createAuthApi } from '@/src/features/auth/auth.api';
+import { authQueries } from '@/src/features/auth/auth.queries';
 import { ROUTES } from '../../constants/routes';
-import { clientApi } from '../../api/client';
 
 const Profile = () => {
   const router = useRouter();
 
   const { mutate } = useMutation({
-    mutationFn: createAuthApi(clientApi).postLogout,
+    ...authQueries.logout(),
     onSuccess: data => {
       if (data.success) {
         alert(data.message);

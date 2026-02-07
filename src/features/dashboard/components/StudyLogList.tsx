@@ -1,18 +1,14 @@
 import { useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
-import { clientApi } from '@/src/shared/api/client';
 import Pagination from '@/src/shared/components/pagination/Pagination';
-import { createDashboardApi } from '../dashboard.api';
 import StudyLogItem from './StudyLogItem';
+import { dashboardQueries } from '../dashboard.queries';
 
 const StudyLogList = () => {
   const searchParams = useSearchParams();
   const page = Number(searchParams.get('page')) || 1;
 
-  const { data: studyLogListData } = useQuery({
-    queryKey: ['study-log list', page],
-    queryFn: () => createDashboardApi(clientApi).getStudyLogs({ limit: 1, page }),
-  });
+  const { data: studyLogListData } = useQuery(dashboardQueries.studyLogs({ page }));
 
   return (
     <div className="bg-background-white flex flex-col gap-6 rounded-[18px] p-6">

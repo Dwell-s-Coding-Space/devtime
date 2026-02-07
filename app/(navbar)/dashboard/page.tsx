@@ -1,23 +1,15 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { clientApi } from '@/src/shared/api/client';
 import StatBox from '@/src/features/dashboard/components/StatBox';
 import StudyLogList from '@/src/features/dashboard/components/StudyLogList';
 import WeeklyStatBar from '@/src/features/dashboard/components/WeeklyStatBar';
 import YearlyStatGrid from '@/src/features/dashboard/components/YearlyStatGrid';
-import { createDashboardApi } from '@/src/features/dashboard/dashboard.api';
+import { dashboardQueries } from '@/src/features/dashboard/dashboard.queries';
 
 export default function Dashboard() {
-  const { data: statData } = useQuery({
-    queryKey: ['stat'],
-    queryFn: createDashboardApi(clientApi).getStats,
-  });
-
-  const { data: heatmapData } = useQuery({
-    queryKey: ['heatmap'],
-    queryFn: createDashboardApi(clientApi).getHeatmap,
-  });
+  const { data: statData } = useQuery(dashboardQueries.stats());
+  const { data: heatmapData } = useQuery(dashboardQueries.heatmap());
 
   if (!statData || !heatmapData) return <div>loading..</div>;
 

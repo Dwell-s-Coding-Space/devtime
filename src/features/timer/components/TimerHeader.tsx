@@ -1,24 +1,18 @@
 import { useQuery } from '@tanstack/react-query';
-import { clientApi } from '@/src/shared/api/client';
-import { checkIsLoggedIn } from '../../auth/auth.action';
-import { createDashboardApi } from '../../dashboard/dashboard.api';
-import { createTimerApi } from '../timer.api';
+import { dashboardQueries } from '../../dashboard/dashboard.queries';
+import { authQueries } from '../../auth/auth.queries';
+import { timerQueries } from '../timer.queries';
 
 const TimerHeader = () => {
-  const { data: isLoggedIn } = useQuery({
-    queryKey: ['auth'],
-    queryFn: checkIsLoggedIn,
-  });
+  const { data: isLoggedIn } = useQuery(authQueries.checkIsLoggedIn());
 
   const { data } = useQuery({
-    queryKey: ['current timer'],
-    queryFn: createTimerApi(clientApi).getCurrent,
+    ...timerQueries.current(),
     enabled: !!isLoggedIn,
   });
 
   const { data: studyLogData } = useQuery({
-    queryKey: ['timer', data?.studyLogId],
-    queryFn: () => createDashboardApi(clientApi).getStudyLogDetail(data?.studyLogId || ''),
+    ...dashboardQueries.studyLogDetail(data?.studyLogId || ''),
     enabled: !!data?.studyLogId,
   });
 

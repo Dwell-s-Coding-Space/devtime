@@ -2,9 +2,8 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { cn } from '@/src/shared/utils/cn';
-import { clientApi } from '@/src/shared/api/client';
 import RankingItem from '@/src/features/ranking/components/RankingItem';
-import { createRankingApi } from '@/src/features/ranking/ranking.api';
+import { rankingQueries } from '@/src/features/ranking/ranking.queries';
 
 const RANKING_OPTION_MAP = {
   '총 학습 시간': 'total',
@@ -12,10 +11,7 @@ const RANKING_OPTION_MAP = {
 };
 
 export default function Ranking() {
-  const { data } = useQuery({
-    queryKey: ['ranking'],
-    queryFn: createRankingApi(clientApi).getList,
-  });
+  const { data } = useQuery(rankingQueries.list());
 
   const currentRankingOption = 'total';
 
