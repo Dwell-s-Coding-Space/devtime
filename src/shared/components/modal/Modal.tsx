@@ -1,15 +1,15 @@
 'use client';
 
-import { useModal } from '@/src/lib/store/modalSlice';
+import { useModalStore } from '@/src/shared/store/useModalStore';
 import Button from '../button/Button';
 import Portal from './Portal';
 
 const Modal = () => {
-  const isOpen = useModal(state => state.isOpen);
-  const payload = useModal(state => state.payload);
-  const onClose = useModal(state => state.onClose);
-  const onConfirm = useModal(state => state.onConfirm);
-  const onCancel = useModal(state => state.onCancel);
+  const isOpen = useModalStore(state => state.isOpen);
+  const payload = useModalStore(state => state.payload);
+  const onClose = useModalStore(state => state.onClose);
+  const onConfirm = useModalStore(state => state.onConfirm);
+  const onCancel = useModalStore(state => state.onCancel);
 
   const { title, description, buttons } = payload || {};
 

@@ -2,7 +2,7 @@
 
 import { useCallback } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { cn } from '@/src/lib/utils';
+import { cn } from '@/src/shared/utils/cn';
 import ChevronDoubleLeftIcon from '@/src/shared/assets/svg/chevron-double-left.svg';
 import ChevronDoubleRightIcon from '@/src/shared/assets/svg/chevron-double-right.svg';
 import ChevronRightIcon from '@/src/shared/assets/svg/chevron-right.svg';

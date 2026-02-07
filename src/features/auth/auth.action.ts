@@ -1,7 +1,7 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import { createServerApi } from '@/src/lib/api/server';
+import { createServerApi } from '@/src/shared/api/server';
 import { LoginFormValues } from '../login/components/LoginForm';
 import { SignUpFormValues } from '../signup/components/SignUpForm';
 import { ProfileSettingFormValues } from '../profile/components/ProfileSettingForm';

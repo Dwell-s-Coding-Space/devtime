@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { clientApi } from '@/src/lib/api/client';
-import { useModal } from '@/src/lib/store/modalSlice';
+import { clientApi } from '@/src/shared/api/client';
+import { useModalStore } from '@/src/shared/store/useModalStore';
 import { createDashboardApi } from '../../dashboard/dashboard.api';
 import { checkIsLoggedIn } from '../../auth/auth.action';
 import { createTimerApi } from '../timer.api';
@@ -18,7 +18,7 @@ const useTimerPage = ({
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const onOpen = useModal(state => state.onOpen);
+  const onOpen = useModalStore(state => state.onOpen);
   const [taskModalType, setTaskModalType] = useState<ModalType | null>(null);
 
   const { data: isLoggedIn } = useQuery({

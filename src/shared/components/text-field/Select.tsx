@@ -1,6 +1,6 @@
 import { Fragment, KeyboardEvent, useEffect, useId, useRef, useState } from 'react';
 import ChevronUpIcon from '@/src/shared/assets/svg/chevron-up.svg';
-import { cn } from '@/src/lib/utils';
+import { cn } from '@/src/shared/utils/cn';
 
 const Select = ({
   value,

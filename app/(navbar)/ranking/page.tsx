@@ -1,8 +1,8 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { cn } from '@/src/lib/utils';
-import { clientApi } from '@/src/lib/api/client';
+import { cn } from '@/src/shared/utils/cn';
+import { clientApi } from '@/src/shared/api/client';
 import RankingItem from '@/src/features/ranking/components/RankingItem';
 import { createRankingApi } from '@/src/features/ranking/ranking.api';
 

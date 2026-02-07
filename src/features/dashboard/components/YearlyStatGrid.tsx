@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { cn } from '@/src/lib/utils';
+import { cn } from '@/src/shared/utils/cn';
 import { GetHeatmapListResponse } from '../dashboard.schema';
 import { getYearlyDates } from '../utils/getYearlyDates';
 

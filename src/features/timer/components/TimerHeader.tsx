@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { clientApi } from '@/src/lib/api/client';
+import { clientApi } from '@/src/shared/api/client';
 import { checkIsLoggedIn } from '../../auth/auth.action';
 import { createDashboardApi } from '../../dashboard/dashboard.api';
 import { createTimerApi } from '../timer.api';

@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
 import { cva } from 'class-variance-authority';
-import { cn } from '@/src/lib/utils';
+import { cn } from '@/src/shared/utils/cn';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'tertiary';
 

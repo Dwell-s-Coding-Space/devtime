@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { clientApi } from '@/src/lib/api/client';
+import { clientApi } from '@/src/shared/api/client';
 import { Goal, TaskList, TaskModalFooter, TaskModalLayout } from '../../timer/components/TaskModal';
 import { TaskModalProps } from '../../timer/timer.types';
 import { createDashboardApi } from '../dashboard.api';

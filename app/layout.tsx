@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import localFont from 'next/font/local';
-import Provider from '@/src/lib/Provider';
+import QueryProvider from '@/src/shared/providers/QueryProvider';
 import './globals.css';
 import Modal from '@/src/shared/components/modal/Modal';
 
@@ -29,13 +29,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <Provider>
+    <QueryProvider>
       <html lang="ko">
         <body className={`${pretendardVariable.variable} ${digitalNumbers.variable}`}>
           <div className="flex min-h-screen flex-col">{children}</div>
           <Modal />
         </body>
       </html>
-    </Provider>
+    </QueryProvider>
   );
 }
