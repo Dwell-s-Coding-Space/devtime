@@ -2,17 +2,18 @@
 
 import z from 'zod';
 import Link from 'next/link';
-import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
+import { useMutation } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { useModalStore } from '@/src/shared/store/useModalStore';
 import Button from '@/src/shared/components/button/Button';
 import TextField from '@/src/shared/components/text-field/TextField';
 import { ROUTES } from '@/src/shared/constants/routes';
+import { clientApi } from '@/src/shared/api/client';
 import { emailSchema, passwordSchema } from '../../signup/components/SignUpForm';
-import { loginAction } from '../../auth/auth.action';
+import { createAuthApi } from '../../auth/auth.api';
 
 const loginFormSchema = z.object({
   email: emailSchema,
@@ -24,7 +25,48 @@ export type LoginFormValues = z.infer<typeof loginFormSchema>;
 const LoginForm = () => {
   const router = useRouter();
   const onOpen = useModalStore(state => state.onOpen);
-  const [isPending, startTransition] = useTransition();
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: createAuthApi(clientApi).postLogin,
+    onSuccess: async data => {
+      if (!data.success) {
+        await onOpen({
+          title: `로그인 정보를 다시 확인해 주세요.\n${data.message}`,
+          buttons: [{ variant: 'primary', label: '확인', action: 'cancel' }],
+        });
+
+        return;
+      }
+
+      if (data.isDuplicateLogin) {
+        await onOpen({
+          title: `중복 로그인이 불가능합니다.`,
+          description:
+            '다른 기기에 중복 로그인 된 상태입니다. [확인] 버튼을 누르면 다른 기기에서 강제 로그아웃되며, 진행중이던 타이머가 있다면 기록이 자동 삭제됩니다.',
+          buttons: [{ variant: 'primary', label: '확인', action: 'cancel' }],
+        });
+
+        return;
+      }
+
+      await onOpen({
+        title: `로그인에 성공하였습니다.`,
+        buttons: [{ variant: 'primary', label: '확인', action: 'cancel' }],
+      });
+
+      if (data.isFirstLogin) {
+        router.push(ROUTES.PROFILE_SETTING);
+      } else {
+        router.push(ROUTES.HOME);
+      }
+    },
+    onError: async err => {
+      await onOpen({
+        title: `로그인 정보를 다시 확인해 주세요.\n${err.message}`,
+        buttons: [{ variant: 'primary', label: '확인', action: 'cancel' }],
+      });
+    },
+  });
 
   const {
     register,
@@ -36,38 +78,7 @@ const LoginForm = () => {
   });
 
   const onSubmit = (data: LoginFormValues) => {
-    startTransition(async () => {
-      const result = await loginAction(data);
-
-      if (result.success) {
-        if (result.isDuplicateLogin) {
-          await onOpen({
-            title: `중복 로그인이 불가능합니다.`,
-            description:
-              '다른 기기에 중복 로그인 된 상태입니다. [확인] 버튼을 누르면 다른 기기에서 강제 로그아웃되며, 진행중이던 타이머가 있다면 기록이 자동 삭제됩니다.',
-            buttons: [{ variant: 'primary', label: '확인', action: 'cancel' }],
-          });
-
-          return;
-        }
-
-        await onOpen({
-          title: `로그인에 성공하였습니다.`,
-          buttons: [{ variant: 'primary', label: '확인', action: 'cancel' }],
-        });
-
-        if (result.isFirstLogin) {
-          router.push(ROUTES.PROFILE_SETTING);
-        } else {
-          router.push(ROUTES.HOME);
-        }
-      } else {
-        await onOpen({
-          title: `로그인 정보를 다시 확인해 주세요.\n${result.message}`,
-          buttons: [{ variant: 'primary', label: '확인', action: 'cancel' }],
-        });
-      }
-    });
+    mutate(data);
   };
 
   return (
