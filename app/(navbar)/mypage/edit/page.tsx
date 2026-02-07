@@ -21,6 +21,7 @@ import {
 import { useModalStore } from '@/src/shared/store/useModalStore';
 import { createMyPageApi } from '@/src/features/mypage/mypage.api';
 import { clientApi } from '@/src/shared/api/client';
+import { ROUTES } from '@/src/shared/constants/routes';
 
 export const CUSTOM_PURPOSE_LABEL = '기타' as const;
 export const CAREER_OPTIONS = ['경력 없음', '0 - 3년', '4 - 7년', '8 - 10년', '11년 이상'] as const;
@@ -86,7 +87,7 @@ export default function MypageEdit() {
     onSuccess: () => {
       alert('저장이 성공적으로 완료되었습니다.');
       queryClient.invalidateQueries({ queryKey: ['profile'] });
-      router.push('/mypage');
+      router.push(ROUTES.MYPAGE);
     },
     onError: err => {
       alert(`저장하는데 실패하였습니다.\n${err.message}`);
