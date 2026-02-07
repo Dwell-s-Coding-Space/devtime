@@ -15,7 +15,6 @@ import {
   purposeSchema,
   techStacksSchema,
 } from '@/app/(navbar)/mypage/edit/page';
-import { clientApi } from '@/src/shared/api/client';
 import { useModalStore } from '@/src/shared/store/useModalStore';
 import Button from '@/src/shared/components/button/Button';
 import Input from '@/src/shared/components/text-field/Input';
@@ -25,7 +24,7 @@ import TextField from '@/src/shared/components/text-field/TextField';
 import AutoComplete from '@/src/shared/components/text-field/AutoComplete';
 import XIcon from '@/src/shared/assets/svg/x.svg';
 import { ROUTES } from '@/src/shared/constants/routes';
-import { createMyPageApi } from '../../mypage/mypage.api';
+import { mypageQueries } from '../../mypage/mypage.queries';
 
 const profileSettingSchema = z
   .object({
@@ -65,15 +64,14 @@ const ProfileSettingForm = () => {
   });
 
   const { data: techStacksData } = useQuery({
-    queryKey: ['techStacks'],
-    queryFn: createMyPageApi(clientApi).getTechStacks,
+    ...mypageQueries.techStacks(),
     select: data => data.results.map(techStack => techStack.name),
   });
 
   const { mutateAsync: addTechStack } = useMutation({
-    mutationFn: createMyPageApi(clientApi).postTechStacks,
+    ...mypageQueries.createTechStack(),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['techStacks'] });
+      queryClient.invalidateQueries({ queryKey: mypageQueries.techStacks().queryKey });
     },
     onError: err => {
       alert(`추가하는데 실패하였습니다.\n${err.message}`);
@@ -81,7 +79,7 @@ const ProfileSettingForm = () => {
   });
 
   const { mutate: postProfile, isPending } = useMutation({
-    mutationFn: createMyPageApi(clientApi).postProfile,
+    ...mypageQueries.createProfile(),
     onSuccess: data => {
       if (data.success) {
         alert('프로필 설정을 완료하였습니다.');

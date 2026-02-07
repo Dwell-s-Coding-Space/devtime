@@ -4,17 +4,13 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
 import { cn } from '@/src/shared/utils/cn';
-import { clientApi } from '@/src/shared/api/client';
 import UserIcon from '@/src/shared/assets/svg/user.svg';
 import EditIcon from '@/src/shared/assets/svg/edit.svg';
 import { ROUTES } from '@/src/shared/constants/routes';
-import { createMyPageApi } from '@/src/features/mypage/mypage.api';
+import { mypageQueries } from '@/src/features/mypage/mypage.queries';
 
 export default function Mypage() {
-  const { data: profileData } = useQuery({
-    queryKey: ['profile'],
-    queryFn: createMyPageApi(clientApi).getProfile,
-  });
+  const { data: profileData } = useQuery(mypageQueries.profile());
 
   return (
     <div className="bg-border-white flex gap-[56px] rounded-[12px] p-9">

@@ -4,9 +4,8 @@ import { MouseEvent, useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import TrashIcon from '@/src/shared/assets/svg/trash.svg';
 import { useModalStore } from '@/src/shared/store/useModalStore';
-import { clientApi } from '@/src/shared/api/client';
 import { StudyLogListResponse } from '../dashboard.schema';
-import { createDashboardApi } from '../dashboard.api';
+import { dashboardQueries } from '../dashboard.queries';
 import TaskViewModal from './TaskViewModal';
 
 interface StudyLogItemProps {
@@ -19,12 +18,12 @@ const StudyLogItem = ({ data }: StudyLogItemProps) => {
   const onOpen = useModalStore(state => state.onOpen);
 
   const { mutate: deleteMutate } = useMutation({
-    mutationFn: createDashboardApi(clientApi).deleteStudyLog,
+    ...dashboardQueries.deleteStudyLog(),
     onSuccess: () => {
       alert('성공적으로 삭제되었습니다.');
-      queryClient.invalidateQueries({ queryKey: ['stat'] });
-      queryClient.invalidateQueries({ queryKey: ['heatmap'] });
-      queryClient.invalidateQueries({ queryKey: ['study-log list'] });
+      queryClient.invalidateQueries({ queryKey: dashboardQueries.stats().queryKey });
+      queryClient.invalidateQueries({ queryKey: dashboardQueries.heatmap().queryKey });
+      queryClient.invalidateQueries({ queryKey: dashboardQueries.studyLogsKey() });
     },
     onError: () => {
       alert('삭제하는 과정에서 에러가 발생했습니다.\n다시 시도 해주세요.');

@@ -11,9 +11,8 @@ import { useModalStore } from '@/src/shared/store/useModalStore';
 import Button from '@/src/shared/components/button/Button';
 import TextField from '@/src/shared/components/text-field/TextField';
 import { ROUTES } from '@/src/shared/constants/routes';
-import { clientApi } from '@/src/shared/api/client';
 import { emailSchema, passwordSchema } from '../../signup/components/SignUpForm';
-import { createAuthApi } from '../../auth/auth.api';
+import { authQueries } from '../../auth/auth.queries';
 
 const loginFormSchema = z.object({
   email: emailSchema,
@@ -27,7 +26,7 @@ const LoginForm = () => {
   const onOpen = useModalStore(state => state.onOpen);
 
   const { mutate, isPending } = useMutation({
-    mutationFn: createAuthApi(clientApi).postLogin,
+    ...authQueries.login(),
     onSuccess: async data => {
       if (!data.success) {
         await onOpen({

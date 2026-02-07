@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { clientApi } from '@/src/shared/api/client';
-import { createTimerApi } from '../timer.api';
+import { dashboardQueries } from '../../dashboard/dashboard.queries';
 import type { TaskModalProps } from '../timer.types';
+import { timerQueries } from '../timer.queries';
 import { useTasks } from '../hooks';
 import { TaskModalFooter, TaskModalLayout, Goal, AddTaskItem, TaskList } from './TaskModal';
 
@@ -18,15 +18,15 @@ const TimerStartModal = ({ onClose, startTimer }: TimerStartModalProps) => {
   );
 
   const { mutate } = useMutation({
-    mutationFn: createTimerApi(clientApi).postStart,
+    ...timerQueries.startTimer(),
     onError: error => {
       alert(`타이머를 시작하는데 오류가 발생했습니다.\n다시 시도 해주세요.\n${error.message}`);
     },
     onSuccess: () => {
       alert('타이머가 성공적으로 시작하였습니다.');
       startTimer();
-      queryClient.invalidateQueries({ queryKey: ['current timer'] });
-      queryClient.invalidateQueries({ queryKey: ['timer'] });
+      queryClient.invalidateQueries({ queryKey: timerQueries.current().queryKey });
+      queryClient.invalidateQueries({ queryKey: dashboardQueries.studyLogs({}).queryKey });
       onClose();
     },
   });
