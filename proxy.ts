@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-
-const PUBLIC_ROUTES = ['/login', '/signup', '/profile-setting', '/home'];
+import { PUBLIC_ROUTES, ROUTES } from './src/shared/constants/routes';
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -18,7 +17,7 @@ export function proxy(request: NextRequest) {
   const accessToken = request.cookies.get('accessToken')?.value;
 
   if (!accessToken) {
-    const loginUrl = new URL('/login', request.url);
+    const loginUrl = new URL(ROUTES.LOGIN, request.url);
     loginUrl.searchParams.set('callbackUrl', pathname);
 
     return NextResponse.redirect(loginUrl);

@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { clientApi } from '@/src/shared/api/client';
 import { useModalStore } from '@/src/shared/store/useModalStore';
+import { ROUTES } from '@/src/shared/constants/routes';
 import { createDashboardApi } from '../../dashboard/dashboard.api';
 import { checkIsLoggedIn } from '../../auth/auth.action';
 import { createTimerApi } from '../timer.api';
@@ -69,7 +70,7 @@ const useTimerPage = ({
         ],
       });
 
-      return isConfirmClicked ? router.push('/login') : null;
+      return isConfirmClicked ? router.push(ROUTES.LOGIN) : null;
     }
 
     if (studyLogData) {
