@@ -1,5 +1,5 @@
-import type { ButtonVariant } from '@/src/shared/components/button/Button';
 import { create } from 'zustand';
+import type { ButtonVariant } from '@/src/shared/components/button/Button';
 
 interface ModalButton {
   label: string;
@@ -38,7 +38,7 @@ export const defaultSingleButton: ModalButton[] = [
   { label: '확인', action: 'confirm', variant: 'primary' },
 ];
 
-export const useModal = create<ModalState>()(set => ({
+export const useModalStore = create<ModalState>()(set => ({
   ...initialModalState,
 
   onOpen: payload => {

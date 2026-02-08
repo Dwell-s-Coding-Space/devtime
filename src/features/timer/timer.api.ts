@@ -1,4 +1,4 @@
-import type Api from '@/src/lib/api/core';
+import type Api from '@/src/shared/api/core';
 import {
   DeleteTimerResponse,
   GetTimerResponse,

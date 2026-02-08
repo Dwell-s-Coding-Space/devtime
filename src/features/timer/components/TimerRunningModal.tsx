@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { clientApi } from '@/src/lib/api/client';
 import { GetStudyLogDetailResponse } from '../../dashboard/dashboard.schema';
-import { createTimerApi } from '../timer.api';
+import { dashboardQueries } from '../../dashboard/dashboard.queries';
 import type { TaskModalProps, TaskMode } from '../timer.types';
+import { timerQueries } from '../timer.queries';
 import { useTasks } from '../hooks';
 import { AddTaskItem, TaskList, TaskModalLayout, TaskModalFooter } from './TaskModal';
 
@@ -29,14 +29,20 @@ const TimerRunningModal = ({ onClose, data }: TimerRunningModalProps) => {
   });
 
   const { mutate } = useMutation({
-    mutationFn: createTimerApi(clientApi).putTasks,
+    ...timerQueries.updateTask(),
     onError: error => {
       alert(`변경사항을 저장하는데 실패했습니다.\n다시 시도 해주세요.\n${error.message}`);
     },
     onSuccess: () => {
       alert('성공적으로 저장하였습니다.');
-      queryClient.invalidateQueries({ queryKey: ['timer', data?.id] });
-      onClose();
+      queryClient.invalidateQueries({
+        queryKey: dashboardQueries.studyLogDetail(data?.id || '').queryKey,
+      });
+      if (taskMode === 'check') {
+        onClose();
+      } else {
+        setTaskMode('check');
+      }
     },
   });
 
@@ -54,7 +60,12 @@ const TimerRunningModal = ({ onClose, data }: TimerRunningModalProps) => {
       <AddTaskItem
         value={newTaskContent}
         onChange={e => setNewTaskContent(e.target.value)}
-        onKeyDown={e => e.key === 'Enter' && addTask()}
+        onKeyDown={e => {
+          if (e.key === 'Enter' && !e.nativeEvent.isComposing) {
+            e.preventDefault();
+            addTask();
+          }
+        }}
         onClick={addTask}
       />
       <TaskList

@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { cn } from '@/src/lib/utils';
+import { cn } from '@/src/shared/utils/cn';
 import { GetRankingListResponse } from '@/src/features/ranking/ranking.schema';
 
 interface RankingItemProps {

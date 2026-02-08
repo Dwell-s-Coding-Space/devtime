@@ -1,19 +1,20 @@
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { clientApi } from '@/src/lib/api/client';
 import Label from '@/src/shared/components/text-field/Label';
 import { GetStudyLogDetailResponse } from '../../dashboard/dashboard.schema';
-import { createTimerApi } from '../timer.api';
+import { dashboardQueries } from '../../dashboard/dashboard.queries';
 import type { TaskModalProps, TaskMode } from '../timer.types';
+import { timerQueries } from '../timer.queries';
 import { useTasks } from '../hooks';
 import { TaskModalFooter, TaskModalLayout, AddTaskItem, TaskList } from './TaskModal';
 
 export interface TimerStopModalProps extends TaskModalProps {
   data?: GetStudyLogDetailResponse['data'];
   timerId?: string;
+  stopTimer: () => void;
 }
 
-const TimerStopModal = ({ onClose, data, timerId }: TimerStopModalProps) => {
+const TimerStopModal = ({ onClose, data, timerId, stopTimer }: TimerStopModalProps) => {
   const queryClient = useQueryClient();
   const [taskMode, setTaskMode] = useState<TaskMode>('check');
   const [reflection, setReflection] = useState('');
@@ -31,25 +32,29 @@ const TimerStopModal = ({ onClose, data, timerId }: TimerStopModalProps) => {
   });
 
   const { mutate } = useMutation({
-    mutationFn: createTimerApi(clientApi).putTasks,
+    ...timerQueries.updateTask(),
     onError: error => {
       alert(`변경사항을 저장하는데 실패했습니다.\n다시 시도 해주세요.\n${error.message}`);
     },
     onSuccess: () => {
       alert('성공적으로 저장하였습니다.');
-      queryClient.invalidateQueries({ queryKey: ['timer', data?.id] });
-      onClose();
+      queryClient.invalidateQueries({
+        queryKey: dashboardQueries.studyLogDetail(data?.id || '').queryKey,
+      });
+      setTaskMode('check');
     },
   });
 
   const { mutate: mutateStop } = useMutation({
-    mutationFn: createTimerApi(clientApi).postStop,
+    ...timerQueries.stopTimer(),
     onError: error => {
       alert(`공부 완료하기를 실패했습니다.\n다시 시도 해주세요.\n${error.message}`);
     },
     onSuccess: () => {
       alert('성공적으로 공부를 완료하였습니다.');
-      queryClient.invalidateQueries({ queryKey: ['timer', data?.id] });
+      stopTimer();
+      queryClient.removeQueries({ queryKey: timerQueries.current().queryKey });
+      queryClient.removeQueries({ queryKey: dashboardQueries.studyLogs({}).queryKey });
       onClose();
     },
   });
@@ -84,7 +89,12 @@ const TimerStopModal = ({ onClose, data, timerId }: TimerStopModalProps) => {
       <AddTaskItem
         value={newTaskContent}
         onChange={e => setNewTaskContent(e.target.value)}
-        onKeyDown={e => e.key !== 'Enter' && addTask()}
+        onKeyDown={e => {
+          if (e.key === 'Enter' && !e.nativeEvent.isComposing) {
+            e.preventDefault();
+            addTask();
+          }
+        }}
         onClick={addTask}
       />
 

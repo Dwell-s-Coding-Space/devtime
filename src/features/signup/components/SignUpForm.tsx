@@ -2,15 +2,17 @@
 
 import z from 'zod';
 import Link from 'next/link';
-import { useEffect, useTransition } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import Button from '@/src/shared/components/button/Button';
 import TextField from '@/src/shared/components/text-field/TextField';
-import { signupAction } from '../../auth/auth.action';
+import { ROUTES } from '@/src/shared/constants/routes';
 import { TERMS_OF_SERVICE } from '../constants';
+import { useMutation } from '@tanstack/react-query';
+import { authQueries } from '../../auth/auth.queries';
 
 const password_regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 
@@ -51,15 +53,28 @@ const signUpSchema = z
 export type SignUpFormValues = z.infer<typeof signUpSchema>;
 
 const SignUpForm = () => {
-  const { replace } = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
+
+  const { mutate, isPending } = useMutation({
+    ...authQueries.signUp(),
+    onSuccess: data => {
+      if (data.success) {
+        alert('회원가입에 성공하였습니다.');
+        router.replace(ROUTES.LOGIN);
+      } else {
+        alert(`회원가입에 실패하였습니다\n${data.message}`);
+      }
+    },
+    onError: err => {
+      alert(`회원가입에 실패하였습니다\n${err.message}`);
+    },
+  });
 
   const {
     register,
     handleSubmit,
     control,
     trigger,
-    setError,
     formState: { errors, isValid },
   } = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpSchema),
@@ -76,17 +91,7 @@ const SignUpForm = () => {
   }, [trigger, password, confirmPassword]);
 
   const onSubmit = (data: SignUpFormValues) => {
-    startTransition(async () => {
-      const result = await signupAction(data);
-
-      if (result.success) {
-        alert('회원가입에 성공하였습니다.');
-        replace('/login');
-      } else {
-        setError('root', { message: result.message });
-        alert(`회원가입에 실패하였습니다\n${result.message}`);
-      }
-    });
+    mutate(data);
   };
 
   return (
@@ -138,7 +143,10 @@ const SignUpForm = () => {
         <Button className="w-full" type="submit" disabled={!isValid}>
           {isPending ? '회원가입 중...' : '회원가입'}
         </Button>
-        <Link href="/login" className="text-text-primary flex items-center justify-center gap-3">
+        <Link
+          href={ROUTES.LOGIN}
+          className="text-text-primary flex items-center justify-center gap-3"
+        >
           <span className="body-r">회원이신가요?</span>
           <span className="body-b">로그인 바로가기</span>
         </Link>

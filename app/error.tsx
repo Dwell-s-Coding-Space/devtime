@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { ROUTES } from '@/src/shared/constants/routes';
 
 export default function Error({ error }: { error: Error }) {
   const router = useRouter();
@@ -11,7 +12,7 @@ export default function Error({ error }: { error: Error }) {
       const parsed = JSON.parse(error.message);
       if (parsed.status === 401) {
         alert('다시 로그인 해주세요.');
-        router.push('/login');
+        router.push(ROUTES.LOGIN);
       }
     } catch {}
   }, [error, router]);

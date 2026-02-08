@@ -11,7 +11,7 @@ const useTasks = ({ initialTasks = [] }: { initialTasks?: TaskItem[] }) => {
 
     setTasks(prev => [
       ...prev,
-      { id: `id-${newTaskContent}`, content: newTaskContent, isCompleted: false },
+      { id: `id-${Date.now()}-${Math.random()}`, content: newTaskContent, isCompleted: false },
     ]);
     setNewTaskContent('');
   };

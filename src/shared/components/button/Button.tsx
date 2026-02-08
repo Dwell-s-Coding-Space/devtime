@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
 import { cva } from 'class-variance-authority';
-import { cn } from '@/src/lib/utils';
+import { cn } from '@/src/shared/utils/cn';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'tertiary';
 
@@ -31,7 +31,7 @@ const ButtonVariants = cva('h-[48px] px-4 py-3 rounded-[5px] subtitle-s', {
 });
 
 const Button = ({ variant = 'primary', className, ...rest }: ButtonProps) => {
-  return <button className={cn(ButtonVariants({ variant }), className)} {...rest} />;
+  return <button type="button" className={cn(ButtonVariants({ variant }), className)} {...rest} />;
 };
 
 export default Button;

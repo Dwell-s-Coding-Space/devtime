@@ -1,4 +1,4 @@
-import { BaseResponse } from '@/src/lib/schema/common.schema';
+import { BaseResponse } from '@/src/shared/schema/common.schema';
 import z from 'zod';
 
 /**

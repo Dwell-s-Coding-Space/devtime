@@ -1,24 +1,32 @@
 import { useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
-import { clientApi } from '@/src/lib/api/client';
-import { createTimerApi } from '../timer.api';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { dashboardQueries } from '../../dashboard/dashboard.queries';
 import type { TaskModalProps } from '../timer.types';
+import { timerQueries } from '../timer.queries';
 import { useTasks } from '../hooks';
 import { TaskModalFooter, TaskModalLayout, Goal, AddTaskItem, TaskList } from './TaskModal';
 
-const TimerStartModal = ({ onClose }: TaskModalProps) => {
+interface TimerStartModalProps extends TaskModalProps {
+  startTimer: () => void;
+}
+
+const TimerStartModal = ({ onClose, startTimer }: TimerStartModalProps) => {
+  const queryClient = useQueryClient();
   const [goal, setGoal] = useState('');
   const { newTaskContent, setNewTaskContent, tasks, addTask, deleteTask, updateTask } = useTasks(
     {}
   );
 
   const { mutate } = useMutation({
-    mutationFn: createTimerApi(clientApi).postStart,
+    ...timerQueries.startTimer(),
     onError: error => {
       alert(`타이머를 시작하는데 오류가 발생했습니다.\n다시 시도 해주세요.\n${error.message}`);
     },
     onSuccess: () => {
       alert('타이머가 성공적으로 시작하였습니다.');
+      startTimer();
+      queryClient.invalidateQueries({ queryKey: timerQueries.current().queryKey });
+      queryClient.invalidateQueries({ queryKey: dashboardQueries.studyLogs({}).queryKey });
       onClose();
     },
   });
@@ -33,7 +41,12 @@ const TimerStartModal = ({ onClose }: TaskModalProps) => {
       <AddTaskItem
         value={newTaskContent}
         onChange={e => setNewTaskContent(e.target.value)}
-        onKeyDown={e => e.key === 'Enter' && addTask()}
+        onKeyDown={e => {
+          if (e.key === 'Enter' && !e.nativeEvent.isComposing) {
+            e.preventDefault();
+            addTask();
+          }
+        }}
         onClick={addTask}
       />
       <TaskList tasks={tasks} mode="edit" handleChange={updateTask} handleDelete={deleteTask} />

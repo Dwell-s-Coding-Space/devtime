@@ -1,18 +1,18 @@
 import { Metadata } from 'next';
 import localFont from 'next/font/local';
-import Provider from '@/src/lib/Provider';
-import './globals.css';
+import QueryProvider from '@/src/shared/providers/QueryProvider';
 import Modal from '@/src/shared/components/modal/Modal';
+import './globals.css';
 
 const pretendardVariable = localFont({
-  src: '../src/lib/style/fonts/PretendardVariable.woff2',
+  src: '../src/shared/styles/fonts/PretendardVariable.woff2',
   weight: '100 900',
   display: 'swap',
   variable: '--font-pretendard',
 });
 
 const digitalNumbers = localFont({
-  src: '../src/lib/style/fonts/DigitalNumbers-Regular.ttf',
+  src: '../src/shared/styles/fonts/DigitalNumbers-Regular.ttf',
   weight: '400',
   display: 'swap',
   variable: '--font-digital-numbers',
@@ -29,13 +29,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <Provider>
+    <QueryProvider>
       <html lang="ko">
         <body className={`${pretendardVariable.variable} ${digitalNumbers.variable}`}>
           <div className="flex min-h-screen flex-col">{children}</div>
           <Modal />
         </body>
       </html>
-    </Provider>
+    </QueryProvider>
   );
 }

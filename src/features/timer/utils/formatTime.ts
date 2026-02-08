@@ -1,22 +1,24 @@
-const SECONDS_IN_MINUTE = 60;
-const MINUTE_IN_HOUR = 60;
+export const MS_IN_SECONDS = 1000;
+export const SECONDS_IN_MINUTE = 60;
+export const MINUTE_IN_HOUR = 60;
 
-const SECONDS_IN_HOUR = SECONDS_IN_MINUTE * MINUTE_IN_HOUR;
+export const SECONDS_IN_HOUR = SECONDS_IN_MINUTE * MINUTE_IN_HOUR;
 
 export const formatTime = (time: number) => {
-  let _time = time;
+  let _time = Math.floor(time / MS_IN_SECONDS);
+
   const result = {
     hours: 0,
     minutes: 0,
     seconds: 0,
   };
 
-  if (_time > SECONDS_IN_HOUR) {
+  if (_time >= SECONDS_IN_HOUR) {
     result.hours = Math.floor(_time / SECONDS_IN_HOUR);
     _time %= SECONDS_IN_HOUR;
   }
 
-  if (_time > SECONDS_IN_MINUTE) {
+  if (_time >= SECONDS_IN_MINUTE) {
     result.minutes = Math.floor(_time / SECONDS_IN_MINUTE);
     _time %= SECONDS_IN_MINUTE;
   }

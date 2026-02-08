@@ -1,4 +1,4 @@
-import { asBoolean } from '@/src/lib/schema/primitives/boolean';
+import { asBoolean } from '@/src/shared/schema/primitives/boolean';
 import z from 'zod';
 
 export const paginationSchema = z.object({

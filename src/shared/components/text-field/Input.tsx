@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { cn } from '@/src/lib/utils';
+import { cn } from '@/src/shared/utils/cn';
 
 interface InputProps extends ComponentProps<'input'> {
   innerButton?: React.ReactNode;
@@ -18,7 +18,7 @@ const Input = ({ innerButton, hasError, className, ...props }: InputProps) => {
       <input
         className={cn(
           { 'flex-1': innerButton },
-          'placeholder:body-m placeholder:text-text-disabled-300 body-m text-text-g800',
+          'placeholder:body-m placeholder:text-text-disabled-300 body-m text-text-g800 w-full',
           className
         )}
         {...props}
