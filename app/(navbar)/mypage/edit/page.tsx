@@ -7,7 +7,6 @@ import { Controller, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import PlusIcon from '@/src/shared/assets/svg/plus.svg';
 import Button from '@/src/shared/components/button/Button';
 import Label from '@/src/shared/components/text-field/Label';
 import TextField from '@/src/shared/components/text-field/TextField';
@@ -21,6 +20,7 @@ import {
 import { useModalStore } from '@/src/shared/store/useModalStore';
 import { ROUTES } from '@/src/shared/constants/routes';
 import { mypageQueries } from '@/src/features/mypage/mypage.queries';
+import { PlusIcon } from '@/src/shared/assets/svg';
 
 export const CUSTOM_PURPOSE_LABEL = '기타' as const;
 export const CAREER_OPTIONS = ['경력 없음', '0 - 3년', '4 - 7년', '8 - 10년', '11년 이상'] as const;
