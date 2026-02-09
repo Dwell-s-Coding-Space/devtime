@@ -22,8 +22,8 @@ import Label from '@/src/shared/components/text-field/Label';
 import Select from '@/src/shared/components/text-field/Select';
 import TextField from '@/src/shared/components/text-field/TextField';
 import AutoComplete from '@/src/shared/components/text-field/AutoComplete';
-import XIcon from '@/src/shared/assets/svg/x.svg';
 import { ROUTES } from '@/src/shared/constants/routes';
+import { XIcon } from '@/src/shared/assets/svg';
 import { mypageQueries } from '../../mypage/mypage.queries';
 
 const profileSettingSchema = z

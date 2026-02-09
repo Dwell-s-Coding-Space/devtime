@@ -2,8 +2,9 @@
 
 import { MouseEvent, useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import TrashIcon from '@/src/shared/assets/svg/trash.svg';
+
 import { useModalStore } from '@/src/shared/store/useModalStore';
+import { TrashIcon } from '@/src/shared/assets/svg';
 import { StudyLogListResponse } from '../dashboard.schema';
 import { dashboardQueries } from '../dashboard.queries';
 import TaskViewModal from './TaskViewModal';

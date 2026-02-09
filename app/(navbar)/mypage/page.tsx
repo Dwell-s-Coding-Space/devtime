@@ -4,9 +4,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
 import { cn } from '@/src/shared/utils/cn';
-import UserIcon from '@/src/shared/assets/svg/user.svg';
-import EditIcon from '@/src/shared/assets/svg/edit.svg';
 import { ROUTES } from '@/src/shared/constants/routes';
+import { EditIcon, UserIcon } from '@/src/shared/assets/svg';
 import { mypageQueries } from '@/src/features/mypage/mypage.queries';
 
 export default function Mypage() {
