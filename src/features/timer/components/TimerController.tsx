@@ -1,5 +1,4 @@
-import TimerStartIcon from '@/src/shared/assets/svg/timer-start.svg';
-import TimerPauseIcon from '@/src/shared/assets/svg/timer-pause.svg';
+import { TimerPauseIcon, TimerStartIcon } from '@/src/shared/assets/svg';
 import { TimerStatus } from '../timer.types';
 
 interface TimerControllerProps {

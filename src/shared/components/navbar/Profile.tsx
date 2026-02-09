@@ -3,10 +3,9 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
-import UserIcon from '@/src/shared/assets/svg/user.svg';
-import LogoutIcon from '@/src/shared/assets/svg/logout.svg';
 import { authQueries } from '@/src/features/auth/auth.queries';
 import { ROUTES } from '../../constants/routes';
+import { LogoutIcon, UserIcon } from '../../assets/svg';
 
 const Profile = () => {
   const router = useRouter();
