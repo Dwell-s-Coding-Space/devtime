@@ -1,0 +1,104 @@
+name: Lighthouse CI
+
+on: pull_request
+
+jobs:
+  lighthouse-ci:
+    name: Lighthouse CI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - run: pnpm install
+
+      - run: pnpm build
+
+      - run: pnpm lhci
+
+      - name: Comment Lighthouse results on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            const links = JSON.parse(fs.readFileSync('.lighthouseci/links.json', 'utf8'));
+            const results = JSON.parse(fs.readFileSync('.lighthouseci/assertion-results.json', 'utf8'));
+            const failed = new Set(results.map(result => `${result.url}:${result.auditProperty}`));
+            const lhrFiles = fs.readdirSync('.lighthouseci').filter(file => file.endsWith('.json') && file.startsWith('lhr-'));
+
+            const scoresByUrl = {};
+
+            for (const file of lhrFiles) {
+              const lhrFile = JSON.parse(fs.readFileSync(path.join('.lighthouseci', file), 'utf8'));
+              const url = lhrFile.requestedUrl;
+
+              if (!scoresByUrl[url]) scoresByUrl[url] = [];
+              scoresByUrl[url].push({
+                performance: lhrFile.categories.performance.score,
+                accessibility: lhrFile.categories.accessibility.score,
+                'best-practices': lhrFile.categories['best-practices'].score,
+                seo: lhrFile.categories.seo.score, 
+              });
+            }
+
+            const rows = Object.entries(scoresByUrl).map(([url, runs]) => {
+              const average = key => Math.round(runs.reduce((score, run) => score + run[key], 0) / runs.length * 100);
+              const score = key => {
+                const value = average(key);
+                const warn = failed.has(`${url}:${key}`) ? ' :warning:' : '';
+                return `${value}${warn}`;
+              }
+              const pathname = new URL(url).pathname;
+              const reportUrl = links[url] || '';
+
+              return `| [${pathname}](${reportUrl}) | ${score('performance')} | ${score('accessibility')} | ${score('best-practices')} | ${score('seo')} |`;
+            })
+
+            const thresholds = {
+              performance: 80,
+              accessibility: 90,
+              'best-practices': 80,
+              seo: 80,
+            }
+
+            const body = [
+              '### Lighthouse CI Results',
+              '',
+              '| URL | Performance | Accessibility | Best Practices | SEO | ',
+              '| --- | --- | --- | --- | --- |',
+              '| Threshold | ' + Object.values(thresholds).join(' | ') + ' |',
+              ...rows,
+            ].join('\n');
+
+
+            const {data: comments} = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number
+            })
+
+            const previousLighthouseComment = comments.find(comment => comment.body.includes('### Lighthouse CI Results'));
+
+            if (previousLighthouseComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: previousLighthouseComment.id,
+                body,
+              })
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              })
+            }

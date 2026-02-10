@@ -12,7 +12,8 @@
     "format:check": "prettier --check .",
     "fix": "pnpm lint:fix && pnpm format",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "lhci": "lhci autorun"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -31,6 +32,7 @@
   "devDependencies": {
     "@chromatic-com/storybook": "^5.0.0",
     "@hookform/devtools": "^4.4.0",
+    "@lhci/cli": "^0.15.1",
     "@storybook/addon-a11y": "^10.2.7",
     "@storybook/addon-docs": "^10.2.7",
     "@storybook/addon-vitest": "^10.2.7",
