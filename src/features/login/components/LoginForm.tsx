@@ -34,6 +34,7 @@ const LoginForm = () => {
   });
 
   const onSubmit = (data: LoginFormValues) => {
+    alert('backend url' + process.env.API_BASE_URL);
     startTransition(async () => {
       const result = await loginAction(data);
 
