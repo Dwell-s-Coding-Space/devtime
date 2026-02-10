@@ -20,9 +20,6 @@ class Api {
   private options;
 
   constructor(baseUrl: string, baseOptions?: RequestInit) {
-    console.log('[api constructor] backend url', process.env.API_BASE_URL);
-    console.log('[api constructor] site url', process.env.SITE_URL);
-    console.log('[api constructor] base url', baseUrl);
     this.baseUrl = baseUrl;
     this.options = baseOptions || {};
   }

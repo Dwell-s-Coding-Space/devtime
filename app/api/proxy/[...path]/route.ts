@@ -28,8 +28,6 @@ async function handler(request: NextRequest, { params }: { params: Promise<{ pat
     if (token) headers.set('authorization', `Bearer ${token}`);
     else headers.delete('authorization');
 
-    console.log('target url', target);
-
     return fetch(target, {
       method: request.method,
       headers,

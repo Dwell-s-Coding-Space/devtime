@@ -14,9 +14,6 @@ export async function checkIsLoggedIn() {
 }
 
 export async function loginAction(data: LoginFormValues) {
-  console.log('[login action] backend url', process.env.API_BASE_URL);
-  console.log('[login action] site url', process.env.SITE_URL);
-
   try {
     const serverApi = await createServerApi();
     const result = await createAuthApi(serverApi).postLogin(data);
