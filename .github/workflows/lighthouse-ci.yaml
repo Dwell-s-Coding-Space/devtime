@@ -25,6 +25,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Install Chrome
+        run: npx puppeteer browsers install chrome
+
       - name: Build
         run: pnpm build
 
@@ -42,6 +45,8 @@ jobs:
           script: |
             const fs = require('fs');
             const path = require('path');
+
+            if (!fs.existsSync('.lighthouseci')) return;
 
             const links = JSON.parse(fs.readFileSync('.lighthouseci/links.json', 'utf8'));
             const results = JSON.parse(fs.readFileSync('.lighthouseci/assertion-results.json', 'utf8'));
