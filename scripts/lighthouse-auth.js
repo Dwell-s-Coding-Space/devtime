@@ -27,10 +27,23 @@ module.exports = async (browser, context) => {
     return;
   }
 
-  // 1. 회원가입 시도 (중복이면 무시)
+  // 1. 로그인 페이지로 이동
   console.log(`[LHCI Auth] Navigating to /login`);
-  await page.goto('http://localhost:3000/login');
+  await page.goto('http://localhost:3000/login', { waitUntil: 'networkidle0' });
 
+  // 이미 로그인된 상태면 /login이 /home으로 리다이렉트됨 (GUEST_ONLY_ROUTE)
+  const currentPath = new URL(page.url()).pathname;
+  if (currentPath !== '/login') {
+    console.log(
+      `[LHCI Auth] Already logged in (redirected to ${currentPath}) - skipping auth`
+    );
+    await page.goto(context.url, { waitUntil: 'networkidle0' });
+    console.log(`[LHCI Auth] Ready for Lighthouse`);
+    await page.close();
+    return;
+  }
+
+  // 2. 회원가입 시도 (중복이면 무시)
   console.log(`[LHCI Auth] Attempting signup...`);
   const signupResult = await page.evaluate(
     async ({ email, nickname, password }) => {
@@ -55,7 +68,7 @@ module.exports = async (browser, context) => {
   );
   console.log(`[LHCI Auth] Signup response: ${JSON.stringify(signupResult)}`);
 
-  // 2. 로그인 (Puppeteer UI 조작으로 쿠키 설정)
+  // 3. 로그인 (Puppeteer UI 조작으로 쿠키 설정)
   console.log(`[LHCI Auth] Filling login form...`);
   await page.waitForSelector('input[name="email"]');
   await page.type('input[name="email"]', LHCI_EMAIL);
@@ -82,7 +95,7 @@ module.exports = async (browser, context) => {
   await page.waitForNavigation({ waitUntil: 'networkidle0' });
   console.log(`[LHCI Auth] Navigated to: ${page.url()}`);
 
-  // 3. Lighthouse 수집 URL로 이동
+  // 4. Lighthouse 수집 URL로 이동
   console.log(`[LHCI Auth] Going to target: ${context.url}`);
   await page.goto(context.url, { waitUntil: 'networkidle0' });
   console.log(`[LHCI Auth] Ready for Lighthouse`);
