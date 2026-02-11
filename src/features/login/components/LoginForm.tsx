@@ -45,6 +45,7 @@ const LoginForm = () => {
           buttons: [{ variant: 'primary', label: '확인', action: 'cancel' }],
         });
 
+        router.push(ROUTES.HOME);
         return;
       }
 
