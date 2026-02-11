@@ -37,6 +37,7 @@ jobs:
         run: pnpm lhci
         env:
           API_BASE_URL: ${{ secrets.API_BASE_URL }}
+          LHCI_TOKEN: ${{ secrets.LHCI_TOKEN }}
           LHCI_EMAIL: ${{ secrets.LHCI_EMAIL }}
           LHCI_PASSWORD: ${{ secrets.LHCI_PASSWORD }}
           LHCI_NICKNAME: ${{ secrets.LHCI_NICKNAME }}
