@@ -36,6 +36,7 @@ jobs:
       - name: Run Lighthouse CI
         run: pnpm lhci
         env:
+          API_BASE_URL: ${{ secrets.API_BASE_URL }}
           LHCI_EMAIL: ${{ secrets.LHCI_EMAIL }}
           LHCI_PASSWORD: ${{ secrets.LHCI_PASSWORD }}
           LHCI_NICKNAME: ${{ secrets.LHCI_NICKNAME }}
