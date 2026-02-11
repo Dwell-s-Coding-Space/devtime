@@ -13,42 +13,31 @@ jobs:
       pull-requests: write
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github/scripts
+          sparse-checkout-cone-mode: false
+
       - name: Comment staged deployment URL
         uses: actions/github-script@v7
         with:
           script: |
+            const upsert = require('./.github/scripts/upsert-pr-comment.js');
+
             const baseBranch = context.payload.pull_request.base.ref;
             const appId = `${{ secrets.AMPLIFY_APP_ID }}`;
             const deployUrl = `https://${baseBranch}.${appId}.amplifyapp.com`;
 
+            const title = '### Staged Deployment'
+
             const body = [
-              '### Staged Deployment',
+              title,
               '',
               `This PR targets \`${baseBranch}\`. Once merged, changes will be live at:`,
               '',
               `**${deployUrl}**`,
             ].join('\n');
 
-            const {data: comments} = await github.rest.issues.listComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-            })
 
-            const existing = comments.find(c => c.body.includes('### Staged Deployment'));
-
-            if (existing) {
-              await github.rest.issues.updateComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                comment_id: existing.id,
-                body,
-              })
-            } else {
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: context.issue.number,
-                body,
-              })
-            }
+            await upsert({ github, context, marker: title, body });

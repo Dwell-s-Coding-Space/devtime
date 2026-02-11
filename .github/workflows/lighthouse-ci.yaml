@@ -48,6 +48,7 @@ jobs:
           script: |
             const fs = require('fs');
             const path = require('path');
+            const upsert = require('./.github/scripts/upsert-pr-comment.js');
 
             if (!fs.existsSync('.lighthouseci')) return;
 
@@ -91,8 +92,10 @@ jobs:
               seo: 80,
             }
 
+            const title = '### Lighthouse CI Results'
+
             const body = [
-              '### Lighthouse CI Results',
+              title,
               '',
               '| URL | Performance | Accessibility | Best Practices | SEO |',
               '| --- | --- | --- | --- | --- |',
@@ -100,26 +103,4 @@ jobs:
               ...rows,
             ].join('\n');
 
-            const {data: comments} = await github.rest.issues.listComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number
-            })
-
-            const previousLighthouseComment = comments.find(comment => comment.body.includes('### Lighthouse CI Results'));
-
-            if (previousLighthouseComment) {
-              await github.rest.issues.updateComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                comment_id: previousLighthouseComment.id,
-                body,
-              })
-            } else {
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: context.issue.number,
-                body,
-              })
-            }
+            await upsert({ github, context, marker: title, body });
