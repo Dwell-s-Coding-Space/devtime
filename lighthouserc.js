@@ -12,7 +12,7 @@ module.exports = {
         'http://localhost:3000/mypage',
         'http://localhost:3000/mypage/edit',
       ],
-      numberOfRuns: 1,
+      numberOfRuns: 3,
       puppeteerScript: './scripts/lighthouse-auth.js',
       puppeteerLaunchOptions: {
         args: ['--no-sandbox'],
