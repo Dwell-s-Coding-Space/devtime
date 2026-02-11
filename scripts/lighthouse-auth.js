@@ -13,6 +13,12 @@ module.exports = async (browser, context) => {
 
   console.log(`[LHCI Auth] Target: ${url.pathname}`);
 
+  // 브라우저 콘솔 로그 캡처
+  page.on('console', (msg) => console.log(`[Browser] ${msg.text()}`));
+  page.on('requestfailed', (req) =>
+    console.log(`[Network Error] ${req.url()} - ${req.failure()?.errorText}`)
+  );
+
   // Public/Guest-only route는 로그인 없이 바로 수집
   if (PUBLIC_ROUTES.includes(url.pathname)) {
     console.log(`[LHCI Auth] Public route - skipping auth`);
@@ -28,17 +34,22 @@ module.exports = async (browser, context) => {
   console.log(`[LHCI Auth] Attempting signup...`);
   const signupResult = await page.evaluate(
     async ({ email, nickname, password }) => {
-      const res = await fetch('/api/proxy/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email,
-          nickname,
-          password,
-          confirmPassword: password,
-        }),
-      });
-      return { status: res.status, ok: res.ok };
+      try {
+        const res = await fetch('/api/proxy/signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email,
+            nickname,
+            password,
+            confirmPassword: password,
+          }),
+        });
+        const body = await res.text();
+        return { status: res.status, ok: res.ok, body };
+      } catch (e) {
+        return { error: e.message };
+      }
     },
     { email: LHCI_EMAIL, nickname: LHCI_NICKNAME, password: LHCI_PASSWORD }
   );
@@ -53,10 +64,13 @@ module.exports = async (browser, context) => {
   console.log(`[LHCI Auth] Login submitted, waiting for modal...`);
 
   // 로그인 성공/실패 모달의 "확인" 버튼 대기 후 클릭
-  await page.waitForFunction(() => {
-    const buttons = document.querySelectorAll('button[type="button"]');
-    return [...buttons].find((btn) => btn.textContent?.trim() === '확인');
-  });
+  await page.waitForFunction(
+    () => {
+      const buttons = document.querySelectorAll('button[type="button"]');
+      return [...buttons].find((btn) => btn.textContent?.trim() === '확인');
+    },
+    { timeout: 15000 }
+  );
   console.log(`[LHCI Auth] Modal found, clicking confirm button...`);
   await page.evaluate(() => {
     const buttons = document.querySelectorAll('button[type="button"]');
