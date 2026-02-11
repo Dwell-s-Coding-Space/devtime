@@ -28,7 +28,7 @@ module.exports = async (browser, context) => {
   // 이미 로그인된 상태면 /login이 /home으로 리다이렉트됨 (GUEST_ONLY_ROUTE)
   const currentPath = new URL(page.url()).pathname;
   if (currentPath !== '/login') {
-    console.log(`🟡 Already logged in! Navigating to ${currentPath} - skipping auth`);
+    console.log(`🟡 Already logged in! Navigating back to ${context.url} - skipping auth`);
     await page.goto(context.url, { waitUntil: 'networkidle0' });
     await page.close();
     return;
