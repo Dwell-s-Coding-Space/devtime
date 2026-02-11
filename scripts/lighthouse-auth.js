@@ -11,40 +11,31 @@ module.exports = async (browser, context) => {
   const page = await browser.newPage();
   const url = new URL(context.url);
 
-  console.log(`[LHCI Auth] Target: ${url.pathname}`);
-
-  // 브라우저 콘솔 로그 캡처
-  page.on('console', (msg) => console.log(`[Browser] ${msg.text()}`));
-  page.on('requestfailed', (req) =>
-    console.log(`[Network Error] ${req.url()} - ${req.failure()?.errorText}`)
-  );
+  console.log(`🟡 Target: ${url.pathname}`);
 
   // Public/Guest-only route는 로그인 없이 바로 수집
   if (PUBLIC_ROUTES.includes(url.pathname)) {
-    console.log(`[LHCI Auth] Public route - skipping auth`);
+    console.log(`🟡 Public route - skipping auth`);
     await page.goto(context.url, { waitUntil: 'networkidle0' });
     await page.close();
     return;
   }
 
   // 1. 로그인 페이지로 이동
-  console.log(`[LHCI Auth] Navigating to /login`);
+  console.log(`🟡 Navigating to /login`);
   await page.goto('http://localhost:3000/login', { waitUntil: 'networkidle0' });
 
   // 이미 로그인된 상태면 /login이 /home으로 리다이렉트됨 (GUEST_ONLY_ROUTE)
   const currentPath = new URL(page.url()).pathname;
   if (currentPath !== '/login') {
-    console.log(
-      `[LHCI Auth] Already logged in (redirected to ${currentPath}) - skipping auth`
-    );
+    console.log(`🟡 Already logged in! Navigating to ${currentPath} - skipping auth`);
     await page.goto(context.url, { waitUntil: 'networkidle0' });
-    console.log(`[LHCI Auth] Ready for Lighthouse`);
     await page.close();
     return;
   }
 
-  // 2. 회원가입 시도 (중복이면 무시)
-  console.log(`[LHCI Auth] Attempting signup...`);
+  // 2. 회원가입 시도 (중복이면 무시, 페이지 이동 X, API 호출만)
+  console.log(`🟡 Attempting signup...`);
   const signupResult = await page.evaluate(
     async ({ email, nickname, password }) => {
       try {
@@ -66,38 +57,27 @@ module.exports = async (browser, context) => {
     },
     { email: LHCI_EMAIL, nickname: LHCI_NICKNAME, password: LHCI_PASSWORD }
   );
-  console.log(`[LHCI Auth] Signup response: ${JSON.stringify(signupResult)}`);
+  console.log(`🟡 Signup response: ${JSON.stringify(signupResult)}`);
 
-  // 3. 로그인 (Puppeteer UI 조작으로 쿠키 설정)
-  console.log(`[LHCI Auth] Filling login form...`);
+  // 3. 로그인 : Puppeteer UI 조작으로 쿠키 설정
+  console.log(`🟡 Filling login form...`);
   await page.waitForSelector('input[name="email"]');
   await page.type('input[name="email"]', LHCI_EMAIL);
   await page.type('input[name="password"]', LHCI_PASSWORD);
   await page.click('button[type="submit"]');
-  console.log(`[LHCI Auth] Login submitted, waiting for modal...`);
+  console.log(`🟡 Login submitted, waiting for modal...`);
 
   // 로그인 성공/실패 모달의 "확인" 버튼 대기 후 클릭
-  await page.waitForFunction(
-    () => {
-      const buttons = document.querySelectorAll('button[type="button"]');
-      return [...buttons].find((btn) => btn.textContent?.trim() === '확인');
-    },
-    { timeout: 15000 }
-  );
-  console.log(`[LHCI Auth] Modal found, clicking confirm button...`);
-  await page.evaluate(() => {
-    const buttons = document.querySelectorAll('button[type="button"]');
-    const confirmBtn = [...buttons].find(
-      (btn) => btn.textContent?.trim() === '확인'
-    );
-    confirmBtn?.click();
+  // 성공시 home으로 이동
+  await page.waitForSelector('button[type="button"]', { visible: true, timeout: 3000 });
+  await page.click('button[type="button"]');
+  await page.waitForNavigation({ waitUntil: 'networkidle0' }).catch(() => {
+    throw new Error('🟡 Login failed - check LHCI_EMAIL/LHCI_PASSWORD');
   });
-  await page.waitForNavigation({ waitUntil: 'networkidle0' });
-  console.log(`[LHCI Auth] Navigated to: ${page.url()}`);
+  console.log(`🟡 Login Success! Navigated to: ${page.url()}`);
 
   // 4. Lighthouse 수집 URL로 이동
-  console.log(`[LHCI Auth] Going to target: ${context.url}`);
+  console.log(`🟡 Navigating to target: ${context.url}`);
   await page.goto(context.url, { waitUntil: 'networkidle0' });
-  console.log(`[LHCI Auth] Ready for Lighthouse`);
   await page.close();
 };

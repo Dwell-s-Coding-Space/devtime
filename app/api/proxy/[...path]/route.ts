@@ -6,10 +6,7 @@ const BACKEND_URL = process.env.API_BASE_URL;
 async function handler(request: NextRequest, { params }: { params: Promise<{ path: string[] }> }) {
   const { path } = await params;
 
-  console.log(`[Proxy Debug] BACKEND_URL=${BACKEND_URL}, path=${path.join('/')}`);
-
   if (!BACKEND_URL) {
-    console.error('[Proxy Debug] API_BASE_URL is not set!');
     return NextResponse.json({ error: 'API_BASE_URL is not configured' }, { status: 500 });
   }
 
