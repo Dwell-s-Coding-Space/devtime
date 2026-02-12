@@ -48,3 +48,8 @@ storybook-static
 .lighthouseci/
 chromewebdata_*.html
 localhost_*.html
+
+# playwright
+/e2e/results
+/playwright-report/
+/blob-report/
