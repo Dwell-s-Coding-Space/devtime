@@ -5,22 +5,14 @@ import { useMutation } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import z from 'zod';
 
 import Button from '@/src/shared/components/button/Button';
 import TextField from '@/src/shared/components/text-field/TextField';
 import { ROUTES } from '@/src/shared/constants/routes';
 import { useModalStore } from '@/src/shared/store/useModalStore';
 
-import { authQueries } from '../../auth/auth.queries';
-import { emailSchema, passwordSchema } from '../../signup/components/SignUpForm';
-
-const loginFormSchema = z.object({
-  email: emailSchema,
-  password: passwordSchema,
-});
-
-export type LoginFormValues = z.infer<typeof loginFormSchema>;
+import { authQueries } from '../auth.queries';
+import { loginFormSchema, LoginFormValues } from '../auth.schema';
 
 const LoginForm = () => {
   const router = useRouter();

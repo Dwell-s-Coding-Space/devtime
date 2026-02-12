@@ -6,52 +6,14 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
-import z from 'zod';
 
 import Button from '@/src/shared/components/button/Button';
 import TextField from '@/src/shared/components/text-field/TextField';
 import { ROUTES } from '@/src/shared/constants/routes';
 
-import { authQueries } from '../../auth/auth.queries';
-import { TERMS_OF_SERVICE } from '../constants';
-
-const password_regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-
-export const emailSchema = z.email('이메일 형식으로 작성해 주세요.');
-export const nicknameSchema = z.string().min(1, '닉네임을 입력해 주세요.');
-export const passwordSchema = z
-  .string()
-  .regex(password_regex, '비밀번호는 8자 이상, 영문과 숫자 조합이어야 합니다.');
-export const confirmPasswordSchema = z.string().min(1, '비밀번호 확인을 입력해 주세요.');
-export const agreeToTermsSchema = z.boolean();
-
-const signUpSchema = z
-  .object({
-    email: emailSchema,
-    nickname: nicknameSchema,
-    password: passwordSchema,
-    confirmPassword: confirmPasswordSchema,
-    agreeToTerms: agreeToTermsSchema,
-  })
-  .superRefine((data, ctx) => {
-    if (data.agreeToTerms !== true) {
-      ctx.addIssue({
-        code: 'custom',
-        message: '이용약관에 동의해 주세요.',
-        path: ['agreeToTerms'],
-      });
-    }
-
-    if (data.password && data.confirmPassword && data.password !== data.confirmPassword) {
-      ctx.addIssue({
-        code: 'custom',
-        path: ['confirmPassword'],
-        message: '비밀번호가 일치하지 않습니다.',
-      });
-    }
-  });
-
-export type SignUpFormValues = z.infer<typeof signUpSchema>;
+import { TERMS_OF_SERVICE } from '../auth.constants';
+import { authQueries } from '../auth.queries';
+import { SignUpFormValues, signUpSchema } from '../auth.schema';
 
 const SignUpForm = () => {
   const router = useRouter();
