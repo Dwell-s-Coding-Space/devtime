@@ -1,16 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import z from 'zod';
 
-import { PostSignUpBody } from '@/src/features/auth/auth.schema';
-import { BaseResponse } from '@/src/shared/schema/common.schema';
-import { asDateOrNull } from '@/src/shared/schema/primitives/date';
-import { asArray } from '@/src/shared/schema/primitives/object';
-
 import {
   confirmPasswordSchema,
   nicknameSchema,
   passwordSchema,
-} from '../signup/components/SignUpForm';
+  PostSignUpBody,
+} from '@/src/features/auth/auth.schema';
+import { BaseResponse } from '@/src/shared/schema/common.schema';
+import { asDateOrNull } from '@/src/shared/schema/primitives/date';
+import { asArray } from '@/src/shared/schema/primitives/object';
 
 export const CUSTOM_PURPOSE_LABEL = '기타' as const;
 export const CAREER_OPTIONS = ['경력 없음', '0 - 3년', '4 - 7년', '8 - 10년', '11년 이상'] as const;
@@ -104,7 +103,7 @@ export interface PostTechStackResponse extends Pick<BaseResponse, 'message'> {
 }
 
 /**
- * 마이페이지 수정 폼 스키마
+ * profile-edit form schema
  */
 
 export const goalSchema = z.optional(z.string());
@@ -144,3 +143,27 @@ export const profileEditSchema = z
   });
 
 export type ProfileEditFormValues = z.infer<typeof profileEditSchema>;
+
+/**
+ * profile-setting form schema
+ */
+
+export const profileSettingSchema = z
+  .object({
+    goal: goalSchema,
+    career: careerSchema,
+    purpose: purposeSchema,
+    purposeDetail: purposeDetailSchema,
+    techStacks: techStacksSchema,
+  })
+  .superRefine((data, ctx) => {
+    if (data.purpose === CUSTOM_PURPOSE_LABEL && !data.purposeDetail?.trim()) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['purposeDetail'],
+        message: '공부 목적을 입력해주세요.',
+      });
+    }
+  });
+
+export type ProfileSettingFormValues = z.infer<typeof profileSettingSchema>;

@@ -4,18 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { Controller, useForm, useWatch } from 'react-hook-form';
-import z from 'zod';
 
-import {
-  CAREER_OPTIONS,
-  careerSchema,
-  CUSTOM_PURPOSE_LABEL,
-  goalSchema,
-  PURPOSE_OPTIONS,
-  purposeDetailSchema,
-  purposeSchema,
-  techStacksSchema,
-} from '@/app/(navbar)/mypage/edit/page';
 import { XIcon } from '@/src/shared/assets/svg';
 import Button from '@/src/shared/components/button/Button';
 import AutoComplete from '@/src/shared/components/text-field/AutoComplete';
@@ -26,27 +15,14 @@ import TextField from '@/src/shared/components/text-field/TextField';
 import { ROUTES } from '@/src/shared/constants/routes';
 import { useModalStore } from '@/src/shared/store/useModalStore';
 
-import { mypageQueries } from '../../mypage/mypage.queries';
-
-const profileSettingSchema = z
-  .object({
-    goal: goalSchema,
-    career: careerSchema,
-    purpose: purposeSchema,
-    purposeDetail: purposeDetailSchema,
-    techStacks: techStacksSchema,
-  })
-  .superRefine((data, ctx) => {
-    if (data.purpose === CUSTOM_PURPOSE_LABEL && !data.purposeDetail?.trim()) {
-      ctx.addIssue({
-        code: 'custom',
-        path: ['purposeDetail'],
-        message: '공부 목적을 입력해주세요.',
-      });
-    }
-  });
-
-export type ProfileSettingFormValues = z.infer<typeof profileSettingSchema>;
+import { mypageQueries } from '../mypage.queries';
+import {
+  CAREER_OPTIONS,
+  CUSTOM_PURPOSE_LABEL,
+  ProfileSettingFormValues,
+  profileSettingSchema,
+  PURPOSE_OPTIONS,
+} from '../mypage.schema';
 
 const ProfileSettingForm = () => {
   const queryClient = useQueryClient();
