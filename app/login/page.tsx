@@ -1,4 +1,5 @@
 import Image from 'next/image';
+
 import LoginForm from '@/src/features/login/components/LoginForm';
 
 export default async function Login() {

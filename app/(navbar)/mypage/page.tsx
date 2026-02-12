@@ -1,12 +1,13 @@
 'use client';
 
-import Link from 'next/link';
-import Image from 'next/image';
 import { useQuery } from '@tanstack/react-query';
-import { cn } from '@/src/shared/utils/cn';
-import { ROUTES } from '@/src/shared/constants/routes';
-import { EditIcon, UserIcon } from '@/src/shared/assets/svg';
+import Image from 'next/image';
+import Link from 'next/link';
+
 import { mypageQueries } from '@/src/features/mypage/mypage.queries';
+import { EditIcon, UserIcon } from '@/src/shared/assets/svg';
+import { ROUTES } from '@/src/shared/constants/routes';
+import { cn } from '@/src/shared/utils/cn';
 
 export default function Mypage() {
   const { data: profileData } = useQuery(mypageQueries.profile());

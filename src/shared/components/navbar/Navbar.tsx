@@ -1,8 +1,9 @@
-import Link from 'next/link';
-import Image from 'next/image';
 import { cookies } from 'next/headers';
-import Profile from './Profile';
+import Image from 'next/image';
+import Link from 'next/link';
+
 import { ROUTES } from '../../constants/routes';
+import Profile from './Profile';
 
 const Navbar = async () => {
   const accessToken = (await cookies()).get('accessToken')?.value;

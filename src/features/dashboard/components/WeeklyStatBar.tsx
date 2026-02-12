@@ -1,5 +1,5 @@
-import { GetStudyStatResponse } from '../dashboard.schema';
 import { SECONDS_IN_HOUR } from '../../timer/utils/formatTime';
+import { GetStudyStatResponse } from '../dashboard.schema';
 
 const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 

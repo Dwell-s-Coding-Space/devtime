@@ -1,4 +1,5 @@
 import { ComponentProps } from 'react';
+
 import { cn } from '@/src/shared/utils/cn';
 
 interface InputProps extends ComponentProps<'input'> {

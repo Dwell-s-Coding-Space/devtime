@@ -1,6 +1,8 @@
-import { ComponentProps } from 'react';
 import { cva } from 'class-variance-authority';
+import { ComponentProps } from 'react';
+
 import { cn } from '@/src/shared/utils/cn';
+
 import Input from './Input';
 import Label from './Label';
 

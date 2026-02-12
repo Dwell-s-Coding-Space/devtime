@@ -1,7 +1,9 @@
 import { queryOptions } from '@tanstack/react-query';
+
 import { clientApi } from '@/src/shared/api/client';
-import { createAuthApi } from './auth.api';
+
 import { checkIsLoggedIn } from './auth.action';
+import { createAuthApi } from './auth.api';
 
 const authApi = createAuthApi(clientApi);
 

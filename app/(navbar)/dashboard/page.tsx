@@ -1,6 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
+
 import StatBox from '@/src/features/dashboard/components/StatBox';
 import StudyLogList from '@/src/features/dashboard/components/StudyLogList';
 import WeeklyStatBar from '@/src/features/dashboard/components/WeeklyStatBar';
