@@ -1,7 +1,9 @@
-import Link from 'next/link';
-import Image from 'next/image';
 import { cookies } from 'next/headers';
-import Profile from './Profile';
+import Image from 'next/image';
+import Link from 'next/link';
+
+import UserDropdown from '@/src/features/auth/components/UserDropdown';
+
 import { ROUTES } from '../../constants/routes';
 
 const Navbar = async () => {
@@ -25,7 +27,7 @@ const Navbar = async () => {
       </div>
 
       {isLoggedIn ? (
-        <Profile />
+        <UserDropdown />
       ) : (
         <div className="flex items-center gap-12">
           <Link href={ROUTES.LOGIN}>

@@ -1,10 +1,11 @@
-import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
+
 import { dashboardQueries } from '../../dashboard/dashboard.queries';
-import type { TaskModalProps } from '../timer.types';
-import { timerQueries } from '../timer.queries';
 import { useTasks } from '../hooks';
-import { TaskModalFooter, TaskModalLayout, Goal, AddTaskItem, TaskList } from './TaskModal';
+import { timerQueries } from '../timer.queries';
+import type { TaskModalProps } from '../timer.types';
+import { AddTaskItem, Goal, TaskList, TaskModalFooter, TaskModalLayout } from './TaskModal';
 
 interface TimerStartModalProps extends TaskModalProps {
   startTimer: () => void;

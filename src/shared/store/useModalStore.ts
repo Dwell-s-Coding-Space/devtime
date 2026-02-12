@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+
 import type { ButtonVariant } from '@/src/shared/components/button/Button';
 
 interface ModalButton {

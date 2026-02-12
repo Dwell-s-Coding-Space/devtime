@@ -1,50 +1,28 @@
 'use client';
 
-import z from 'zod';
-import { useRouter } from 'next/navigation';
-import { Controller, useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-  CAREER_OPTIONS,
-  careerSchema,
-  CUSTOM_PURPOSE_LABEL,
-  goalSchema,
-  PURPOSE_OPTIONS,
-  purposeDetailSchema,
-  purposeSchema,
-  techStacksSchema,
-} from '@/app/(navbar)/mypage/edit/page';
-import { useModalStore } from '@/src/shared/store/useModalStore';
+import { useRouter } from 'next/navigation';
+import { Controller, useForm, useWatch } from 'react-hook-form';
+
+import { XIcon } from '@/src/shared/assets/svg';
 import Button from '@/src/shared/components/button/Button';
+import AutoComplete from '@/src/shared/components/text-field/AutoComplete';
 import Input from '@/src/shared/components/text-field/Input';
 import Label from '@/src/shared/components/text-field/Label';
 import Select from '@/src/shared/components/text-field/Select';
 import TextField from '@/src/shared/components/text-field/TextField';
-import AutoComplete from '@/src/shared/components/text-field/AutoComplete';
 import { ROUTES } from '@/src/shared/constants/routes';
-import { XIcon } from '@/src/shared/assets/svg';
-import { mypageQueries } from '../../mypage/mypage.queries';
+import { useModalStore } from '@/src/shared/store/useModalStore';
 
-const profileSettingSchema = z
-  .object({
-    goal: goalSchema,
-    career: careerSchema,
-    purpose: purposeSchema,
-    purposeDetail: purposeDetailSchema,
-    techStacks: techStacksSchema,
-  })
-  .superRefine((data, ctx) => {
-    if (data.purpose === CUSTOM_PURPOSE_LABEL && !data.purposeDetail?.trim()) {
-      ctx.addIssue({
-        code: 'custom',
-        path: ['purposeDetail'],
-        message: '공부 목적을 입력해주세요.',
-      });
-    }
-  });
-
-export type ProfileSettingFormValues = z.infer<typeof profileSettingSchema>;
+import { mypageQueries } from '../mypage.queries';
+import {
+  CAREER_OPTIONS,
+  CUSTOM_PURPOSE_LABEL,
+  ProfileSettingFormValues,
+  profileSettingSchema,
+  PURPOSE_OPTIONS,
+} from '../mypage.schema';
 
 const ProfileSettingForm = () => {
   const queryClient = useQueryClient();

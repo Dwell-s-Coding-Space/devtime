@@ -1,7 +1,9 @@
 import { ComponentProps } from 'react';
-import { cn } from '@/src/shared/utils/cn';
-import { EditIcon } from '@/src/shared/assets/svg';
+
 import type { TaskItem as TaskItemType } from '@/src/features/dashboard/dashboard.schema';
+import { EditIcon } from '@/src/shared/assets/svg';
+import { cn } from '@/src/shared/utils/cn';
+
 import type { TaskMode } from '../../timer.types';
 import TaskItem from './TaskItem';
 

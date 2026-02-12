@@ -1,13 +1,15 @@
 'use client';
 
+import { useMutation } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useMutation } from '@tanstack/react-query';
-import { authQueries } from '@/src/features/auth/auth.queries';
-import { ROUTES } from '../../constants/routes';
-import { LogoutIcon, UserIcon } from '../../assets/svg';
 
-const Profile = () => {
+import { LogoutIcon, UserIcon } from '@/src/shared/assets/svg';
+import { ROUTES } from '@/src/shared/constants/routes';
+
+import { authQueries } from '../auth.queries';
+
+const UserDropdown = () => {
   const router = useRouter();
 
   const { mutate } = useMutation({
@@ -50,4 +52,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default UserDropdown;

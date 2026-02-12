@@ -1,14 +1,15 @@
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
-import { useModalStore } from '@/src/shared/store/useModalStore';
 import { ROUTES } from '@/src/shared/constants/routes';
+import { useModalStore } from '@/src/shared/store/useModalStore';
+
+import { authQueries } from '../../auth/auth.queries';
+import { dashboardQueries } from '../../dashboard/dashboard.queries';
+import { timerQueries } from '../timer.queries';
 import { ModalType } from '../timer.types';
 import useTimer from './useTimer';
-import { timerQueries } from '../timer.queries';
-import { dashboardQueries } from '../../dashboard/dashboard.queries';
-import { authQueries } from '../../auth/auth.queries';
 
 const useTimerPage = ({
   startTimer,

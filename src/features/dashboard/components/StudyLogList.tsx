@@ -1,14 +1,18 @@
+'use client';
+
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
+
 import Pagination from '@/src/shared/components/pagination/Pagination';
-import StudyLogItem from './StudyLogItem';
+
 import { dashboardQueries } from '../dashboard.queries';
+import StudyLogItem from './StudyLogItem';
 
 const StudyLogList = () => {
   const searchParams = useSearchParams();
   const page = Number(searchParams.get('page')) || 1;
 
-  const { data: studyLogListData } = useQuery(dashboardQueries.studyLogs({ page }));
+  const { data: studyLogListData } = useSuspenseQuery(dashboardQueries.studyLogs({ page }));
 
   return (
     <div className="bg-background-white flex flex-col gap-6 rounded-[18px] p-6">

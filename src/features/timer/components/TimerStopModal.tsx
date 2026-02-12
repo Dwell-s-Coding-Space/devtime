@@ -1,12 +1,14 @@
-import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
+
 import Label from '@/src/shared/components/text-field/Label';
-import { GetStudyLogDetailResponse } from '../../dashboard/dashboard.schema';
+
 import { dashboardQueries } from '../../dashboard/dashboard.queries';
-import type { TaskModalProps, TaskMode } from '../timer.types';
-import { timerQueries } from '../timer.queries';
+import { GetStudyLogDetailResponse } from '../../dashboard/dashboard.schema';
 import { useTasks } from '../hooks';
-import { TaskModalFooter, TaskModalLayout, AddTaskItem, TaskList } from './TaskModal';
+import { timerQueries } from '../timer.queries';
+import type { TaskModalProps, TaskMode } from '../timer.types';
+import { AddTaskItem, TaskList, TaskModalFooter, TaskModalLayout } from './TaskModal';
 
 export interface TimerStopModalProps extends TaskModalProps {
   data?: GetStudyLogDetailResponse['data'];

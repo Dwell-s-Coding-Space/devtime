@@ -1,5 +1,7 @@
 import { ComponentProps } from 'react';
+
 import { cn } from '@/src/shared/utils/cn';
+
 import { CheckIcon } from '../../assets/svg';
 
 interface CheckboxProps extends Omit<ComponentProps<'input'>, 'type'> {

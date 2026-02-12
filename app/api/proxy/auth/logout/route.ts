@@ -1,7 +1,8 @@
+import { NextRequest, NextResponse } from 'next/server';
+
 import { getTokens, removeTokens } from '@/src/features/auth/auth.utils';
 import { API_ENDPOINTS } from '@/src/shared/constants/apiEndpoints';
 import { BACKEND_URL } from '@/src/shared/constants/env';
-import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   const target = new URL(`${BACKEND_URL}${API_ENDPOINTS.LOGOUT}`);

@@ -1,25 +1,18 @@
 'use client';
 
-import z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import { useMutation } from '@tanstack/react-query';
-import { zodResolver } from '@hookform/resolvers/zod';
 
-import { useModalStore } from '@/src/shared/store/useModalStore';
 import Button from '@/src/shared/components/button/Button';
 import TextField from '@/src/shared/components/text-field/TextField';
 import { ROUTES } from '@/src/shared/constants/routes';
-import { emailSchema, passwordSchema } from '../../signup/components/SignUpForm';
-import { authQueries } from '../../auth/auth.queries';
+import { useModalStore } from '@/src/shared/store/useModalStore';
 
-const loginFormSchema = z.object({
-  email: emailSchema,
-  password: passwordSchema,
-});
-
-export type LoginFormValues = z.infer<typeof loginFormSchema>;
+import { authQueries } from '../auth.queries';
+import { loginFormSchema, LoginFormValues } from '../auth.schema';
 
 const LoginForm = () => {
   const router = useRouter();

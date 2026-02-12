@@ -1,15 +1,15 @@
 'use client';
 
-import { cn } from '@/src/shared/utils/cn';
-import TimerStartModal from '@/src/features/timer/components/TimerStartModal';
-import TimerRunningModal from '@/src/features/timer/components/TimerRunningModal';
-import TimerStopModal from '@/src/features/timer/components/TimerStopModal';
-import useTimer from '@/src/features/timer/hooks/useTimer';
-import useTimerPage from '@/src/features/timer/hooks/useTimerPage';
-import TimerHeader from '@/src/features/timer/components/TimerHeader';
-import TimerSubController from '@/src/features/timer/components/TimerSubController';
 import TimerController from '@/src/features/timer/components/TimerController';
 import TimerDisplay from '@/src/features/timer/components/TimerDisplay';
+import TimerHeader from '@/src/features/timer/components/TimerHeader';
+import TimerRunningModal from '@/src/features/timer/components/TimerRunningModal';
+import TimerStartModal from '@/src/features/timer/components/TimerStartModal';
+import TimerStopModal from '@/src/features/timer/components/TimerStopModal';
+import TimerSubController from '@/src/features/timer/components/TimerSubController';
+import useTimer from '@/src/features/timer/hooks/useTimer';
+import useTimerPage from '@/src/features/timer/hooks/useTimerPage';
+import { cn } from '@/src/shared/utils/cn';
 
 export default function Home() {
   const { time, startTimer, pauseTimer, stopTimer, mode } = useTimer();

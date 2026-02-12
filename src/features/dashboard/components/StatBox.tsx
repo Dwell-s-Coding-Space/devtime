@@ -1,4 +1,4 @@
-import { formatTime } from '../../timer/utils/formatTime';
+import { formatTime } from '@/src/features/timer/utils/formatTime';
 
 interface StatBoxProps {
   label: string;

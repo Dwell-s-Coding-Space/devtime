@@ -1,8 +1,10 @@
 'use client';
 
-import { useCallback } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useCallback } from 'react';
+
 import { cn } from '@/src/shared/utils/cn';
+
 import {
   ChevronDoubleLeftIcon,
   ChevronDoubleRightIcon,

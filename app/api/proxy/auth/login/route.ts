@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+
 import { PostLoginResponse } from '@/src/features/auth/auth.schema';
 import { setTokens } from '@/src/features/auth/auth.utils';
 import { API_ENDPOINTS } from '@/src/shared/constants/apiEndpoints';
