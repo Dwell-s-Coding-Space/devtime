@@ -1,5 +1,7 @@
 import { queryOptions } from '@tanstack/react-query';
+
 import { clientApi } from '@/src/shared/api/client';
+
 import { createDashboardApi } from './dashboard.api';
 
 const dashboardApi = createDashboardApi(clientApi);

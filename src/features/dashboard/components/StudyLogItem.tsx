@@ -1,12 +1,13 @@
 'use client';
 
-import { MouseEvent, useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { MouseEvent, useState } from 'react';
 
-import { useModalStore } from '@/src/shared/store/useModalStore';
 import { TrashIcon } from '@/src/shared/assets/svg';
-import { StudyLogListResponse } from '../dashboard.schema';
+import { useModalStore } from '@/src/shared/store/useModalStore';
+
 import { dashboardQueries } from '../dashboard.queries';
+import { StudyLogListResponse } from '../dashboard.schema';
 import TaskViewModal from './TaskViewModal';
 
 interface StudyLogItemProps {

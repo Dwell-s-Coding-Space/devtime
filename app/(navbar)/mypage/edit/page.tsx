@@ -1,26 +1,26 @@
 'use client';
 
-import z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useEffect, useTransition } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import z from 'zod';
 
-import Button from '@/src/shared/components/button/Button';
-import Label from '@/src/shared/components/text-field/Label';
-import TextField from '@/src/shared/components/text-field/TextField';
-import Select from '@/src/shared/components/text-field/Select';
-import Input from '@/src/shared/components/text-field/Input';
+import { mypageQueries } from '@/src/features/mypage/mypage.queries';
 import {
   confirmPasswordSchema,
   nicknameSchema,
   passwordSchema,
 } from '@/src/features/signup/components/SignUpForm';
-import { useModalStore } from '@/src/shared/store/useModalStore';
-import { ROUTES } from '@/src/shared/constants/routes';
-import { mypageQueries } from '@/src/features/mypage/mypage.queries';
 import { PlusIcon } from '@/src/shared/assets/svg';
+import Button from '@/src/shared/components/button/Button';
+import Input from '@/src/shared/components/text-field/Input';
+import Label from '@/src/shared/components/text-field/Label';
+import Select from '@/src/shared/components/text-field/Select';
+import TextField from '@/src/shared/components/text-field/TextField';
+import { ROUTES } from '@/src/shared/constants/routes';
+import { useModalStore } from '@/src/shared/store/useModalStore';
 
 export const CUSTOM_PURPOSE_LABEL = '기타' as const;
 export const CAREER_OPTIONS = ['경력 없음', '0 - 3년', '4 - 7년', '8 - 10년', '11년 이상'] as const;

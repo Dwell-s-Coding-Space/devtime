@@ -1,18 +1,19 @@
 'use client';
 
-import z from 'zod';
-import Link from 'next/link';
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+import { useForm, useWatch } from 'react-hook-form';
+import z from 'zod';
 
 import Button from '@/src/shared/components/button/Button';
 import TextField from '@/src/shared/components/text-field/TextField';
 import { ROUTES } from '@/src/shared/constants/routes';
-import { TERMS_OF_SERVICE } from '../constants';
-import { useMutation } from '@tanstack/react-query';
+
 import { authQueries } from '../../auth/auth.queries';
+import { TERMS_OF_SERVICE } from '../constants';
 
 const password_regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 

@@ -1,11 +1,13 @@
 'use client';
 
+import { useMutation } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useMutation } from '@tanstack/react-query';
+
 import { authQueries } from '@/src/features/auth/auth.queries';
-import { ROUTES } from '../../constants/routes';
+
 import { LogoutIcon, UserIcon } from '../../assets/svg';
+import { ROUTES } from '../../constants/routes';
 
 const Profile = () => {
   const router = useRouter();

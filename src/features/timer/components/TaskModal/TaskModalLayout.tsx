@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+
 import Portal from '@/src/shared/components/modal/Portal';
 
 const TaskModalLayout = ({ children }: { children: ReactNode }) => {
