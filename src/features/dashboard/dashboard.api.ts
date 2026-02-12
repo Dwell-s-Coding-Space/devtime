@@ -12,9 +12,9 @@ export const createDashboardApi = (api: Api) => ({
   getHeatmap: () => api.get<GetHeatmapListResponse>('/heatmap'),
   getStudyLogs: ({ limit, page, date }: { limit?: number; page?: number; date?: string }) => {
     const searchParams = new URLSearchParams();
-    limit && searchParams.set('limit', String(limit));
-    page && searchParams.set('page', String(page));
-    date && searchParams.set('date', date);
+    if (limit) searchParams.set('limit', String(limit));
+    if (page) searchParams.set('page', String(page));
+    if (date) searchParams.set('date', date);
 
     return api.get<StudyLogListResponse>('/study-logs' + '?' + searchParams.toString());
   },
