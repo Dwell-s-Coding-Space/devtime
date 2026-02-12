@@ -1,9 +1,16 @@
-import { SECONDS_IN_HOUR } from '../../timer/utils/formatTime';
-import { GetStudyStatResponse } from '../dashboard.schema';
+'use client';
+
+import { useSuspenseQuery } from '@tanstack/react-query';
+
+import { SECONDS_IN_HOUR } from '@/src/features/timer/utils/formatTime';
+
+import { dashboardQueries } from '../dashboard.queries';
 
 const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-const WeeklyStatBar = ({ data }: { data: GetStudyStatResponse['weekdayStudyTime'] }) => {
+const WeeklyStatBar = () => {
+  const { data } = useSuspenseQuery(dashboardQueries.stats());
+
   return (
     <div className="bg-content-primary flex h-[264px] flex-1 justify-between rounded-[18px] py-6 pr-12 pl-[30px]">
       <h3 className="subtitle-s text-text-white">요일별 공부 시간 평균</h3>
@@ -17,7 +24,7 @@ const WeeklyStatBar = ({ data }: { data: GetStudyStatResponse['weekdayStudyTime'
         </div>
 
         {WEEKDAYS.map(weekday => {
-          const value = data[weekday as keyof typeof data];
+          const value = data.weekdayStudyTime[weekday as keyof typeof data.weekdayStudyTime];
           const label = weekday.charAt(0);
           const percent = (value / (24 * SECONDS_IN_HOUR)) * 100;
 
