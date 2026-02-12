@@ -1,4 +1,4 @@
-import { ResetIcon, TodoIcon } from "@/src/shared/assets/svg";
+import { ResetIcon, TodoIcon } from '@/src/shared/assets/svg';
 
 const TimerSubController = ({
   handleTask,
