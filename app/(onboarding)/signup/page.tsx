@@ -1,4 +1,4 @@
-import SignUpForm from '@/src/features/signup/components/SignUpForm';
+import { SignUpForm } from '@/src/features/auth';
 
 export default async function SignUp() {
   return <SignUpForm />;
