@@ -1,8 +1,11 @@
+'use client';
+
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
 import { cn } from '@/src/shared/utils/cn';
 
-import { GetHeatmapListResponse } from '../dashboard.schema';
+import { dashboardQueries } from '../dashboard.queries';
 import { getYearlyDates } from '../utils/getYearlyDates';
 
 const KOR_WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
@@ -16,7 +19,8 @@ const SEA_LEVEL = {
   5: '#023E99',
 };
 
-const YearlyStatGrid = ({ data }: { data: GetHeatmapListResponse['heatmap'] }) => {
+const YearlyStatGrid = () => {
+  const { data } = useSuspenseQuery(dashboardQueries.heatmap());
   const currentYear = new Date().getFullYear();
   const yearlyDates = useMemo(() => getYearlyDates(currentYear), [currentYear]);
 
@@ -41,7 +45,7 @@ const YearlyStatGrid = ({ data }: { data: GetHeatmapListResponse['heatmap'] }) =
 
   const dataObj = useMemo(() => {
     const obj = {} as Record<string, { studyTimeHours: number; colorLevel: number }>;
-    data.map(
+    data.heatmap.map(
       d =>
         (obj[d.date?.toString() as string] = {
           studyTimeHours: d.studyTimeHours,
@@ -50,7 +54,7 @@ const YearlyStatGrid = ({ data }: { data: GetHeatmapListResponse['heatmap'] }) =
     );
 
     return obj;
-  }, [data]);
+  }, [data.heatmap]);
 
   return (
     <div className="bg-background-white flex flex-col gap-6 rounded-[18px] p-6">
