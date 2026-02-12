@@ -1,5 +1,6 @@
-import { GetRankingListResponse } from '@/src/features/ranking/ranking.schema';
 import type Api from '@/src/shared/api/core';
+
+import { GetRankingListResponse } from './ranking.schema';
 
 export type RankingOption = 'total' | 'avg';
 

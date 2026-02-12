@@ -1,3 +1,6 @@
+import type Api from '@/src/shared/api/core';
+import { BaseResponse } from '@/src/shared/schema/common.schema';
+
 import {
   GetProfileResponse,
   GetTechStackListResponse,
@@ -5,9 +8,7 @@ import {
   PostTechStackBody,
   PostTechStackResponse,
   PutProfileBody,
-} from '@/src/features/mypage/mypage.schema';
-import type Api from '@/src/shared/api/core';
-import { BaseResponse } from '@/src/shared/schema/common.schema';
+} from './mypage.schema';
 
 export const createMyPageApi = (api: Api) => ({
   getProfile: () => api.get<GetProfileResponse>('/profile'),
