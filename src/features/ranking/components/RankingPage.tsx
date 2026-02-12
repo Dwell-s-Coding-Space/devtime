@@ -1,9 +1,11 @@
 'use client';
 
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useSuspenseInfiniteQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
+import { useEffect, useRef } from 'react';
 
+import SkeletonList from '@/src/shared/components/skeleton/SkeletonList';
 import { cn } from '@/src/shared/utils/cn';
 
 import { RankingOption } from '../ranking.api';
@@ -16,12 +18,35 @@ const RANKING_OPTION_MAP: Record<string, RankingOption> = {
 };
 
 const RankingPage = () => {
+  const observerRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const searchParams = useSearchParams();
+
   const rankingOption = (searchParams.get('option') ||
     RANKING_OPTION_MAP['총 학습 시간']) as (typeof RANKING_OPTION_MAP)[string];
 
-  const { data } = useSuspenseQuery(rankingQueries.list({ sortBy: rankingOption }));
+  const { data, hasNextPage, isFetchingNextPage, fetchNextPage } = useSuspenseInfiniteQuery(
+    rankingQueries.list({ sortBy: rankingOption, limit: 5 })
+  );
+  const rankingList = data.pages.flatMap(page => page.data.rankings);
+
+  useEffect(() => {
+    const el = observerRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(el);
+
+    return () => observer.disconnect();
+  }, [fetchNextPage, isFetchingNextPage, hasNextPage]);
 
   return (
     <div className="flex flex-col gap-3">
@@ -49,9 +74,12 @@ const RankingPage = () => {
 
       {/* ranking list */}
       <div className="flex flex-col gap-3">
-        {data?.data.rankings.map(ranking => (
+        {rankingList.map(ranking => (
           <RankingItem data={ranking} key={ranking.userId} />
         ))}
+
+        <div className="h-[10px] w-full" ref={observerRef} />
+        {isFetchingNextPage && <SkeletonList count={3} className="h-[150px] bg-gray-300" />}
       </div>
     </div>
   );
