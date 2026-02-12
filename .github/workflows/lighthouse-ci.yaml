@@ -32,6 +32,7 @@ jobs:
         run: pnpm build
         env:
           API_BASE_URL: ${{ secrets.API_BASE_URL }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
       - name: Run Lighthouse CI
         run: pnpm lhci

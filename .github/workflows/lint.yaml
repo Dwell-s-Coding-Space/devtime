@@ -4,7 +4,7 @@ on: pull_request
 
 jobs:
   lint:
-    name: Lint
+    name: Lint & Build
     runs-on: ubuntu-latest
 
     steps:
@@ -23,8 +23,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: TypeScript check
-        run: pnpm typecheck
+      - name: Build
+        run: pnpm build
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
       - name: ESLint
         run: pnpm lint
