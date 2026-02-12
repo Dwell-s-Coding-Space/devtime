@@ -1,3 +1,5 @@
+import type Api from '@/src/shared/api/core';
+
 import {
   DeleteTimerResponse,
   GetTimerResponse,
@@ -8,8 +10,7 @@ import {
   PutTasksUpdateBody,
   PutTimerUpdateBody,
   PutTimerUpdateResponse,
-} from '@/src/features/timer/timer.schema';
-import type Api from '@/src/shared/api/core';
+} from './timer.schema';
 
 export const createTimerApi = (api: Api) => ({
   getCurrent: () => api.get<GetTimerResponse>('/timers'),
