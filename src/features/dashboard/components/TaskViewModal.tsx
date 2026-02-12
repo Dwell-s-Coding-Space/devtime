@@ -1,7 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { Goal, TaskList, TaskModalFooter, TaskModalLayout } from '../../timer/components/TaskModal';
-import { TaskModalProps } from '../../timer/timer.types';
+import {
+  Goal,
+  TaskList,
+  TaskModalFooter,
+  TaskModalLayout,
+} from '@/src/features/timer/components/TaskModal';
+import { TaskModalProps } from '@/src/features/timer/timer.types';
+
 import { dashboardQueries } from '../dashboard.queries';
 
 interface TaskViewModalProps extends TaskModalProps {

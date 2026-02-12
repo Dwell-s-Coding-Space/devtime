@@ -1,37 +1,24 @@
-'use client';
+import { Suspense } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
-
-import StatBox from '@/src/features/dashboard/components/StatBox';
-import StudyLogList from '@/src/features/dashboard/components/StudyLogList';
-import WeeklyStatBar from '@/src/features/dashboard/components/WeeklyStatBar';
-import YearlyStatGrid from '@/src/features/dashboard/components/YearlyStatGrid';
-import { dashboardQueries } from '@/src/features/dashboard/dashboard.queries';
+import { StatSummary, StudyLogList, WeeklyStatBar, YearlyStatGrid } from '@/src/features/dashboard';
+import Skeleton from '@/src/shared/components/skeleton/Skeleton';
 
 export default function Dashboard() {
-  const { data: statData } = useQuery(dashboardQueries.stats());
-  const { data: heatmapData } = useQuery(dashboardQueries.heatmap());
-
-  if (!statData || !heatmapData) return <div>loading..</div>;
-
   return (
     <>
       <div className="flex flex-col gap-4">
-        <div className="flex items-center gap-4">
-          <div className="grid grid-cols-2 grid-rows-2 gap-4">
-            <StatBox value={statData.totalStudyTime} label="누적 공부 시간" type="time" />
-            <StatBox value={statData.consecutiveDays} label="누적 공부 일수" type="day" />
-            <StatBox
-              value={statData.averageDailyStudyTime}
-              label="하루 평균 공부 시간"
-              type="time"
-            />
-            <StatBox value={statData.taskCompletionRate} label="목표 달성률" type="rate" />
+        <Suspense fallback={<Skeleton className="h-[264px] bg-gray-300" />}>
+          <div className="flex items-center gap-4">
+            <StatSummary />
+            <WeeklyStatBar />
           </div>
-          <WeeklyStatBar data={statData.weekdayStudyTime} />
-        </div>
-        <YearlyStatGrid data={heatmapData.heatmap} />
-        <StudyLogList />
+        </Suspense>
+        <Suspense fallback={<Skeleton className="h-[300px] bg-gray-300" />}>
+          <YearlyStatGrid />
+        </Suspense>
+        <Suspense fallback={<Skeleton className="h-[500px] bg-gray-300" />}>
+          <StudyLogList />
+        </Suspense>
       </div>
     </>
   );
