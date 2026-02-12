@@ -1,50 +1,11 @@
-'use client';
+import { Suspense } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
-
-import RankingItem from '@/src/features/ranking/components/RankingItem';
-import { rankingQueries } from '@/src/features/ranking/ranking.queries';
-import { cn } from '@/src/shared/utils/cn';
-
-const RANKING_OPTION_MAP = {
-  '총 학습 시간': 'total',
-  '일 평균 학습 시간': 'avg',
-};
+import { RankingPage, RankingPageLoading } from '@/src/features/ranking';
 
 export default function Ranking() {
-  const { data } = useQuery(rankingQueries.list());
-
-  const currentRankingOption = 'total';
-
   return (
-    <div>
-      {/* ranking option menu */}
-      <div className="bg-background-white mb-3 w-fit rounded-[12px] p-2">
-        {Object.entries(RANKING_OPTION_MAP).map(([label, value]) => {
-          const isSelected = value === currentRankingOption;
-
-          return (
-            <button
-              key={value}
-              className={cn(
-                'rounded-[5px] p-2',
-                isSelected
-                  ? 'bg-background-primary-light subtitle-b text-text-secondary'
-                  : 'subtitle-r text-text-secondary bg-transparent'
-              )}
-            >
-              {label}
-            </button>
-          );
-        })}
-      </div>
-
-      {/* ranking list */}
-      <div className="flex flex-col gap-3">
-        {data?.data.rankings.map(ranking => (
-          <RankingItem data={ranking} key={ranking.userId} />
-        ))}
-      </div>
-    </div>
+    <Suspense fallback={<RankingPageLoading />}>
+      <RankingPage />
+    </Suspense>
   );
 }
