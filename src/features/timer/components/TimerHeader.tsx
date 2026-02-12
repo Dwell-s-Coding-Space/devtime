@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { dashboardQueries } from '../../dashboard/dashboard.queries';
+
 import { authQueries } from '../../auth/auth.queries';
+import { dashboardQueries } from '../../dashboard/dashboard.queries';
 import { timerQueries } from '../timer.queries';
 
 const TimerHeader = () => {

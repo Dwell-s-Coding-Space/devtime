@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+
 import { ROUTES } from '@/src/shared/constants/routes';
 
 export default function Error({ error }: { error: Error }) {

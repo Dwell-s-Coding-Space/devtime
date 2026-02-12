@@ -1,6 +1,7 @@
 import Image from 'next/image';
-import { cn } from '@/src/shared/utils/cn';
+
 import { GetRankingListResponse } from '@/src/features/ranking/ranking.schema';
+import { cn } from '@/src/shared/utils/cn';
 
 interface RankingItemProps {
   data: GetRankingListResponse['data']['rankings'][number];

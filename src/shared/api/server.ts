@@ -1,5 +1,6 @@
-import Api from './core';
 import { cookies } from 'next/headers';
+
+import Api from './core';
 
 export const createServerApi = async () => {
   const cookieStore = await cookies();

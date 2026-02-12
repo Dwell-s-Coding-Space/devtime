@@ -1,8 +1,10 @@
 import { ChangeEvent, useState } from 'react';
-import { cn } from '@/src/shared/utils/cn';
-import Checkbox from '@/src/shared/components/checkbox/Checkbox';
-import { CheckIcon, EditIcon, SymbolIcon, TrashIcon } from '@/src/shared/assets/svg';
+
 import type { TaskItem as TaskItemType } from '@/src/features/dashboard/dashboard.schema';
+import { CheckIcon, EditIcon, SymbolIcon, TrashIcon } from '@/src/shared/assets/svg';
+import Checkbox from '@/src/shared/components/checkbox/Checkbox';
+import { cn } from '@/src/shared/utils/cn';
+
 import { TaskMode } from '../../timer.types';
 
 interface TaskItemProps {

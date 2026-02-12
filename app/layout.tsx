@@ -1,8 +1,10 @@
+import './globals.css';
+
 import { Metadata } from 'next';
 import localFont from 'next/font/local';
-import QueryProvider from '@/src/shared/providers/QueryProvider';
+
 import Modal from '@/src/shared/components/modal/Modal';
-import './globals.css';
+import QueryProvider from '@/src/shared/providers/QueryProvider';
 
 const pretendardVariable = localFont({
   src: '../src/shared/styles/fonts/PretendardVariable.woff2',

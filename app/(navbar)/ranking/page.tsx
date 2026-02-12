@@ -1,9 +1,10 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { cn } from '@/src/shared/utils/cn';
+
 import RankingItem from '@/src/features/ranking/components/RankingItem';
 import { rankingQueries } from '@/src/features/ranking/ranking.queries';
+import { cn } from '@/src/shared/utils/cn';
 
 const RANKING_OPTION_MAP = {
   '총 학습 시간': 'total',

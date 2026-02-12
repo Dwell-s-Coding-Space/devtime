@@ -1,6 +1,7 @@
 'use client';
 
 import { useModalStore } from '@/src/shared/store/useModalStore';
+
 import Button from '../button/Button';
 import Portal from './Portal';
 

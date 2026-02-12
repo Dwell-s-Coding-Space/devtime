@@ -1,5 +1,3 @@
-import type Api from '@/src/shared/api/core';
-import { BaseResponse } from '@/src/shared/schema/common.schema';
 import {
   GetCheckEmailResponse,
   GetCheckNicknameResponse,
@@ -9,6 +7,8 @@ import {
   PostRefreshResponse,
   PostSignUpBody,
 } from '@/src/features/auth/auth.schema';
+import type Api from '@/src/shared/api/core';
+import { BaseResponse } from '@/src/shared/schema/common.schema';
 
 export const createAuthApi = (api: Api) => ({
   getCheckEmail: (email: string) =>

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+
 import { TimerStatus } from '../timer.types';
 
 const useTimer = () => {

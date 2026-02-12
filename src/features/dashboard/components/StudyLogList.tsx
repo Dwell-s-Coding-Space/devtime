@@ -1,8 +1,10 @@
-import { useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
+import { useSearchParams } from 'next/navigation';
+
 import Pagination from '@/src/shared/components/pagination/Pagination';
-import StudyLogItem from './StudyLogItem';
+
 import { dashboardQueries } from '../dashboard.queries';
+import StudyLogItem from './StudyLogItem';
 
 const StudyLogList = () => {
   const searchParams = useSearchParams();
