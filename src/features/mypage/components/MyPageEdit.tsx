@@ -2,8 +2,9 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useEffect, useTransition } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 
 import { PlusIcon } from '@/src/shared/assets/svg';
@@ -14,11 +15,13 @@ import Select from '@/src/shared/components/text-field/Select';
 import TextField from '@/src/shared/components/text-field/TextField';
 import { ROUTES } from '@/src/shared/constants/routes';
 import { useModalStore } from '@/src/shared/store/useModalStore';
+import { getS3ImageUrl } from '@/src/shared/utils/url';
 
 import { mypageQueries } from '../mypage.queries';
 import {
   CAREER_OPTIONS,
   CUSTOM_PURPOSE_LABEL,
+  IMAGE_CONFIG,
   ProfileEditFormValues,
   profileEditSchema,
   PURPOSE_OPTIONS,
@@ -28,11 +31,10 @@ export default function MypageEdit() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const onOpen = useModalStore(state => state.onOpen);
-  const [isPending, startTransition] = useTransition();
 
   const { data: profileData } = useSuspenseQuery(mypageQueries.profile());
 
-  const { mutate: updateProfile } = useMutation({
+  const { mutate: updateProfile, isPending } = useMutation({
     ...mypageQueries.updateProfile(),
     onSuccess: () => {
       alert('저장이 성공적으로 완료되었습니다.');
@@ -44,11 +46,16 @@ export default function MypageEdit() {
     },
   });
 
+  const { mutateAsync: createPresignedUrl } = useMutation({
+    ...mypageQueries.createPresignedUrl(),
+  });
+
   const {
     register,
     control,
     trigger,
     getValues,
+    setValue,
     formState: { errors, isValid },
   } = useForm<ProfileEditFormValues>({
     resolver: zodResolver(profileEditSchema),
@@ -64,6 +71,21 @@ export default function MypageEdit() {
 
   const password = useWatch({ control, name: 'password' });
   const confirmPassword = useWatch({ control, name: 'confirmPassword' });
+  const profileImage = useWatch({ control, name: 'profileImage' });
+
+  const profileImageSrc = useMemo(() => {
+    if (profileImage) return URL.createObjectURL(profileImage);
+    if (profileData.profile?.profileImage) return getS3ImageUrl(profileData.profile.profileImage);
+    return null;
+  }, [profileImage, profileData.profile?.profileImage]);
+
+  useEffect(() => {
+    return () => {
+      if (profileImageSrc?.startsWith('blob:')) {
+        URL.revokeObjectURL(profileImageSrc);
+      }
+    };
+  }, [profileImageSrc]);
 
   useEffect(() => {
     if (password && confirmPassword) {
@@ -85,11 +107,45 @@ export default function MypageEdit() {
     }
   };
 
-  const onSubmit = () => {
-    const data = getValues();
-    startTransition(async () => {
-      updateProfile(data);
-    });
+  const onSubmit = async () => {
+    const { profileImage, ...rest } = getValues();
+
+    let profileImageUrl = profileData.profile?.profileImage;
+
+    if (profileImage) {
+      try {
+        const { presignedUrl, key } = await createPresignedUrl({
+          fileName: profileImage.name,
+          contentType: profileImage.type as Parameters<typeof createPresignedUrl>[0]['contentType'],
+        });
+
+        const s3UploadResponse = await fetch(presignedUrl, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': profileImage.type,
+          },
+          body: profileImage,
+        });
+
+        if (!s3UploadResponse.ok) {
+          throw new Error(`S3 업로드 실패: ${s3UploadResponse.status}`);
+        }
+
+        profileImageUrl = key;
+      } catch (error) {
+        const message =
+          error instanceof Error
+            ? error.message.includes('S3')
+              ? 'S3 업로드에 실패했습니다.'
+              : '이미지 업로드 준비에 실패했습니다.'
+            : '이미지 업로드에 실패했습니다.';
+
+        alert(message);
+        return;
+      }
+    }
+
+    updateProfile({ ...rest, profileImage: profileImageUrl });
   };
 
   return (
@@ -97,13 +153,34 @@ export default function MypageEdit() {
       <div className="bg-background-white flex flex-col gap-9 rounded-[12px] p-9">
         <div className="flex flex-col gap-2">
           <Label>프로필 이미지</Label>
-          <input id="file-input" type="file" className="hidden" />
-          <label htmlFor="file-input" className="flex items-end gap-3">
-            <div className="border-primary flex h-30 w-30 items-center justify-center rounded-[8px] border border-dashed">
-              <PlusIcon className="text-content-primary h-9 w-9" />
-            </div>
-            <span className="text-text-g500 lable-m">5MB 미만의 .png, .jpg 파일</span>
-          </label>
+          <div className="flex items-end gap-3">
+            <input
+              id="file-input"
+              type="file"
+              accept={IMAGE_CONFIG.accept}
+              className="hidden"
+              onChange={e => {
+                const file = e.target.files?.[0];
+                if (file) setValue('profileImage', file, { shouldValidate: true });
+              }}
+            />
+            <label
+              htmlFor="file-input"
+              className="relative h-30 w-30 overflow-hidden rounded-[8px]"
+            >
+              {profileImageSrc ? (
+                <Image src={profileImageSrc} alt="profile" fill className="object-cover" />
+              ) : (
+                <div className="border-primary flex h-full w-full items-center justify-center rounded-[8px] border border-dashed">
+                  <PlusIcon className="text-content-primary h-9 w-9" />
+                </div>
+              )}
+            </label>
+
+            <span className="text-text-g500 lable-m">
+              {IMAGE_CONFIG.maxSizeMB}MB 미만의 {IMAGE_CONFIG.extensions.join(', ')} 파일
+            </span>
+          </div>
         </div>
 
         <div className="flex gap-[72px]">
