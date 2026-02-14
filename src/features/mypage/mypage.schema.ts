@@ -103,6 +103,33 @@ export interface PostTechStackResponse extends Pick<BaseResponse, 'message'> {
 }
 
 /**
+ * Presigned URL 발급
+ * post /file/presigned-url
+ */
+export const IMAGE_CONFIG = {
+  mimes: ['image/png', 'image/jpeg'] as const,
+  extensions: ['.png', '.jpg', '.jpeg'] as const,
+  maxSizeMB: 5,
+  get accept() {
+    return this.extensions.join(',');
+  },
+  get acceptMimes() {
+    return this.mimes.join(',');
+  },
+} as const;
+
+export const postPresignedUrlBodySchema = z.object({
+  fileName: z.string(),
+  contentType: z.enum(IMAGE_CONFIG.mimes),
+});
+
+export type PostPresignedUrlBody = z.infer<typeof postPresignedUrlBodySchema>;
+export type PostPresignedUrlResponse = {
+  presignedUrl: string;
+  key: string;
+};
+
+/**
  * profile-edit form schema
  */
 
@@ -113,6 +140,17 @@ export const purposeSchema = z.optional(
 );
 export const purposeDetailSchema = z.optional(z.string());
 export const techStacksSchema = z.array(z.string()).optional();
+export const profileImageSchema = z
+  .instanceof(File)
+  .refine(
+    file => file.size <= IMAGE_CONFIG.maxSizeMB * 1024 * 1024,
+    `${IMAGE_CONFIG.maxSizeMB}MB 이하의 파일만 업로드 가능합니다.`
+  )
+  .refine(
+    file => IMAGE_CONFIG.mimes.includes(file.type as (typeof IMAGE_CONFIG.mimes)[number]),
+    `${IMAGE_CONFIG.extensions.join(', ')} 파일만 업로드 가능합니다.`
+  )
+  .optional();
 
 export const profileEditSchema = z
   .object({
@@ -124,6 +162,7 @@ export const profileEditSchema = z
     purpose: purposeSchema,
     purposeDetail: purposeDetailSchema,
     techStacks: techStacksSchema,
+    profileImage: profileImageSchema,
   })
   .superRefine((data, ctx) => {
     if (data.password && data.confirmPassword && data.password !== data.confirmPassword) {

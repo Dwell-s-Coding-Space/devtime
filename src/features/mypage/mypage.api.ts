@@ -4,6 +4,8 @@ import { BaseResponse } from '@/src/shared/schema/common.schema';
 import {
   GetProfileResponse,
   GetTechStackListResponse,
+  PostPresignedUrlBody,
+  PostPresignedUrlResponse,
   PostProfileBody,
   PostTechStackBody,
   PostTechStackResponse,
@@ -23,6 +25,10 @@ export const createMyPageApi = (api: Api) => ({
   getTechStacks: () => api.get<GetTechStackListResponse>('/tech-stacks'),
   postTechStacks: (reqBody: PostTechStackBody) =>
     api.post<PostTechStackResponse, PostTechStackBody>('/tech-stacks', {
+      body: reqBody,
+    }),
+  postPresignedUrl: (reqBody: PostPresignedUrlBody) =>
+    api.post<PostPresignedUrlResponse, PostPresignedUrlBody>('/file/presigned-url', {
       body: reqBody,
     }),
 });
