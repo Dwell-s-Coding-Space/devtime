@@ -29,4 +29,7 @@ export const mypageQueries = {
   createTechStack: () => ({
     mutationFn: mypageApi.postTechStacks,
   }),
+  createPresignedUrl: () => ({
+    mutationFn: mypageApi.postPresignedUrl,
+  }),
 };
