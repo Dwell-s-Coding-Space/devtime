@@ -2,6 +2,7 @@ import Image from 'next/image';
 
 import { GetRankingListResponse } from '@/src/features/ranking/ranking.schema';
 import { cn } from '@/src/shared/utils/cn';
+import { getS3ImageUrl } from '@/src/shared/utils/url';
 
 interface RankingItemProps {
   data: GetRankingListResponse['data']['rankings'][number];
@@ -30,11 +31,13 @@ const RankingItem = ({ data }: RankingItemProps) => {
         >
           <span className="title-b">{rank}위</span>
         </div>
-        {profileImage ? (
-          <Image src={''} alt="profile" width={80} height={80} />
-        ) : (
-          <div className="bg-background-disabled h-20 w-20 rounded-full" />
-        )}
+        <div className="relative h-20 w-20 overflow-hidden rounded-full">
+          {profileImage ? (
+            <Image src={getS3ImageUrl(profileImage)} alt="profile" fill sizes="80px" />
+          ) : (
+            <div className="bg-background-disabled h-full w-full" />
+          )}
+        </div>
       </div>
       <div className="flex flex-col gap-4">
         <div className="text-text-primary flex flex-col">
