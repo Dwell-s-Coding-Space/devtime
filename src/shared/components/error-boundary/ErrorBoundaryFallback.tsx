@@ -11,13 +11,16 @@ const ErrorBoundaryFallback = ({ onRetry, className, ...res }: ErrorBoundaryFall
   return (
     <div
       className={cn(
-        'bg-background-gray-light flex w-full flex-col items-center justify-center gap-3 rounded-[8px] p-5',
+        'bg-background-gray-light flex w-full flex-col items-center justify-center gap-5 rounded-[18px] p-8',
         className
       )}
       {...res}
     >
-      <span className="title-b text-red">에러가 발생하였습니다!</span>
-      <span className="subtitle-s">다시 시도해주세요.</span>
+      <div className="flex flex-col items-center gap-2">
+        <span className="text-[48px] leading-none">😵‍💫</span>
+        <span className="title-b text-gray-800">앗, 문제가 생겼어요!</span>
+        <span className="body-r text-gray-500">잠시 후 다시 시도해주세요</span>
+      </div>
       <Button variant="secondary" onClick={onRetry}>
         다시 시도하기
       </Button>
