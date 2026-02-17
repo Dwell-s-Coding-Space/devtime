@@ -101,12 +101,13 @@ const ProfileSettingForm = () => {
       <h1 className="heading-b text-text-primary text-center">프로필 설정</h1>
       <div className="flex flex-1 flex-col gap-10">
         <div className="flex flex-col gap-2">
-          <Label>개발 경력</Label>
+          <Label htmlFor="career-select">개발 경력</Label>
           <Controller
             name="career"
             control={control}
             render={({ field }) => (
               <Select
+                id="career-select"
                 value={field.value as (typeof CAREER_OPTIONS)[number]}
                 placeholder="개발 경력을 선택해 주세요."
                 options={CAREER_OPTIONS}
@@ -117,13 +118,14 @@ const ProfileSettingForm = () => {
         </div>
 
         <div className="flex flex-col gap-2">
-          <Label>공부 목적</Label>
+          <Label htmlFor="purpose-select">공부 목적</Label>
           <Controller
             name="purpose"
             control={control}
             render={({ field }) => (
               <>
                 <Select
+                  id="purpose-select"
                   value={field.value as (typeof PURPOSE_OPTIONS)[number]}
                   placeholder="공부의 목적을 선택해 주세요."
                   options={PURPOSE_OPTIONS}
