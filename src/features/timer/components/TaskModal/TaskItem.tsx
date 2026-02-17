@@ -2,6 +2,7 @@ import { ChangeEvent, useState } from 'react';
 
 import type { TaskItem as TaskItemType } from '@/src/features/dashboard/dashboard.schema';
 import { CheckIcon, EditIcon, SymbolIcon, TrashIcon } from '@/src/shared/assets/svg';
+import IconButton from '@/src/shared/components/button/IconButton';
 import Checkbox from '@/src/shared/components/checkbox/Checkbox';
 import { cn } from '@/src/shared/utils/cn';
 
@@ -47,17 +48,17 @@ const TaskItem = ({ task, mode, handleChange, handleDelete }: TaskItemProps) => 
 
       {mode === 'edit' &&
         (isEditing ? (
-          <button onClick={handleEditConfirm}>
+          <IconButton aria-label="할 일 수정 완료" onClick={handleEditConfirm}>
             <CheckIcon className="h-6 w-6 text-white" />
-          </button>
+          </IconButton>
         ) : (
           <>
-            <button onClick={() => setIsEditing(true)}>
+            <IconButton aria-label="할 일 수정" onClick={() => setIsEditing(true)}>
               <EditIcon className="h-6 w-6 text-white" />
-            </button>
-            <button onClick={() => handleDelete?.(task.id)}>
+            </IconButton>
+            <IconButton aria-label="할 일 삭제" onClick={() => handleDelete?.(task.id)}>
               <TrashIcon className="h-6 w-6 text-white" />
-            </button>
+            </IconButton>
           </>
         ))}
 

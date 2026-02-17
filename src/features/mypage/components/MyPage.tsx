@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { EditIcon, UserIcon } from '@/src/shared/assets/svg';
+import IconButton from '@/src/shared/components/button/IconButton';
 import { ROUTES } from '@/src/shared/constants/routes';
 import { cn } from '@/src/shared/utils/cn';
 import { getS3ImageUrl } from '@/src/shared/utils/url';
@@ -27,7 +28,11 @@ const MyPage = () => {
             className="object-cover"
           />
         ) : (
-          <div className="bg-background-gray-dark text-state-disabled flex h-full w-full items-center justify-center">
+          <div
+            role="img"
+            aria-label="프로필 기본"
+            className="bg-background-gray-dark text-state-disabled flex h-full w-full items-center justify-center"
+          >
             <UserIcon className="h-12 w-12" />
           </div>
         )}
