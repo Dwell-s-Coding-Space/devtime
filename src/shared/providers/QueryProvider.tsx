@@ -1,11 +1,10 @@
 'use client';
 
-import { captureException } from '@sentry/nextjs';
 import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ReactNode } from 'react';
 
-import { UnauthorizedError, ValidationError } from '../api/error';
+import { UnauthorizedError } from '../api/error';
 import { ROUTES } from '../constants/routes';
 
 const queryClient = new QueryClient({
@@ -14,20 +13,12 @@ const queryClient = new QueryClient({
       if (error instanceof UnauthorizedError) {
         window.location.href = ROUTES.LOGIN;
       }
-
-      if (error instanceof ValidationError) {
-        captureException(error);
-      }
     },
   }),
   mutationCache: new MutationCache({
     onError: error => {
       if (error instanceof UnauthorizedError) {
         window.location.href = ROUTES.LOGIN;
-      }
-
-      if (error instanceof ValidationError) {
-        captureException(error);
       }
     },
   }),
