@@ -151,8 +151,9 @@ const ProfileSettingForm = () => {
         />
 
         <div className="flex flex-col gap-2">
-          <Label>공부/사용 중인 기술 스택(선택)</Label>
+          <Label htmlFor="select-techStack">공부/사용 중인 기술 스택(선택)</Label>
           <AutoComplete
+            id="select-techStack"
             placeholder="기술 스택을 검색해 등록해 주세요."
             options={techStacksData || []}
             onSelect={stack => {
