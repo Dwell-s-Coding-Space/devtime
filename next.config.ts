@@ -2,14 +2,16 @@ import withBundleAnalyzer from '@next/bundle-analyzer';
 import { withSentryConfig } from '@sentry/nextjs';
 import type { NextConfig } from 'next';
 
-const imageUrl = new URL(process.env.NEXT_PUBLIC_S3_BUCKET_URL || '').hostname;
+const imageUrlHostname = process.env.NEXT_PUBLIC_S3_BUCKET_URL
+  ? new URL(process.env.NEXT_PUBLIC_S3_BUCKET_URL).hostname
+  : '';
 
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: imageUrl,
+        hostname: imageUrlHostname,
       },
     ],
     dangerouslyAllowSVG: true,
