@@ -125,7 +125,7 @@ const Select = ({ id, value, placeholder, options, onChange }: SelectProps) => {
         onKeyDown={handleKeyDown}
         className={cn(
           'body-m bg-background-gray-light flex h-11 w-full items-center gap-2 rounded-[5px] p-3 pl-4',
-          value ? 'text-text-g700' : 'text-text-disabled-500'
+          value ? 'text-text-g700' : 'text-text-placeholder'
         )}
       >
         <span className="flex-1 text-left">{value || placeholder}</span>
