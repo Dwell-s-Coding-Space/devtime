@@ -19,7 +19,7 @@ const Input = ({ innerButton, hasError, className, ...props }: InputProps) => {
       <input
         className={cn(
           { 'flex-1': innerButton },
-          'placeholder:body-m placeholder:text-text-disabled-300 body-m text-text-g800 w-full',
+          'placeholder:body-m placeholder:text-text-placeholder body-m text-text-g800 w-full',
           className
         )}
         {...props}
