@@ -1,3 +1,7 @@
+import { ZodType } from 'zod';
+
+import { ApiError, NotFoundError, TimeoutError, UnauthorizedError, ValidationError } from './error';
+
 const isAbsoluteUrl = (url: string) => {
   return url.startsWith('http');
 };
@@ -13,6 +17,7 @@ type RequestOptionsWithoutBody = Omit<RequestInit, 'body'> & {
 type RequestOptionsWithBody<TBody = unknown> = Omit<RequestInit, 'body'> & {
   timeout?: number;
   body?: TBody;
+  schema?: ZodType;
 };
 
 class Api {
@@ -25,7 +30,7 @@ class Api {
   }
 
   private request = async <T>(path: string, options?: RequestOptionsWithBody) => {
-    const { timeout = 5000, body, ...init } = options || {};
+    const { timeout = 5000, body, schema, ...init } = options || {};
 
     const normalizedPath = isAbsoluteUrl(path)
       ? path
@@ -49,25 +54,37 @@ class Api {
 
       if (!res.ok) {
         const errorBody = await res.json().catch(() => null);
+        const message = errorBody?.error?.message || res.statusText || 'Request Failed';
 
-        throw new Error(
-          JSON.stringify({
-            status: res.status,
-            message: errorBody?.error?.message || res.statusText || 'Request Failed',
-          })
-        );
+        switch (res.status) {
+          case 401:
+            throw new UnauthorizedError(message);
+          case 404:
+            throw new NotFoundError(message);
+          default:
+            throw new ApiError(res.status, message);
+        }
       }
 
       if (res.status === 204) {
         return undefined as T;
       }
 
-      const data = (await res.json()) as T;
+      const data = await res.json();
 
-      return data;
+      if (schema) {
+        const result = schema.safeParse(data);
+        if (!result.success) {
+          throw new ValidationError();
+        }
+
+        return result.data as T;
+      }
+
+      return data as T;
     } catch (e: unknown) {
       if (isErrorWithName(e, 'TimeoutError')) {
-        throw new Error(JSON.stringify({ status: 408, message: 'Request Timeout' }));
+        throw new TimeoutError();
       }
 
       if (isErrorWithName(e, 'AbortError')) {
@@ -78,7 +95,7 @@ class Api {
         throw e;
       }
 
-      throw new Error(JSON.stringify({ status: 0, message: 'Unknown Error' }));
+      throw new ApiError(0, 'Unknown Error');
     }
   };
 
