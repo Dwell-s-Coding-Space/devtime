@@ -8,12 +8,9 @@ const imageUrlHostname = process.env.NEXT_PUBLIC_S3_BUCKET_URL
 
 const nextConfig: NextConfig = {
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: imageUrlHostname,
-      },
-    ],
+    remotePatterns: [{ protocol: 'https' as const, hostname: imageUrlHostname }].filter(
+      p => p.hostname
+    ),
     dangerouslyAllowSVG: true,
     contentDispositionType: 'attachment',
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
