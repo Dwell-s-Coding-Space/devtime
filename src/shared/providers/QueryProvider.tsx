@@ -1,17 +1,33 @@
 'use client';
 
-import { QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { captureException } from '@sentry/nextjs';
+import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ReactNode } from 'react';
 
+import { UnauthorizedError, ValidationError } from '../api/error';
 import { ROUTES } from '../constants/routes';
 
 const queryClient = new QueryClient({
   queryCache: new QueryCache({
     onError: error => {
-      const parsed = JSON.parse(error.message);
-      if (parsed.status === 401) {
+      if (error instanceof UnauthorizedError) {
         window.location.href = ROUTES.LOGIN;
+      }
+
+      if (error instanceof ValidationError) {
+        captureException(error);
+      }
+    },
+  }),
+  mutationCache: new MutationCache({
+    onError: error => {
+      if (error instanceof UnauthorizedError) {
+        window.location.href = ROUTES.LOGIN;
+      }
+
+      if (error instanceof ValidationError) {
+        captureException(error);
       }
     },
   }),
