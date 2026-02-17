@@ -1,10 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import z from 'zod';
 
 import { TaskItem } from '@/src/features/dashboard/dashboard.schema';
 import { BaseResponse } from '@/src/shared/schema/common.schema';
-import { asDateOrNull } from '@/src/shared/schema/primitives/date';
-import { asArray } from '@/src/shared/schema/primitives/object';
+import { dateString } from '@/src/shared/schema/primitives/date';
 
 /**
  * 활성화된 타이머 조회
@@ -12,14 +10,14 @@ import { asArray } from '@/src/shared/schema/primitives/object';
  */
 
 const splitTimeItemSchema = z.object({
-  date: asDateOrNull(),
+  date: dateString(),
   timeSpent: z.number(),
 });
 
-const timerResponseSchema = z.object({
+export const timerResponseSchema = z.object({
   timerId: z.string(),
   studyLogId: z.string(),
-  splitTimes: asArray(splitTimeItemSchema),
+  splitTimes: z.array(splitTimeItemSchema),
   startTime: z.string(),
   lastUpdateTime: z.string(),
 });

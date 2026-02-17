@@ -1,6 +1,6 @@
 import type Api from '@/src/shared/api/core';
 
-import { GetRankingListResponse } from './ranking.schema';
+import { GetRankingListResponse, rankingListResponseSchema } from './ranking.schema';
 
 export type RankingOption = 'total' | 'avg';
 
@@ -18,6 +18,8 @@ export const createRankingApi = (api: Api) => ({
     if (page) searchParams.set('page', String(page));
     const query = searchParams.toString();
 
-    return api.get<GetRankingListResponse>(`/rankings${query ? `?${query}` : ''}`);
+    return api.get<GetRankingListResponse>(`/rankings${query ? `?${query}` : ''}`, {
+      schema: rankingListResponseSchema,
+    });
   },
 });

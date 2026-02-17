@@ -9,11 +9,13 @@ import {
   PostProfileBody,
   PostTechStackBody,
   PostTechStackResponse,
+  profileResponseSchema,
   PutProfileBody,
+  techStackListResponseSchema,
 } from './mypage.schema';
 
 export const createMyPageApi = (api: Api) => ({
-  getProfile: () => api.get<GetProfileResponse>('/profile'),
+  getProfile: () => api.get<GetProfileResponse>('/profile', { schema: profileResponseSchema }),
   postProfile: (reqBody: PostProfileBody) =>
     api.post<BaseResponse, PostProfileBody>('/profile', {
       body: reqBody,
@@ -22,7 +24,8 @@ export const createMyPageApi = (api: Api) => ({
     api.put<BaseResponse, PutProfileBody>('/profile', {
       body: reqBody,
     }),
-  getTechStacks: () => api.get<GetTechStackListResponse>('/tech-stacks'),
+  getTechStacks: () =>
+    api.get<GetTechStackListResponse>('/tech-stacks', { schema: techStackListResponseSchema }),
   postTechStacks: (reqBody: PostTechStackBody) =>
     api.post<PostTechStackResponse, PostTechStackBody>('/tech-stacks', {
       body: reqBody,

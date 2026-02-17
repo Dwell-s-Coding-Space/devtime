@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import z from 'zod';
 
 import {
@@ -8,8 +7,7 @@ import {
   PostSignUpBody,
 } from '@/src/features/auth/auth.schema';
 import { BaseResponse } from '@/src/shared/schema/common.schema';
-import { asDateOrNull } from '@/src/shared/schema/primitives/date';
-import { asArray } from '@/src/shared/schema/primitives/object';
+import { dateString } from '@/src/shared/schema/primitives/date';
 
 export const CUSTOM_PURPOSE_LABEL = '기타' as const;
 export const CAREER_OPTIONS = ['경력 없음', '0 - 3년', '4 - 7년', '8 - 10년', '11년 이상'] as const;
@@ -30,11 +28,11 @@ export const profileSchema = z.object({
   career: z.enum(CAREER_OPTIONS),
   purpose: z.string(),
   goal: z.string(),
-  techStacks: asArray(z.string()),
+  techStacks: z.array(z.string()),
   profileImage: z.string().nullable(),
 });
 
-const profileResponseSchema = z.object({
+export const profileResponseSchema = z.object({
   email: z.string(),
   nickname: z.string(),
   profile: z.optional(profileSchema),
@@ -56,7 +54,7 @@ export const profileBodySchema = z
       z.object({ type: z.literal(CUSTOM_PURPOSE_LABEL), detail: z.string() }),
     ]),
     goal: z.string(),
-    techStacks: asArray(z.string()),
+    techStacks: z.array(z.string()),
     profileImage: z.string().nullable(),
   })
   .partial();
@@ -80,12 +78,12 @@ export type PutProfileBody = Partial<
 export const techStackItemSchema = z.object({
   id: z.number(),
   name: z.string(),
-  createdAt: asDateOrNull(),
-  updatedAt: asDateOrNull(),
+  createdAt: dateString(),
+  updatedAt: dateString(),
 });
 
-const techStackListResponseSchema = z.object({
-  results: asArray(techStackItemSchema),
+export const techStackListResponseSchema = z.object({
+  results: z.array(techStackItemSchema),
 });
 
 export type TechStackItem = z.infer<typeof techStackItemSchema>;
