@@ -11,3 +11,8 @@ export const asDateOrNull = () =>
       return Number.isNaN(d.getTime()) ? null : d;
     })
     .catch(null);
+
+/**
+ * 유효한 Date
+ */
+export const dateString = () => z.string().refine(s => !isNaN(Date.parse(s)));

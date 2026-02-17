@@ -1,3 +1,4 @@
+import { captureException } from '@sentry/nextjs';
 import { ZodType } from 'zod';
 
 import { ApiError, NotFoundError, TimeoutError, UnauthorizedError, ValidationError } from './error';
@@ -12,6 +13,7 @@ const isErrorWithName = (e: unknown, name: string): e is Error => {
 
 type RequestOptionsWithoutBody = Omit<RequestInit, 'body'> & {
   timeout?: number;
+  schema?: ZodType;
 };
 
 type RequestOptionsWithBody<TBody = unknown> = Omit<RequestInit, 'body'> & {
@@ -75,10 +77,17 @@ class Api {
       if (schema) {
         const result = schema.safeParse(data);
         if (!result.success) {
-          throw new ValidationError();
+          const error = new ValidationError();
+          captureException(error, {
+            extra: {
+              endpoint: normalizedPath,
+              errors: result.error.issues.map(issue => ({
+                path: issue.path.join('.'),
+                message: issue.message,
+              })),
+            },
+          });
         }
-
-        return result.data as T;
       }
 
       return data as T;
