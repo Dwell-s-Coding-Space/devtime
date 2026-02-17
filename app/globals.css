@@ -78,6 +78,7 @@
   --color-text-g800: var(--color-gray-800);
   --color-text-disabled-300: var(--color-gray-300);
   --color-text-disabled-400: var(--color-gray-400);
+  --color-text-placeholder: #657080;
   --color-text-white: var(--color-white);
 
   --color-dim-b50: rgba(0, 0, 0, 0.5);
