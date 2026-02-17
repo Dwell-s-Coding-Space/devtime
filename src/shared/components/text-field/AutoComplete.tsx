@@ -9,21 +9,20 @@ import {
   useState,
 } from 'react';
 
-import { PostTechStackResponse } from '@/src/features/mypage/mypage.schema';
 import { cn } from '@/src/shared/utils/cn';
 
 import Input from './Input';
 
 interface AutoCompleteProps {
+  id: string;
   placeholder: string;
   options: string[];
   onSelect: (value: string) => void;
-  onAdd?: (value: string) => Promise<PostTechStackResponse>;
+  onAdd?: (value: string) => Promise<unknown>;
 }
 
-const AutoComplete = ({ placeholder, options, onSelect, onAdd }: AutoCompleteProps) => {
+const AutoComplete = ({ id, placeholder, options, onSelect, onAdd }: AutoCompleteProps) => {
   const listboxId = useId();
-  const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [isAdding, setIsAdding] = useState(false);
@@ -148,11 +147,12 @@ const AutoComplete = ({ placeholder, options, onSelect, onAdd }: AutoCompletePro
   }, [isOpen, focusedOptionIdx, optionId]);
 
   return (
-    <div className="relative w-full" ref={containerRef}>
+    <div className="relative w-full">
       <div className="sr-only" aria-live="polite">
         {filteredOptions.length}개의 검색 결과
       </div>
       <Input
+        id={id}
         role="combobox"
         type="text"
         ref={inputRef}
@@ -191,7 +191,7 @@ const AutoComplete = ({ placeholder, options, onSelect, onAdd }: AutoCompletePro
                 onMouseEnter={() => setFocusedOptionIdx(idx)}
                 className={cn(
                   'cursor-pointer px-3 py-2',
-                  isFocused && 'bg-background-gray-light z-10 rounded-[5px]'
+                  isFocused && 'bg-background-primary-light z-10 rounded-[5px]'
                 )}
               >
                 {option}
@@ -203,7 +203,7 @@ const AutoComplete = ({ placeholder, options, onSelect, onAdd }: AutoCompletePro
               role="option"
               aria-selected={false}
               id={optionId(addButtonIdx)}
-              onClick={addOption}
+              onMouseDown={addOption}
               onMouseEnter={() => setFocusedOptionIdx(addButtonIdx)}
               className={cn(
                 'body-s text-text-secondary px-3 py-2',
