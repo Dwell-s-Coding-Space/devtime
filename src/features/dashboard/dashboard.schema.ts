@@ -1,11 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import z from 'zod';
 
 import { paginationSchema } from '@/src/shared/schema/common.schema';
-import { asBoolean } from '@/src/shared/schema/primitives/boolean';
-import { asDateOrNull } from '@/src/shared/schema/primitives/date';
-import { asClampedNumber, asNonNegative } from '@/src/shared/schema/primitives/number';
-import { asArray } from '@/src/shared/schema/primitives/object';
+import { dateString } from '@/src/shared/schema/primitives/date';
 
 /**
  * 사용자의 공부 기록 통계 조회
@@ -13,20 +9,20 @@ import { asArray } from '@/src/shared/schema/primitives/object';
  */
 
 const weekdayStudyTimeSchema = z.object({
-  Monday: asNonNegative(),
-  Tuesday: asNonNegative(),
-  Wednesday: asNonNegative(),
-  Thursday: asNonNegative(),
-  Friday: asNonNegative(),
-  Saturday: asNonNegative(),
-  Sunday: asNonNegative(),
+  Monday: z.number().nonnegative(),
+  Tuesday: z.number().nonnegative(),
+  Wednesday: z.number().nonnegative(),
+  Thursday: z.number().nonnegative(),
+  Friday: z.number().nonnegative(),
+  Saturday: z.number().nonnegative(),
+  Sunday: z.number().nonnegative(),
 });
 
-const studyStatResponseSchema = z.object({
-  consecutiveDays: asNonNegative(),
-  totalStudyTime: asNonNegative(),
-  averageDailyStudyTime: asNonNegative(),
-  taskCompletionRate: asNonNegative(),
+export const studyStatResponseSchema = z.object({
+  consecutiveDays: z.number().int().nonnegative(),
+  totalStudyTime: z.number().nonnegative(),
+  averageDailyStudyTime: z.number().nonnegative(),
+  taskCompletionRate: z.number().min(0).max(100),
   weekdayStudyTime: weekdayStudyTimeSchema,
 });
 
@@ -38,13 +34,13 @@ export type GetStudyStatResponse = z.infer<typeof studyStatResponseSchema>;
  */
 
 const heatmapItemSchema = z.object({
-  date: asDateOrNull(),
-  studyTimeHours: asNonNegative(),
-  colorLevel: asClampedNumber(0, 5),
+  date: dateString(),
+  studyTimeHours: z.number().nonnegative(),
+  colorLevel: z.number().int().min(0).max(5),
 });
 
-const heatmapListResponseSchema = z.object({
-  heatmap: asArray(heatmapItemSchema),
+export const heatmapListResponseSchema = z.object({
+  heatmap: z.array(heatmapItemSchema),
 });
 
 export type GetHeatmapListResponse = z.infer<typeof heatmapListResponseSchema>;
@@ -56,18 +52,18 @@ export type GetHeatmapListResponse = z.infer<typeof heatmapListResponseSchema>;
 
 const studyLogItemSchema = z.object({
   id: z.string(),
-  date: asDateOrNull(),
+  date: dateString(),
   todayGoal: z.string(),
-  studyTime: asNonNegative(),
-  totalTasks: asNonNegative(),
-  incompleteTasks: asNonNegative(),
-  completionRate: z.number(),
+  studyTime: z.number().nonnegative(),
+  totalTasks: z.number().int().nonnegative(),
+  incompleteTasks: z.number().int().nonnegative(),
+  completionRate: z.number().min(0).max(100),
 });
 
-const studyLogListResponseSchema = z.object({
+export const studyLogListResponseSchema = z.object({
   success: z.literal(true),
   data: z.object({
-    studyLogs: asArray(studyLogItemSchema),
+    studyLogs: z.array(studyLogItemSchema),
     pagination: paginationSchema,
   }),
 });
@@ -82,7 +78,7 @@ export type StudyLogListResponse = z.infer<typeof studyLogListResponseSchema>;
 const taskItemSchema = z.object({
   id: z.string(),
   content: z.string(),
-  isCompleted: asBoolean(),
+  isCompleted: z.boolean(),
 });
 
 const studyLogDetailSchema = studyLogItemSchema
@@ -91,11 +87,11 @@ const studyLogDetailSchema = studyLogItemSchema
     totalTasks: true,
   })
   .extend({
-    tasks: asArray(taskItemSchema),
+    tasks: z.array(taskItemSchema),
     review: z.string(),
   });
 
-const studyLogDetailResponseSchema = z.object({
+export const studyLogDetailResponseSchema = z.object({
   success: z.literal(true),
   data: studyLogDetailSchema,
 });
