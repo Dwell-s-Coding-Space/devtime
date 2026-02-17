@@ -1,22 +1,10 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
-
-import { ROUTES } from '@/src/shared/constants/routes';
-
-export default function Error({ error }: { error: Error }) {
-  const router = useRouter();
-
-  useEffect(() => {
-    try {
-      const parsed = JSON.parse(error.message);
-      if (parsed.status === 401) {
-        alert('다시 로그인 해주세요.');
-        router.push(ROUTES.LOGIN);
-      }
-    } catch {}
-  }, [error, router]);
-
-  return <div>오류가 발생했습니다.</div>;
+export default function Error({ error, reset }: { error: Error; reset: () => void }) {
+  return (
+    <div>
+      <p>오류가 발생했습니다.</p>
+      <button onClick={reset}>다시 시도</button>
+    </div>
+  );
 }
