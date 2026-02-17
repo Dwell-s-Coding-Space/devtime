@@ -1,24 +1,34 @@
 import type Api from '@/src/shared/api/core';
-import { BaseResponse } from '@/src/shared/schema/common.schema';
+import { BaseResponse, baseResponseSchema } from '@/src/shared/schema/common.schema';
 
 import {
   GetHeatmapListResponse,
   GetStudyLogDetailResponse,
   GetStudyStatResponse,
+  heatmapListResponseSchema,
+  studyLogDetailResponseSchema,
   StudyLogListResponse,
+  studyLogListResponseSchema,
+  studyStatResponseSchema,
 } from './dashboard.schema';
 
 export const createDashboardApi = (api: Api) => ({
-  getStats: () => api.get<GetStudyStatResponse>('/stats'),
-  getHeatmap: () => api.get<GetHeatmapListResponse>('/heatmap'),
+  getStats: () => api.get<GetStudyStatResponse>('/stats', { schema: studyStatResponseSchema }),
+  getHeatmap: () =>
+    api.get<GetHeatmapListResponse>('/heatmap', { schema: heatmapListResponseSchema }),
   getStudyLogs: ({ limit, page, date }: { limit?: number; page?: number; date?: string }) => {
     const searchParams = new URLSearchParams();
     if (limit) searchParams.set('limit', String(limit));
     if (page) searchParams.set('page', String(page));
     if (date) searchParams.set('date', date);
 
-    return api.get<StudyLogListResponse>('/study-logs' + '?' + searchParams.toString());
+    return api.get<StudyLogListResponse>('/study-logs' + '?' + searchParams.toString(), {
+      schema: studyLogListResponseSchema,
+    });
   },
-  getStudyLogDetail: (id: string) => api.get<GetStudyLogDetailResponse>(`/study-logs/${id}`),
+  getStudyLogDetail: (id: string) =>
+    api.get<GetStudyLogDetailResponse>(`/study-logs/${id}`, {
+      schema: studyLogDetailResponseSchema,
+    }),
   deleteStudyLog: (id: string) => api.delete<BaseResponse>(`/study-logs/${id}`),
 });

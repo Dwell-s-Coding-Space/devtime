@@ -10,10 +10,11 @@ import {
   PutTasksUpdateBody,
   PutTimerUpdateBody,
   PutTimerUpdateResponse,
+  timerResponseSchema,
 } from './timer.schema';
 
 export const createTimerApi = (api: Api) => ({
-  getCurrent: () => api.get<GetTimerResponse>('/timers'),
+  getCurrent: () => api.get<GetTimerResponse>('/timers', { schema: timerResponseSchema }),
   postStart: (reqBody: PostTimerStartBody) =>
     api.post<PostTimerStartResponse, PostTimerStartBody>('/timers', {
       body: reqBody,
