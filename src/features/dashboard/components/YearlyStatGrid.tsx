@@ -5,6 +5,7 @@ import { useMemo } from 'react';
 
 import { cn } from '@/src/shared/utils/cn';
 
+import { formatTime, MS_IN_SECONDS, SECONDS_IN_HOUR } from '../../timer/utils/formatTime';
 import { dashboardQueries } from '../dashboard.queries';
 import { getYearlyDates } from '../utils/getYearlyDates';
 
@@ -57,8 +58,8 @@ const YearlyStatGrid = () => {
   }, [data.heatmap]);
 
   return (
-    <div className="bg-background-white flex flex-col gap-6 rounded-[18px] p-6">
-      <h3 className="subtitle-s text-text-disabled-400">공부 시간 바다</h3>
+    <div className="bg-background-white flex w-fit flex-col gap-6 rounded-[18px] p-6">
+      <h3 className="subtitle-s text-text-placeholder">공부 시간 바다</h3>
       <div className="flex gap-4">
         {/* Weekday Label */}
         <div className="flex flex-col gap-[3px]">
@@ -92,6 +93,15 @@ const YearlyStatGrid = () => {
                     ? SEA_LEVEL[cellData.colorLevel as keyof typeof SEA_LEVEL]
                     : undefined;
 
+                  const { hours, minutes, seconds } = formatTime(
+                    (cellData?.studyTimeHours || 0) * SECONDS_IN_HOUR * MS_IN_SECONDS
+                  );
+
+                  const timeString =
+                    (hours !== '00' ? `${hours}시간` : '') +
+                    (minutes !== '00' ? ` ${minutes}분` : '') +
+                    (seconds !== '00' ? `${seconds}초` : '');
+
                   return (
                     <div className="group relative" key={date}>
                       <div
@@ -110,7 +120,7 @@ const YearlyStatGrid = () => {
                           }
                         )}
                       >
-                        {cellData?.studyTimeHours || '기록 없음'}
+                        {timeString || '기록 없음'}
                       </div>
                     </div>
                   );
