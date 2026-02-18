@@ -1,5 +1,4 @@
 import { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { fn } from 'storybook/test';
 
 import Input from './Input';
 import Label from './Label';
@@ -53,7 +52,7 @@ export const WithButton: Story = {
     innerButton: (
       <button
         onClick={() => {}}
-        className="disabled:body-b disabled:text-text-placeholder body-b text-text-secondary"
+        className="disabled:body-b disabled:text-text-placeholder body-b text-text-primary"
       >
         추가
       </button>
