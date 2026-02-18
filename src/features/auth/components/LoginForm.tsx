@@ -82,7 +82,7 @@ const LoginForm = () => {
           label="아이디"
           placeholder="이메일 주소를 입력해 주세요."
           {...register('email')}
-          messageType={errors.email && 'error'}
+          messageType="error"
           message={errors.email?.message}
         />
         <TextField
@@ -91,7 +91,7 @@ const LoginForm = () => {
           type="password"
           placeholder="비밀번호를 입력해 주세요."
           {...register('password')}
-          messageType={errors.password && 'error'}
+          messageType="error"
           message={errors.password?.message}
         />
       </div>
