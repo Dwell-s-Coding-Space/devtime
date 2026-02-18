@@ -78,6 +78,7 @@ const LoginForm = () => {
     <form className="flex w-[328px] flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
       <div className="flex flex-col gap-3">
         <TextField
+          id="id"
           label="아이디"
           placeholder="이메일 주소를 입력해 주세요."
           {...register('email')}
@@ -86,6 +87,7 @@ const LoginForm = () => {
         />
         <TextField
           label="비밀번호"
+          id="password"
           type="password"
           placeholder="비밀번호를 입력해 주세요."
           {...register('password')}

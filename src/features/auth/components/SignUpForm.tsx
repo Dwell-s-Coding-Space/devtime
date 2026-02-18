@@ -62,18 +62,21 @@ const SignUpForm = () => {
       <h1 className="heading-b text-text-primary text-center">회원가입</h1>
       <div className="flex flex-col gap-4">
         <TextField
+          id="id"
           label="아이디"
           {...register('email')}
           messageType={errors.email && 'error'}
           message={errors.email?.message}
         />
         <TextField
+          id="nickname"
           label="닉네임"
           {...register('nickname')}
           messageType={errors.nickname && 'error'}
           message={errors.nickname?.message}
         />
         <TextField
+          id="password"
           label="비밀번호"
           type="password"
           {...register('password')}
@@ -81,6 +84,7 @@ const SignUpForm = () => {
           message={errors.password?.message}
         />
         <TextField
+          id="password-confirm"
           label="비밀번호 확인"
           type="password"
           {...register('confirmPassword')}

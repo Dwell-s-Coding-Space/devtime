@@ -143,6 +143,7 @@ const ProfileSettingForm = () => {
         </div>
 
         <TextField
+          id="goal"
           label="공부 목표"
           placeholder="공부 목표를 입력해 주세요."
           {...register('goal')}

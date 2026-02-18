@@ -9,6 +9,7 @@ interface AddTaskItemProps extends ComponentProps<'input'> {
 const AddTaskItem = ({ onClick, value, onChange, ...inputProps }: AddTaskItemProps) => {
   return (
     <TextField
+      id="add-task"
       label="할 일 목록"
       value={value}
       onChange={onChange}
