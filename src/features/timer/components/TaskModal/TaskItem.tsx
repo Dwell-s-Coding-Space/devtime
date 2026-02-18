@@ -63,7 +63,13 @@ const TaskItem = ({ task, mode, handleChange, handleDelete }: TaskItemProps) => 
         ))}
 
       {mode === 'check' && (
-        <Checkbox id={checkboxId} checked={task.isCompleted} onChange={handleCheck} />
+        <Checkbox
+          variant="todo"
+          id={checkboxId}
+          checked={task.isCompleted}
+          onChange={handleCheck}
+          className="h-7 w-7"
+        />
       )}
     </label>
   );
