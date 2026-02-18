@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 
-import Label from '@/src/shared/components/text-field/Label';
+import Label from '@/src/shared/components/form/Label';
 
 import { dashboardQueries } from '../../dashboard/dashboard.queries';
 import { GetStudyLogDetailResponse } from '../../dashboard/dashboard.schema';

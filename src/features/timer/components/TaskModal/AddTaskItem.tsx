@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
 
-import TextField from '@/src/shared/components/text-field/TextField';
+import TextField from '@/src/shared/components/form/TextField';
 
 interface AddTaskItemProps extends ComponentProps<'input'> {
   onClick: () => void;

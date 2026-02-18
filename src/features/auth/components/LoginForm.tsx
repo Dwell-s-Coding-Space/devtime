@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 
 import Button from '@/src/shared/components/button/Button';
-import TextField from '@/src/shared/components/text-field/TextField';
+import TextField from '@/src/shared/components/form/TextField';
 import { ROUTES } from '@/src/shared/constants/routes';
 import { useModalStore } from '@/src/shared/store/useModalStore';
 
