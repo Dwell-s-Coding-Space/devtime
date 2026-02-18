@@ -23,7 +23,7 @@
 @theme {
   /* base color */
   --color-*: initial;
-  --color-primary: #4c79ff;
+  --color-primary: #3b5fc7;
   --color-primary-10: rgba(76, 121, 255, 0.1);
   --color-primary-30: rgba(76, 121, 255, 0.3);
 
