@@ -203,6 +203,7 @@ export default function MypageEdit() {
         <div className="flex gap-[72px]">
           <div className="flex flex-1 flex-col gap-6">
             <TextField
+              id="nickname"
               label="닉네임"
               placeholder="닉네임을 입력해 주세요."
               {...register('nickname')}
@@ -236,6 +237,7 @@ export default function MypageEdit() {
             </div>
 
             <TextField
+              id="new-password"
               label="새 비밀번호"
               type="password"
               placeholder="비밀번호를 입력해 주세요."
@@ -245,6 +247,7 @@ export default function MypageEdit() {
             />
 
             <TextField
+              id="new-password-confirm"
               label="새 비밀번호 재입력"
               type="password"
               placeholder="비밀번호를 다시 입력해 주세요."
@@ -272,6 +275,7 @@ export default function MypageEdit() {
             </div>
 
             <TextField
+              id="goal"
               label="공부 목표"
               placeholder="공부 목표를 입력해 주세요."
               {...register('goal')}
