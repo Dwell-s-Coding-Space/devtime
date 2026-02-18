@@ -7,7 +7,7 @@ interface InputProps extends ComponentProps<'input'> {
   hasError?: boolean;
 }
 
-const Input = ({ innerButton, hasError, className, ...props }: InputProps) => {
+const Input = ({ id, innerButton, hasError, className, ...props }: InputProps) => {
   return (
     <div
       className={cn(
@@ -17,6 +17,7 @@ const Input = ({ innerButton, hasError, className, ...props }: InputProps) => {
       )}
     >
       <input
+        id={id}
         className={cn(
           { 'flex-1': innerButton },
           'placeholder:body-m placeholder:text-text-placeholder body-m text-text-g800 w-full',

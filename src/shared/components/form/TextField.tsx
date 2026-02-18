@@ -7,6 +7,7 @@ import Input from './Input';
 import Label from './Label';
 
 interface FieldProps extends ComponentProps<'input'> {
+  id: string;
   label: string;
   message?: string;
   messageType?: 'error' | 'informative' | 'success';
