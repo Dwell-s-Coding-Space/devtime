@@ -107,3 +107,7 @@ button {
     cursor: not-allowed;
   }
 }
+
+input {
+  outline: none;
+}
