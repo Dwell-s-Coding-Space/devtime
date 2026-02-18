@@ -2,7 +2,7 @@ import { Fragment, KeyboardEvent, useCallback, useEffect, useId, useRef, useStat
 
 import { cn } from '@/src/shared/utils/cn';
 
-import { ChevronUpIcon } from '../../assets/svg';
+import { ChevronDownIcon } from '../../assets/svg';
 
 interface SelectProps {
   id: string;
@@ -129,7 +129,7 @@ const Select = ({ id, value, placeholder, options, onChange }: SelectProps) => {
         )}
       >
         <span className="flex-1 text-left">{value || placeholder}</span>
-        <ChevronUpIcon
+        <ChevronDownIcon
           className={cn(
             'text-content-secondary h-6 w-6 transition-transform',
             isOpen && 'rotate-180'
