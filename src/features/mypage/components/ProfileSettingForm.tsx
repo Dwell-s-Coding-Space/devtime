@@ -7,11 +7,11 @@ import { Controller, useForm, useWatch } from 'react-hook-form';
 
 import { XIcon } from '@/src/shared/assets/svg';
 import Button from '@/src/shared/components/button/Button';
-import AutoComplete from '@/src/shared/components/text-field/AutoComplete';
-import Input from '@/src/shared/components/text-field/Input';
-import Label from '@/src/shared/components/text-field/Label';
-import Select from '@/src/shared/components/text-field/Select';
-import TextField from '@/src/shared/components/text-field/TextField';
+import AutoComplete from '@/src/shared/components/form/AutoComplete';
+import Input from '@/src/shared/components/form/Input';
+import Label from '@/src/shared/components/form/Label';
+import Select from '@/src/shared/components/form/Select';
+import TextField from '@/src/shared/components/form/TextField';
 import { ROUTES } from '@/src/shared/constants/routes';
 import { useModalStore } from '@/src/shared/store/useModalStore';
 

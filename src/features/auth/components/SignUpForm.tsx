@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 
 import Button from '@/src/shared/components/button/Button';
-import TextField from '@/src/shared/components/text-field/TextField';
+import TextField from '@/src/shared/components/form/TextField';
 import { ROUTES } from '@/src/shared/constants/routes';
 
 import { TERMS_OF_SERVICE } from '../auth.constants';

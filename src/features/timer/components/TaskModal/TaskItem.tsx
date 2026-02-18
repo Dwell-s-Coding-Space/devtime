@@ -3,7 +3,7 @@ import { ChangeEvent, useState } from 'react';
 import type { TaskItem as TaskItemType } from '@/src/features/dashboard/dashboard.schema';
 import { CheckIcon, EditIcon, SymbolIcon, TrashIcon } from '@/src/shared/assets/svg';
 import IconButton from '@/src/shared/components/button/IconButton';
-import Checkbox from '@/src/shared/components/checkbox/Checkbox';
+import Checkbox from '@/src/shared/components/form/Checkbox';
 import { cn } from '@/src/shared/utils/cn';
 
 import { TaskMode } from '../../timer.types';
