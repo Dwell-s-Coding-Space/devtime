@@ -58,7 +58,7 @@ const YearlyStatGrid = () => {
   }, [data.heatmap]);
 
   return (
-    <div className="bg-background-white flex w-fit flex-col gap-6 rounded-[18px] p-6">
+    <div className="bg-background-white flex flex-col gap-6 rounded-[18px] p-6">
       <h3 className="subtitle-s text-text-placeholder">공부 시간 바다</h3>
       <div className="flex gap-4">
         {/* Weekday Label */}
