@@ -37,14 +37,19 @@ const TextField = ({
     <div className="flex flex-col gap-2">
       <Label htmlFor={inputProps.id}>{label}</Label>
       <div className="flex items-center gap-3">
-        <Input innerButton={innerButton} hasError={messageType === 'error'} {...inputProps} />
+        <Input
+          innerButton={innerButton}
+          hasError={messageType === 'error' && !!message?.length}
+          {...inputProps}
+        />
         {outerButton}
       </div>
-      {message ? (
-        <span className={cn(MessageVariants({ variant: messageType }))}>{message}</span>
-      ) : messageType ? (
-        <div className="h-4" />
-      ) : null}
+      {messageType &&
+        (message ? (
+          <span className={cn(MessageVariants({ variant: messageType }))}>{message}</span>
+        ) : (
+          <div className="h-4" />
+        ))}
     </div>
   );
 };
