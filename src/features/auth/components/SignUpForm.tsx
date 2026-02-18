@@ -65,14 +65,14 @@ const SignUpForm = () => {
           id="id"
           label="아이디"
           {...register('email')}
-          messageType={errors.email && 'error'}
+          messageType="error"
           message={errors.email?.message}
         />
         <TextField
           id="nickname"
           label="닉네임"
           {...register('nickname')}
-          messageType={errors.nickname && 'error'}
+          messageType="error"
           message={errors.nickname?.message}
         />
         <TextField
@@ -80,7 +80,7 @@ const SignUpForm = () => {
           label="비밀번호"
           type="password"
           {...register('password')}
-          messageType={errors.password && 'error'}
+          messageType="error"
           message={errors.password?.message}
         />
         <TextField
@@ -88,7 +88,7 @@ const SignUpForm = () => {
           label="비밀번호 확인"
           type="password"
           {...register('confirmPassword')}
-          messageType={errors.confirmPassword && 'error'}
+          messageType="error"
           message={errors.confirmPassword?.message}
         />
       </div>

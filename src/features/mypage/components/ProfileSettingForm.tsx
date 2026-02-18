@@ -147,8 +147,6 @@ const ProfileSettingForm = () => {
           label="공부 목표"
           placeholder="공부 목표를 입력해 주세요."
           {...register('goal')}
-          messageType={errors.goal && 'error'}
-          message={errors.goal?.message}
         />
 
         <div className="flex flex-col gap-2">
