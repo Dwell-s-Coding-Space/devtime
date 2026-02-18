@@ -194,7 +194,7 @@ export default function MypageEdit() {
               )}
             </label>
 
-            <span className="text-text-g500 lable-m">
+            <span className="text-text-placeholder lable-m">
               {IMAGE_CONFIG.maxSizeMB}MB 미만의 {IMAGE_CONFIG.extensions.join(', ')} 파일
             </span>
           </div>
@@ -319,7 +319,9 @@ export default function MypageEdit() {
           </div>
         </div>
         <div className="flex items-center justify-end gap-4">
-          <Button variant="tertiary">취소</Button>
+          <Button variant="tertiary" onClick={() => router.push(ROUTES.MYPAGE)}>
+            취소
+          </Button>
           <Button variant="primary" onClick={handleSave} disabled={!isValid}>
             {isPending ? '변경 사항 저장 중...' : '변경 사항 저장하기'}
           </Button>
