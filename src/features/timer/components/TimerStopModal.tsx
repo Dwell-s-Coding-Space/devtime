@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import Label from '@/src/shared/components/form/Label';
+import Textarea from '@/src/shared/components/form/Textarea';
 
 import { dashboardQueries } from '../../dashboard/dashboard.queries';
 import { GetStudyLogDetailResponse } from '../../dashboard/dashboard.schema';
@@ -110,10 +111,10 @@ const TimerStopModal = ({ onClose, data, timerId, stopTimer }: TimerStopModalPro
 
       <div className="flex flex-col gap-2">
         <Label htmlFor="reflection">학습 회고</Label>
-        <textarea
+        <Textarea
+          id="reflection"
           value={reflection}
           onChange={e => setReflection(e.target.value)}
-          className="bg-background-gray-light placeholder:text-text-disabled-300 body-m text-text-g600 h-[84px] overflow-y-scroll rounded-[5px] px-4 py-3"
           placeholder="오늘 학습한 내용을 회고해 보세요(15자 이상 작성 필수)."
         />
       </div>
