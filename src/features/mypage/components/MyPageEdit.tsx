@@ -1,14 +1,15 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 
-import { PlusIcon } from '@/src/shared/assets/svg';
+import { PlusIcon, XIcon } from '@/src/shared/assets/svg';
 import Button from '@/src/shared/components/button/Button';
+import AutoComplete from '@/src/shared/components/text-field/AutoComplete';
 import Input from '@/src/shared/components/text-field/Input';
 import Label from '@/src/shared/components/text-field/Label';
 import Select from '@/src/shared/components/text-field/Select';
@@ -31,6 +32,21 @@ export default function MypageEdit() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const onOpen = useModalStore(state => state.onOpen);
+
+  const { data: techStacksData } = useQuery({
+    ...mypageQueries.techStacks(),
+    select: data => data.results.map(techStack => techStack.name),
+  });
+
+  const { mutateAsync: addTechStack } = useMutation({
+    ...mypageQueries.createTechStack(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: mypageQueries.techStacks().queryKey });
+    },
+    onError: err => {
+      alert(`추가하는데 실패하였습니다.\n${err.message}`);
+    },
+  });
 
   const { data: profileData } = useSuspenseQuery(mypageQueries.profile());
 
@@ -72,6 +88,7 @@ export default function MypageEdit() {
   const password = useWatch({ control, name: 'password' });
   const confirmPassword = useWatch({ control, name: 'confirmPassword' });
   const profileImage = useWatch({ control, name: 'profileImage' });
+  const techStacks = useWatch({ control, name: 'techStacks' });
 
   const profileImageSrc = useMemo(() => {
     if (profileImage) return URL.createObjectURL(profileImage);
@@ -192,40 +209,6 @@ export default function MypageEdit() {
               messageType={errors.nickname && 'error'}
               message={errors.nickname?.message}
             />
-            <TextField
-              label="비밀번호"
-              type="password"
-              placeholder="비밀번호를 입력해 주세요."
-              {...register('password')}
-              messageType={errors.password && 'error'}
-              message={errors.password?.message}
-            />
-            <TextField
-              label="비밀번호 확인"
-              type="password"
-              placeholder="비밀번호를 다시 입력해 주세요."
-              {...register('confirmPassword')}
-              messageType={errors.confirmPassword && 'error'}
-              message={errors.confirmPassword?.message}
-            />
-          </div>
-          <div className="flex flex-1 flex-col gap-6">
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="career-select">개발 경력</Label>
-              <Controller
-                name="career"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    id="career-select"
-                    value={field.value as (typeof CAREER_OPTIONS)[number]}
-                    placeholder="개발 경력을 선택해 주세요."
-                    options={CAREER_OPTIONS}
-                    onChange={field.onChange}
-                  />
-                )}
-              />
-            </div>
 
             <div className="flex flex-col gap-2">
               <Label htmlFor="purpose-select">공부 목적</Label>
@@ -253,12 +236,82 @@ export default function MypageEdit() {
             </div>
 
             <TextField
+              label="새 비밀번호"
+              type="password"
+              placeholder="비밀번호를 입력해 주세요."
+              {...register('password')}
+              messageType={errors.password && 'error'}
+              message={errors.password?.message}
+            />
+
+            <TextField
+              label="새 비밀번호 재입력"
+              type="password"
+              placeholder="비밀번호를 다시 입력해 주세요."
+              {...register('confirmPassword')}
+              messageType={errors.confirmPassword && 'error'}
+              message={errors.confirmPassword?.message}
+            />
+          </div>
+          <div className="flex flex-1 flex-col gap-6">
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="career-select">개발 경력</Label>
+              <Controller
+                name="career"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    id="career-select"
+                    value={field.value as (typeof CAREER_OPTIONS)[number]}
+                    placeholder="개발 경력을 선택해 주세요."
+                    options={CAREER_OPTIONS}
+                    onChange={field.onChange}
+                  />
+                )}
+              />
+            </div>
+
+            <TextField
               label="공부 목표"
               placeholder="공부 목표를 입력해 주세요."
               {...register('goal')}
               messageType={errors.goal && 'error'}
               message={errors.goal?.message}
             />
+
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="select-techStack">공부/사용 중인 기술 스택(선택)</Label>
+              <AutoComplete
+                id="select-techStack"
+                placeholder="기술 스택을 검색해 등록해 주세요."
+                options={techStacksData || []}
+                onSelect={stack => {
+                  const currentStacks = getValues('techStacks') || [];
+                  if (!currentStacks?.includes(stack)) {
+                    setValue('techStacks', [...currentStacks, stack]);
+                  }
+                }}
+                onAdd={value => addTechStack({ name: value })}
+              />
+              <div className="flex flex-wrap items-center gap-2">
+                {techStacks?.map(stack => (
+                  <div
+                    className="text-text-primary bg-background-primary-light border-border-primary flex h-11 items-center gap-2 rounded-[5px] border p-3"
+                    key={stack}
+                  >
+                    {stack}
+                    <button
+                      onClick={() => {
+                        const filteredStacks = techStacks.filter(item => item !== stack);
+                        setValue('techStacks', filteredStacks);
+                      }}
+                    >
+                      <XIcon className="h-5 w-5" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
         <div className="flex items-center justify-end gap-4">
