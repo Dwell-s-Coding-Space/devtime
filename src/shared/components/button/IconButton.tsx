@@ -11,7 +11,7 @@ const IconButton = ({ className, ...rest }: IconButtonProps) => {
     <button
       type="button"
       className={cn(
-        'disabled:text-text-disabled-300 inline-flex items-center justify-center',
+        'disabled:text-text-placeholder inline-flex items-center justify-center',
         className
       )}
       {...rest}

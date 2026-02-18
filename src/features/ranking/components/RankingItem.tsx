@@ -46,15 +46,15 @@ const RankingItem = ({ data }: RankingItemProps) => {
         </div>
         <dl className="flex items-center gap-6">
           <div className="flex items-center gap-2">
-            <dt className="text-text-g500 body-r">누적</dt>
+            <dt className="text-text-placeholder body-r">누적</dt>
             <dd className="text-text-g700 body-s">{Math.floor(totalStudyTime)}시간</dd>
           </div>
           <div className="flex items-center gap-2">
-            <dt className="text-text-g500 body-r">일 평균</dt>
+            <dt className="text-text-placeholder body-r">일 평균</dt>
             <dd className="text-text-g700 body-s">{Math.floor(averageStudyTime)}시간</dd>
           </div>
           <div className="flex items-center gap-2">
-            <dt className="text-text-g500 body-r">경력</dt>
+            <dt className="text-text-placeholder body-r">경력</dt>
             <dd className="text-text-g700 body-s">{career}</dd>
           </div>
         </dl>
@@ -62,7 +62,7 @@ const RankingItem = ({ data }: RankingItemProps) => {
           {techStacks.map(tech => (
             <div
               key={tech.id}
-              className="bg-background-gray-dark body-m text-text-g500 rounded-[5px] px-2 py-1"
+              className="bg-background-gray-dark body-m text-text-placeholder rounded-[5px] px-2 py-1"
             >
               {tech.name}
             </div>
