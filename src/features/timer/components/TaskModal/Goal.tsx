@@ -17,7 +17,7 @@ const Goal = (props: GoalProps) => {
           placeholder="오늘의 목표"
           {...props}
           className={cn(
-            'placeholder-text-disabled-300 heading-dashboard text-text-secondary',
+            'placeholder-text-placeholder heading-dashboard text-text-secondary',
             props.className
           )}
         />

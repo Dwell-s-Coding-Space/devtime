@@ -44,7 +44,7 @@ const MyPage = () => {
           <p
             className={cn(
               'heading-b',
-              profileData?.profile?.goal ? 'text-text-secondary' : 'text-text-disabled-300'
+              profileData?.profile?.goal ? 'text-text-secondary' : 'text-text-placeholder'
             )}
           >
             {profileData?.profile?.goal || '아직 설정한 목표가 없어요.'}
@@ -53,11 +53,11 @@ const MyPage = () => {
 
         <dl className="flex flex-col gap-6">
           <div className="flex flex-col gap-1">
-            <dt className="label-s text-text-disabled-400">이메일 주소</dt>
+            <dt className="label-s text-text-g600">이메일 주소</dt>
             <dd
               className={cn(
                 'subtitle-s',
-                profileData?.email ? 'text-text-g600' : 'text-text-disabled-300'
+                profileData?.email ? 'text-text-g800' : 'text-text-placeholder'
               )}
             >
               {profileData?.email}
@@ -65,11 +65,11 @@ const MyPage = () => {
           </div>
 
           <div className="flex flex-col gap-1">
-            <dt className="label-s text-text-disabled-400">개발 경력</dt>
+            <dt className="label-s text-text-g600">개발 경력</dt>
             <dd
               className={cn(
                 'subtitle-s',
-                profileData?.profile?.career ? 'text-text-g600' : 'text-text-disabled-300'
+                profileData?.profile?.career ? 'text-text-g800' : 'text-text-placeholder'
               )}
             >
               {profileData?.profile?.career || '개발 경력을 업데이트 해주세요.'}
@@ -77,11 +77,11 @@ const MyPage = () => {
           </div>
 
           <div className="flex flex-col gap-1">
-            <dt className="label-s text-text-disabled-400">공부 목적</dt>
+            <dt className="label-s text-text-g600">공부 목적</dt>
             <dd
               className={cn(
                 'subtitle-s',
-                profileData?.profile?.purpose ? 'text-text-g600' : 'text-text-disabled-300'
+                profileData?.profile?.purpose ? 'text-text-g800' : 'text-text-placeholder'
               )}
             >
               {profileData?.profile?.purpose || '공부 목적을 업데이트 해주세요.'}
@@ -89,13 +89,13 @@ const MyPage = () => {
           </div>
 
           <div className="flex flex-col gap-1">
-            <dt className="label-s text-text-disabled-400">개발 스택</dt>
+            <dt className="label-s text-text-g600">개발 스택</dt>
             <dd
               className={cn(
                 'subtitle-s',
                 profileData?.profile?.techStacks
-                  ? 'text-text-g500 body-m'
-                  : 'text-text-disabled-300 subtitle-s'
+                  ? 'text-text-g800 body-m'
+                  : 'text-text-placeholder subtitle-s'
               )}
             >
               {profileData?.profile?.techStacks ? (
@@ -114,7 +114,7 @@ const MyPage = () => {
         </dl>
       </div>
 
-      <Link href={ROUTES.MYPAGE_EDIT} className="text-text-g600 flex h-fit items-center gap-2">
+      <Link href={ROUTES.MYPAGE_EDIT} className="text-text-g800 flex h-fit items-center gap-2">
         <EditIcon className="h-6 w-6" />
         <span className="label-m">회원정보 수정</span>
       </Link>

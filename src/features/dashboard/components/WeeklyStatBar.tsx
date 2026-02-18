@@ -17,7 +17,7 @@ const WeeklyStatBar = () => {
       <div className="flex items-start gap-2 pt-7">
         <div className="flex w-[80px] flex-col gap-10">
           {[24, 16, 8].map(val => (
-            <p key={val} className="border-t-dim-w50 text-dim-w50 caption-b border-t pt-1">
+            <p key={val} className="border-t-dim-w50 text-text-white caption-b border-t pt-1">
               {val}시간
             </p>
           ))}
