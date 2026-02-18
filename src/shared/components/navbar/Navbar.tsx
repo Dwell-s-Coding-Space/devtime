@@ -1,9 +1,9 @@
 import { cookies } from 'next/headers';
-import Image from 'next/image';
 import Link from 'next/link';
 
 import UserDropdown from '@/src/features/auth/components/UserDropdown';
 
+import { LogoHorizontal } from '../../assets/svg';
 import { ROUTES } from '../../constants/routes';
 
 const Navbar = async () => {
@@ -14,7 +14,7 @@ const Navbar = async () => {
     <div className="mb-10 flex items-center justify-between">
       <div className="flex items-center gap-12">
         <Link href={ROUTES.HOME}>
-          <Image src="./logo-horizontal.svg" alt="logo" width={148} height={40} unoptimized />
+          <LogoHorizontal />
         </Link>
         <div className="flex items-center gap-9">
           <Link href={ROUTES.DASHBOARD}>
@@ -30,10 +30,10 @@ const Navbar = async () => {
         <UserDropdown />
       ) : (
         <div className="flex items-center gap-12">
-          <Link href={ROUTES.LOGIN}>
+          <Link href={ROUTES.LOGIN} className="shrink-0">
             <span className="text-text-secondary body-s">로그인</span>
           </Link>
-          <Link href={ROUTES.SIGNUP}>
+          <Link href={ROUTES.SIGNUP} className="shrink-0">
             <span className="text-text-secondary body-s">회원가입</span>
           </Link>
         </div>
