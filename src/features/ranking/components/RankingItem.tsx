@@ -58,7 +58,7 @@ const RankingItem = ({ data }: RankingItemProps) => {
             <dd className="text-text-g700 body-s">{career}</dd>
           </div>
         </dl>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {techStacks.map(tech => (
             <div
               key={tech.id}
