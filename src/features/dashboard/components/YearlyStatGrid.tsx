@@ -130,9 +130,7 @@ const YearlyStatGrid = () => {
         </div>
       </div>
       <div className="flex items-center gap-2">
-        <span className="caption-s" style={{ color: SEA_LEVEL[1] }}>
-          Shallow
-        </span>
+        <span className="caption-s text-text-g500">Shallow</span>
         <div className="flex h-5 w-[150px] overflow-hidden rounded-[5px]">
           {Object.values(SEA_LEVEL).map(color => (
             <div key={color} className="flex-1" style={{ backgroundColor: color }} />
