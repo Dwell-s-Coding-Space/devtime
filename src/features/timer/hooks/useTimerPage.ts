@@ -24,7 +24,7 @@ const useTimerPage = ({
 
   const { data: isLoggedIn } = useQuery(authQueries.checkIsLoggedIn());
 
-  const { data: timerData } = useQuery(timerQueries.current());
+  const { data: timerData } = useQuery({ ...timerQueries.current(), enabled: !!isLoggedIn });
 
   const { data: studyLogData } = useQuery({
     ...dashboardQueries.studyLogDetail(timerData?.studyLogId || ''),
