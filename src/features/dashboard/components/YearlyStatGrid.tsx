@@ -59,7 +59,7 @@ const YearlyStatGrid = () => {
 
   return (
     <div className="bg-background-white flex flex-col gap-6 rounded-[18px] p-6">
-      <h3 className="subtitle-s text-text-placeholder">공부 시간 바다</h3>
+      <h3 className="subtitle-s text-text-g500">공부 시간 바다</h3>
       <div className="flex gap-4">
         {/* Weekday Label */}
         <div className="flex flex-col gap-[3px]">
@@ -107,8 +107,7 @@ const YearlyStatGrid = () => {
                       <div
                         style={{ backgroundColor: color }}
                         className={cn('h-[18px] w-[18px] rounded-[5px]', {
-                          'border-border-gray bg-background-gray-light border':
-                            !color && !isDisabled,
+                          'bg-background-gray-light border border-gray-200': !color && !isDisabled,
                           'bg-background-disabled': isDisabled,
                         })}
                       />
