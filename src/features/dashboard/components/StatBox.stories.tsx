@@ -13,6 +13,9 @@ const meta = {
   title: 'Features/StatBox',
   component: StatBox,
   tags: ['autodocs'],
+  globals: {
+    backgrounds: { value: 'dark' },
+  },
   parameters: {
     docs: {
       description: {
@@ -40,6 +43,13 @@ export const TimeStatBox: Story = {
     type: 'time',
     value: MOCK_STAT_DATA['totalStudyTime'],
   },
+  decorators: [
+    Story => (
+      <dl>
+        <Story />
+      </dl>
+    ),
+  ],
 };
 
 export const DayStatBox: Story = {
@@ -48,6 +58,13 @@ export const DayStatBox: Story = {
     type: 'day',
     value: MOCK_STAT_DATA['consecutiveDays'],
   },
+  decorators: [
+    Story => (
+      <dl>
+        <Story />
+      </dl>
+    ),
+  ],
 };
 
 export const RateStatBox: Story = {
@@ -56,11 +73,18 @@ export const RateStatBox: Story = {
     type: 'rate',
     value: MOCK_STAT_DATA['taskCompletionRate'],
   },
+  decorators: [
+    Story => (
+      <dl>
+        <Story />
+      </dl>
+    ),
+  ],
 };
 
 export const StatSummary: Story = {
   render: () => (
-    <div className="grid h-fit w-fit grid-cols-2 grid-rows-2 gap-4">
+    <dl className="grid h-fit w-fit grid-cols-2 grid-rows-2 gap-4">
       <StatBox value={MOCK_STAT_DATA.totalStudyTime} label="누적 공부 시간" type="time" />
       <StatBox value={MOCK_STAT_DATA.consecutiveDays} label="누적 공부 일수" type="day" />
       <StatBox
@@ -69,6 +93,6 @@ export const StatSummary: Story = {
         type="time"
       />
       <StatBox value={MOCK_STAT_DATA.taskCompletionRate} label="목표 달성률" type="rate" />
-    </div>
+    </dl>
   ),
 };
