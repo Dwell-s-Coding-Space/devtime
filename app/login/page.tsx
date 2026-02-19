@@ -10,7 +10,6 @@ export default async function Login() {
         alt="symbol"
         width={1090}
         height={530}
-        unoptimized
         className="absolute h-auto"
         style={{
           width: `clamp(300px, calc(1090 / 1920 * 100vw), 1090px)`,
