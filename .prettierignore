@@ -18,3 +18,4 @@ yarn.lock
 # Generated
 *.min.js
 *.min.css
+public/mockServiceWorker.js
