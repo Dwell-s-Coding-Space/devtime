@@ -20,7 +20,7 @@ const AddTaskItem = ({ onClick, value, onChange, ...inputProps }: AddTaskItemPro
         <button
           disabled={!value}
           onClick={onClick}
-          className="disabled:body-b disabled:text-text-disabled-400 body-b text-text-primary"
+          className="disabled:body-b disabled:text-text-disabled body-b text-text-primary"
         >
           추가
         </button>

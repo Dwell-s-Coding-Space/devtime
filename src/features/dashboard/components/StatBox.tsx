@@ -11,7 +11,7 @@ const StatBox = ({ value, label, type }: StatBoxProps) => {
 
   return (
     <div className="bg-background-white flex w-[240px] flex-col gap-2 rounded-[18px] p-6">
-      <dt className="subtitle-s text-text-placeholder">{label}</dt>
+      <dt className="subtitle-s text-text-g500">{label}</dt>
       <dd className="text-text-secondary flex items-end justify-end gap-1">
         {type === 'rate' && (
           <>

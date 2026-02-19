@@ -14,17 +14,17 @@ const ButtonVariants = cva('h-[48px] px-4 py-3 rounded-[5px] subtitle-s', {
     variant: {
       primary: [
         'bg-background-primary text-text-white',
-        'disabled:bg-background-disabled-dark disabled:text-text-disabled-300',
+        'disabled:bg-background-disabled-dark disabled:text-text-white',
         'focus:outline-state-focus focus:outline-[1.5px]',
       ],
       secondary: [
         'bg-background-primary-light text-text-primary',
-        'disabled:bg-background-disabled disabled:text-text-disabled-400',
+        'disabled:bg-background-disabled disabled:text-text-disabled',
         'focus:outline-state-focus focus:outline-[1.5px]',
       ],
       tertiary: [
         'bg-background-gray-light text-text-primary',
-        'disabled:bg-background-disabled disabled:text-text-disabled-400',
+        'disabled:bg-background-disabled disabled:text-text-disabled',
         'focus:outline-state-focus focus:outline-[1.5px]',
       ],
     },
