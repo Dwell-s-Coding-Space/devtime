@@ -11,6 +11,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from '../../assets/svg';
+import IconButton from '../button/IconButton';
 
 interface PaginationProps {
   totalPage: number;
@@ -82,23 +83,27 @@ const Pagination = ({ totalPage }: PaginationProps) => {
 
   return (
     <div className="flex items-center justify-center gap-3">
-      <button
+      <IconButton
+        aria-label="맨 처음 페이지로 이동"
         onClick={() => movePage(1)}
         disabled={currentPage === 1}
-        className="bg-background-primary-light text-content-primary disabled:bg-background-disabled disabled:text-text-disabled-300 h-6 w-6 rounded-[5px]"
+        className="bg-background-primary-light text-content-primary disabled:bg-background-disabled disabled:text-text-placeholder h-6 w-6 rounded-[5px]"
       >
         <ChevronDoubleLeftIcon className="h-6 w-6" />
-      </button>
-      <button
+      </IconButton>
+      <IconButton
+        aria-label="이전 페이지로 이동"
         onClick={() => movePage(currentPage - 1)}
         disabled={currentPage === 1}
-        className="bg-background-primary-light text-content-primary disabled:bg-background-disabled disabled:text-text-disabled-300 h-6 w-6 rounded-[5px]"
+        className="bg-background-primary-light text-content-primary disabled:bg-background-disabled disabled:text-text-placeholder h-6 w-6 rounded-[5px]"
       >
         <ChevronLeftIcon className="h-6 w-6" />
-      </button>
+      </IconButton>
       {getDisplayedButtons().map(page => (
         <button
           key={page}
+          aria-label={`${page}페이지로 이동`}
+          aria-current={currentPage === Number(page) ? 'page' : undefined}
           onClick={() => movePage(Number(page))}
           className={cn(
             'h-6 w-fit min-w-6 rounded-[5px]',
@@ -110,20 +115,22 @@ const Pagination = ({ totalPage }: PaginationProps) => {
           {page}
         </button>
       ))}
-      <button
+      <IconButton
+        aria-label="다음 페이지로 이동"
         onClick={() => movePage(currentPage + 1)}
         disabled={currentPage === totalPage}
-        className="bg-background-primary-light text-content-primary disabled:bg-background-disabled disabled:text-text-disabled-300 h-6 w-6 rounded-[5px]"
+        className="bg-background-primary-light text-content-primary disabled:bg-background-disabled disabled:text-text-placeholder h-6 w-6 rounded-[5px]"
       >
         <ChevronRightIcon className="h-6 w-6" />
-      </button>
-      <button
+      </IconButton>
+      <IconButton
+        aria-label="맨 마지막 페이지로 이동"
         onClick={() => movePage(totalPage)}
         disabled={currentPage === totalPage}
-        className="bg-background-primary-light text-content-primary disabled:bg-background-disabled disabled:text-text-disabled-300 h-6 w-6 rounded-[5px]"
+        className="bg-background-primary-light text-content-primary disabled:bg-background-disabled disabled:text-text-placeholder h-6 w-6 rounded-[5px]"
       >
         <ChevronDoubleRightIcon className="h-6 w-6" />
-      </button>
+      </IconButton>
     </div>
   );
 };

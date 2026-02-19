@@ -5,11 +5,13 @@ import { useMutation } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { useForm, useWatch } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 
 import Button from '@/src/shared/components/button/Button';
-import TextField from '@/src/shared/components/text-field/TextField';
+import Checkbox from '@/src/shared/components/form/Checkbox';
+import TextField from '@/src/shared/components/form/TextField';
 import { ROUTES } from '@/src/shared/constants/routes';
+import { cn } from '@/src/shared/utils/cn';
 
 import { TERMS_OF_SERVICE } from '../auth.constants';
 import { authQueries } from '../auth.queries';
@@ -46,6 +48,7 @@ const SignUpForm = () => {
 
   const password = useWatch({ control, name: 'password' });
   const confirmPassword = useWatch({ control, name: 'confirmPassword' });
+  const agreeToTerms = useWatch({ control, name: 'agreeToTerms' });
 
   useEffect(() => {
     if (password && confirmPassword) {
@@ -62,29 +65,33 @@ const SignUpForm = () => {
       <h1 className="heading-b text-text-primary text-center">회원가입</h1>
       <div className="flex flex-col gap-4">
         <TextField
+          id="id"
           label="아이디"
           {...register('email')}
-          messageType={errors.email && 'error'}
+          messageType="error"
           message={errors.email?.message}
         />
         <TextField
+          id="nickname"
           label="닉네임"
           {...register('nickname')}
-          messageType={errors.nickname && 'error'}
+          messageType="error"
           message={errors.nickname?.message}
         />
         <TextField
+          id="password"
           label="비밀번호"
           type="password"
           {...register('password')}
-          messageType={errors.password && 'error'}
+          messageType="error"
           message={errors.password?.message}
         />
         <TextField
+          id="password-confirm"
           label="비밀번호 확인"
           type="password"
           {...register('confirmPassword')}
-          messageType={errors.confirmPassword && 'error'}
+          messageType="error"
           message={errors.confirmPassword?.message}
         />
       </div>
@@ -92,9 +99,27 @@ const SignUpForm = () => {
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
           <span className="label-m">이용약관</span>
-          <label className="body-s text-text-primary-30">
+          <label
+            htmlFor="agree-to-terms"
+            className={cn(
+              'body-s flex items-center gap-1',
+              agreeToTerms ? 'text-text-primary' : 'text-text-placeholder'
+            )}
+          >
             동의함
-            <input type="checkbox" className="ml-1" {...register('agreeToTerms')} />
+            <Controller
+              name="agreeToTerms"
+              control={control}
+              render={({ field: { value, onChange, ...rest } }) => (
+                <Checkbox
+                  id="agree-to-terms"
+                  className="h-6 w-6"
+                  {...rest}
+                  onChange={e => onChange(e.target.checked)}
+                  checked={value}
+                />
+              )}
+            />
           </label>
         </div>
         <div className="bg-background-gray-light text-text-g600 caption-r h-[110px] overflow-y-scroll rounded-[5px] px-4 py-3">

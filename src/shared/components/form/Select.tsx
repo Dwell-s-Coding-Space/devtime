@@ -1,27 +1,25 @@
-import { Fragment, KeyboardEvent, useEffect, useId, useRef, useState } from 'react';
+import { Fragment, KeyboardEvent, useCallback, useEffect, useId, useRef, useState } from 'react';
 
 import { cn } from '@/src/shared/utils/cn';
 
-import { ChevronUpIcon } from '../../assets/svg';
+import { ChevronDownIcon } from '../../assets/svg';
 
-const Select = ({
-  value,
-  placeholder,
-  options,
-  onChange,
-}: {
+interface SelectProps {
+  id: string;
   value?: string;
   placeholder: string;
   options: readonly string[];
   onChange: (value: string) => void;
-}) => {
+}
+
+const Select = ({ id, value, placeholder, options, onChange }: SelectProps) => {
   const listboxId = useId();
   const containerRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [focusedOptionIdx, setFocusedOptionIdx] = useState(-1);
 
-  const optionId = (idx: number) => `${listboxId}-option-${idx}`;
+  const optionId = useCallback((idx: number) => `${listboxId}-option-${idx}`, [listboxId]);
 
   const openList = () => {
     setIsOpen(true);
@@ -104,9 +102,16 @@ const Select = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    if (!isOpen || focusedOptionIdx < 0) return;
+    const el = document.getElementById(optionId(focusedOptionIdx));
+    el?.scrollIntoView({ block: 'nearest' });
+  }, [isOpen, focusedOptionIdx, optionId]);
+
   return (
     <div className="relative w-full" ref={containerRef}>
       <button
+        id={id}
         role="combobox"
         type="button"
         ref={buttonRef}
@@ -120,11 +125,11 @@ const Select = ({
         onKeyDown={handleKeyDown}
         className={cn(
           'body-m bg-background-gray-light flex h-11 w-full items-center gap-2 rounded-[5px] p-3 pl-4',
-          value ? 'text-text-g600' : 'text-text-disabled-300'
+          value ? 'text-text-g700' : 'text-text-placeholder'
         )}
       >
         <span className="flex-1 text-left">{value || placeholder}</span>
-        <ChevronUpIcon
+        <ChevronDownIcon
           className={cn(
             'text-content-secondary h-6 w-6 transition-transform',
             isOpen && 'rotate-180'
@@ -132,40 +137,41 @@ const Select = ({
         />
       </button>
 
-      {isOpen && (
-        <ul
-          id={listboxId}
-          role="listbox"
-          tabIndex={-1}
-          aria-orientation="vertical"
-          className="bg-background-white border-border-gray absolute z-10 mt-2 flex w-full flex-col rounded-[5px] border"
-        >
-          {options.map((option, idx) => {
-            const isSelected = value === option;
-            const isFocused = focusedOptionIdx === idx;
+      <ul
+        id={listboxId}
+        role="listbox"
+        tabIndex={-1}
+        aria-orientation="vertical"
+        className={cn(
+          'bg-background-white border-border-gray absolute z-10 mt-2 max-h-[400px] w-full flex-col overflow-y-auto rounded-[5px] border',
+          isOpen ? 'flex' : 'hidden'
+        )}
+      >
+        {options.map((option, idx) => {
+          const isSelected = value === option;
+          const isFocused = focusedOptionIdx === idx;
 
-            return (
-              <Fragment key={option}>
-                <li
-                  role="option"
-                  id={optionId(idx)}
-                  aria-selected={isSelected}
-                  onMouseEnter={() => setFocusedOptionIdx(idx)}
-                  onClick={() => selectOption(option)}
-                  className={cn(
-                    'cursor-pointer px-3 py-4',
-                    isSelected && 'text-text-secondary body-b',
-                    isFocused && 'outline-border-primary z-10 rounded-[5px] outline'
-                  )}
-                >
-                  {option}
-                </li>
-                {idx !== options.length - 1 && <div className="bg-border-gray mx-3 h-px w-auto" />}
-              </Fragment>
-            );
-          })}
-        </ul>
-      )}
+          return (
+            <Fragment key={option}>
+              <li
+                role="option"
+                id={optionId(idx)}
+                aria-selected={isSelected}
+                onMouseEnter={() => setFocusedOptionIdx(idx)}
+                onClick={() => selectOption(option)}
+                className={cn(
+                  'cursor-pointer px-3 py-4',
+                  isSelected && 'text-text-secondary body-b',
+                  isFocused && 'bg-background-primary-light z-10 rounded-[5px] px-3'
+                )}
+              >
+                {option}
+              </li>
+              {idx !== options.length - 1 && <div className="bg-border-gray mx-3 h-px w-auto" />}
+            </Fragment>
+          );
+        })}
+      </ul>
     </div>
   );
 };

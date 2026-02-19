@@ -18,6 +18,8 @@ const RankingItem = ({ data }: RankingItemProps) => {
   } = data;
   const isTop3 = rank >= 1 && rank <= 3;
 
+  const purposeString = typeof purpose === 'object' ? purpose.detail : purpose;
+
   return (
     <div className="bg-background-white flex gap-9 rounded-[12px] px-6 py-3">
       <div className="flex flex-col gap-4">
@@ -42,7 +44,7 @@ const RankingItem = ({ data }: RankingItemProps) => {
       <div className="flex flex-col gap-4">
         <div className="text-text-primary flex flex-col">
           <span className="title-b">{nickname}</span>
-          <span className="body-m">{purpose}</span>
+          <span className="body-m">{purposeString}</span>
         </div>
         <dl className="flex items-center gap-6">
           <div className="flex items-center gap-2">
@@ -58,7 +60,7 @@ const RankingItem = ({ data }: RankingItemProps) => {
             <dd className="text-text-g700 body-s">{career}</dd>
           </div>
         </dl>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {techStacks.map(tech => (
             <div
               key={tech.id}

@@ -7,11 +7,11 @@ import { Controller, useForm, useWatch } from 'react-hook-form';
 
 import { XIcon } from '@/src/shared/assets/svg';
 import Button from '@/src/shared/components/button/Button';
-import AutoComplete from '@/src/shared/components/text-field/AutoComplete';
-import Input from '@/src/shared/components/text-field/Input';
-import Label from '@/src/shared/components/text-field/Label';
-import Select from '@/src/shared/components/text-field/Select';
-import TextField from '@/src/shared/components/text-field/TextField';
+import AutoComplete from '@/src/shared/components/form/AutoComplete';
+import Input from '@/src/shared/components/form/Input';
+import Label from '@/src/shared/components/form/Label';
+import Select from '@/src/shared/components/form/Select';
+import TextField from '@/src/shared/components/form/TextField';
 import { ROUTES } from '@/src/shared/constants/routes';
 import { useModalStore } from '@/src/shared/store/useModalStore';
 
@@ -90,7 +90,7 @@ const ProfileSettingForm = () => {
 
     postProfile({
       ...res,
-      purpose: purposeDetail ? { type: '기타', detail: purposeDetail } : purpose,
+      purpose: purposeDetail ? { type: CUSTOM_PURPOSE_LABEL, detail: purposeDetail } : purpose,
     });
   };
 
@@ -101,12 +101,13 @@ const ProfileSettingForm = () => {
       <h1 className="heading-b text-text-primary text-center">프로필 설정</h1>
       <div className="flex flex-1 flex-col gap-10">
         <div className="flex flex-col gap-2">
-          <Label>개발 경력</Label>
+          <Label htmlFor="career-select">개발 경력</Label>
           <Controller
             name="career"
             control={control}
             render={({ field }) => (
               <Select
+                id="career-select"
                 value={field.value as (typeof CAREER_OPTIONS)[number]}
                 placeholder="개발 경력을 선택해 주세요."
                 options={CAREER_OPTIONS}
@@ -117,13 +118,14 @@ const ProfileSettingForm = () => {
         </div>
 
         <div className="flex flex-col gap-2">
-          <Label>공부 목적</Label>
+          <Label htmlFor="purpose-select">공부 목적</Label>
           <Controller
             name="purpose"
             control={control}
             render={({ field }) => (
               <>
                 <Select
+                  id="purpose-select"
                   value={field.value as (typeof PURPOSE_OPTIONS)[number]}
                   placeholder="공부의 목적을 선택해 주세요."
                   options={PURPOSE_OPTIONS}
@@ -141,16 +143,16 @@ const ProfileSettingForm = () => {
         </div>
 
         <TextField
+          id="goal"
           label="공부 목표"
           placeholder="공부 목표를 입력해 주세요."
           {...register('goal')}
-          messageType={errors.goal && 'error'}
-          message={errors.goal?.message}
         />
 
         <div className="flex flex-col gap-2">
-          <Label>공부/사용 중인 기술 스택(선택)</Label>
+          <Label htmlFor="select-techStack">공부/사용 중인 기술 스택(선택)</Label>
           <AutoComplete
+            id="select-techStack"
             placeholder="기술 스택을 검색해 등록해 주세요."
             options={techStacksData || []}
             onSelect={stack => {

@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
 
-import TextField from '@/src/shared/components/text-field/TextField';
+import TextField from '@/src/shared/components/form/TextField';
 
 interface AddTaskItemProps extends ComponentProps<'input'> {
   onClick: () => void;
@@ -9,6 +9,7 @@ interface AddTaskItemProps extends ComponentProps<'input'> {
 const AddTaskItem = ({ onClick, value, onChange, ...inputProps }: AddTaskItemProps) => {
   return (
     <TextField
+      id="add-task"
       label="할 일 목록"
       value={value}
       onChange={onChange}
@@ -19,7 +20,7 @@ const AddTaskItem = ({ onClick, value, onChange, ...inputProps }: AddTaskItemPro
         <button
           disabled={!value}
           onClick={onClick}
-          className="disabled:body-b disabled:text-text-disabled-400 body-b text-text-primary"
+          className="disabled:body-b disabled:text-text-disabled body-b text-text-primary"
         >
           추가
         </button>

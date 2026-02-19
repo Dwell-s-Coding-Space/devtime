@@ -16,7 +16,7 @@ const StudyLogList = () => {
 
   return (
     <div className="bg-background-white flex flex-col gap-6 rounded-[18px] p-6">
-      <h3 className="subtitle-s text-text-disabled-400">학습 기록</h3>
+      <h3 className="subtitle-s text-text-g500">학습 기록</h3>
       <div>
         <div className="bg-background-primary-light text-content-secondary subtitle-s flex items-center gap-[72px] rounded-t-[12px] px-9 py-5">
           <div className="w-[90px]">날짜</div>

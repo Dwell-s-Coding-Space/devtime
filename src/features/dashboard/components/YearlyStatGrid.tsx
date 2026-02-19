@@ -5,6 +5,7 @@ import { useMemo } from 'react';
 
 import { cn } from '@/src/shared/utils/cn';
 
+import { formatTime, MS_IN_SECONDS, SECONDS_IN_HOUR } from '../../timer/utils/formatTime';
 import { dashboardQueries } from '../dashboard.queries';
 import { getYearlyDates } from '../utils/getYearlyDates';
 
@@ -58,7 +59,7 @@ const YearlyStatGrid = () => {
 
   return (
     <div className="bg-background-white flex flex-col gap-6 rounded-[18px] p-6">
-      <h3 className="subtitle-s text-text-disabled-400">공부 시간 바다</h3>
+      <h3 className="subtitle-s text-text-g500">공부 시간 바다</h3>
       <div className="flex gap-4">
         {/* Weekday Label */}
         <div className="flex flex-col gap-[3px]">
@@ -92,13 +93,21 @@ const YearlyStatGrid = () => {
                     ? SEA_LEVEL[cellData.colorLevel as keyof typeof SEA_LEVEL]
                     : undefined;
 
+                  const { hours, minutes, seconds } = formatTime(
+                    (cellData?.studyTimeHours || 0) * SECONDS_IN_HOUR * MS_IN_SECONDS
+                  );
+
+                  const timeString =
+                    (hours !== '00' ? `${hours}시간` : '') +
+                    (minutes !== '00' ? ` ${minutes}분` : '') +
+                    (seconds !== '00' ? `${seconds}초` : '');
+
                   return (
                     <div className="group relative" key={date}>
                       <div
                         style={{ backgroundColor: color }}
                         className={cn('h-[18px] w-[18px] rounded-[5px]', {
-                          'border-border-gray bg-background-gray-light border':
-                            !color && !isDisabled,
+                          'bg-background-gray-light border border-gray-200': !color && !isDisabled,
                           'bg-background-disabled': isDisabled,
                         })}
                       />
@@ -110,7 +119,7 @@ const YearlyStatGrid = () => {
                           }
                         )}
                       >
-                        {cellData?.studyTimeHours || '기록 없음'}
+                        {timeString || '기록 없음'}
                       </div>
                     </div>
                   );
@@ -121,9 +130,7 @@ const YearlyStatGrid = () => {
         </div>
       </div>
       <div className="flex items-center gap-2">
-        <span className="caption-s" style={{ color: SEA_LEVEL[1] }}>
-          Shallow
-        </span>
+        <span className="caption-s text-text-g500">Shallow</span>
         <div className="flex h-5 w-[150px] overflow-hidden rounded-[5px]">
           {Object.values(SEA_LEVEL).map(color => (
             <div key={color} className="flex-1" style={{ backgroundColor: color }} />

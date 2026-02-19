@@ -58,7 +58,7 @@ export interface PostRefreshResponse extends Omit<BaseResponse, 'message'> {
  * sign up form schema
  */
 
-const password_regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+const password_regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*]{8,}$/;
 
 export const emailSchema = z.email('이메일 형식으로 작성해 주세요.');
 export const nicknameSchema = z.string().min(1, '닉네임을 입력해 주세요.');

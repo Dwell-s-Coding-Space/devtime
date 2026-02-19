@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { MouseEvent, useState } from 'react';
 
 import { TrashIcon } from '@/src/shared/assets/svg';
+import IconButton from '@/src/shared/components/button/IconButton';
 import { useModalStore } from '@/src/shared/store/useModalStore';
 
 import { dashboardQueries } from '../dashboard.queries';
@@ -69,9 +70,9 @@ const StudyLogItem = ({ data }: StudyLogItemProps) => {
         <div className="w-[90px]">{incompleteTasks}</div>
         <div className="w-[90px]">{completionRate}%</div>
         <div className="w-6">
-          <button onClick={handleDelete}>
+          <IconButton aria-label="학습 로그 삭제" onClick={handleDelete}>
             <TrashIcon className="h-6 w-6" />
-          </button>
+          </IconButton>
         </div>
       </div>
 

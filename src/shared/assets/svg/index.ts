@@ -6,6 +6,7 @@ export { default as ChevronLeftIcon } from './chevron-left.svg';
 export { default as ChevronRightIcon } from './chevron-right.svg';
 export { default as ChevronUpIcon } from './chevron-up.svg';
 export { default as EditIcon } from './edit.svg';
+export { default as LogoHorizontal } from './logo-horizontal.svg';
 export { default as LogoutIcon } from './logout.svg';
 export { default as PlusIcon } from './plus.svg';
 export { default as ResetIcon } from './reset.svg';

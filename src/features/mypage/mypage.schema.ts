@@ -24,9 +24,14 @@ export const PURPOSE_OPTIONS = [
  * get /profile
  */
 
+export const purposeValueSchema = z.union([
+  z.enum(PURPOSE_OPTIONS),
+  z.object({ type: z.literal(CUSTOM_PURPOSE_LABEL), detail: z.string() }),
+]);
+
 export const profileSchema = z.object({
   career: z.enum(CAREER_OPTIONS),
-  purpose: z.string(),
+  purpose: purposeValueSchema,
   goal: z.string(),
   techStacks: z.array(z.string()),
   profileImage: z.string().nullable(),
@@ -49,10 +54,7 @@ export type GetProfileResponse = z.infer<typeof profileResponseSchema>;
 export const profileBodySchema = z
   .object({
     career: z.enum(CAREER_OPTIONS),
-    purpose: z.union([
-      z.enum(PURPOSE_OPTIONS),
-      z.object({ type: z.literal(CUSTOM_PURPOSE_LABEL), detail: z.string() }),
-    ]),
+    purpose: purposeValueSchema,
     goal: z.string(),
     techStacks: z.array(z.string()),
     profileImage: z.string().nullable(),
