@@ -12,7 +12,7 @@ import { RankingOption } from '../ranking.api';
 import { rankingQueries } from '../ranking.queries';
 import RankingItem from './RankingItem';
 
-const RANKING_OPTION_MAP: Record<string, RankingOption> = {
+export const RANKING_OPTION_MAP: Record<string, RankingOption> = {
   '총 학습 시간': 'total',
   '일 평균 학습 시간': 'avg',
 };

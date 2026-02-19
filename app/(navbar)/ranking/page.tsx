@@ -1,27 +1,18 @@
-'use client';
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 
-import { QueryErrorResetBoundary } from '@tanstack/react-query';
-import { Suspense } from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
+import { RankingBoundary } from '@/src/features/ranking';
+import { RANKING_OPTION_MAP } from '@/src/features/ranking/components/RankingPage';
+import { rankingQueries } from '@/src/features/ranking/ranking.queries';
 
-import { RankingPage, RankingPageLoading } from '@/src/features/ranking';
-import ErrorBoundaryFallback from '@/src/shared/components/error-boundary/ErrorBoundaryFallback';
+export default async function Ranking() {
+  const queryClient = new QueryClient();
+  await queryClient.prefetchInfiniteQuery(
+    rankingQueries.list({ sortBy: RANKING_OPTION_MAP['총 학습 시간'], limit: 5 })
+  );
 
-export default function Ranking() {
   return (
-    <QueryErrorResetBoundary>
-      {({ reset }) => (
-        <ErrorBoundary
-          onReset={reset}
-          fallbackRender={({ resetErrorBoundary }) => (
-            <ErrorBoundaryFallback onRetry={resetErrorBoundary} className="h-[500px]" />
-          )}
-        >
-          <Suspense fallback={<RankingPageLoading />}>
-            <RankingPage />
-          </Suspense>
-        </ErrorBoundary>
-      )}
-    </QueryErrorResetBoundary>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <RankingBoundary />
+    </HydrationBoundary>
   );
 }
