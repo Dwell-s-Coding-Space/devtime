@@ -12,18 +12,18 @@ const Navbar = async () => {
 
   return (
     <div className="mb-10 flex items-center justify-between">
-      <div className="flex items-center gap-12">
+      <div className="flex items-center gap-4 md:gap-12">
         <Link href={ROUTES.HOME} aria-label="홈으로 이동">
           <LogoHorizontal />
         </Link>
-        <ul className="flex items-center gap-9">
+        <ul className="flex items-center gap-2 md:gap-9">
           <li>
-            <Link href={ROUTES.DASHBOARD} className="text-text-secondary body-s">
+            <Link href={ROUTES.DASHBOARD} className="text-text-secondary body-s shrink-0">
               대시보드
             </Link>
           </li>
           <li>
-            <Link href={ROUTES.RANKING} className="text-text-secondary body-s">
+            <Link href={ROUTES.RANKING} className="text-text-secondary body-s shrink-0">
               랭킹
             </Link>
           </li>
@@ -33,7 +33,7 @@ const Navbar = async () => {
       {isLoggedIn ? (
         <UserDropdown />
       ) : (
-        <ul className="flex items-center gap-12">
+        <ul className="flex items-center gap-2 md:gap-12">
           <li>
             <Link href={ROUTES.LOGIN} className="text-text-secondary body-s shrink-0">
               로그인
