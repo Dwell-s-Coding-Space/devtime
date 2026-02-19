@@ -90,7 +90,7 @@ const ProfileSettingForm = () => {
 
     postProfile({
       ...res,
-      purpose: purposeDetail ? { type: '기타', detail: purposeDetail } : purpose,
+      purpose: purposeDetail ? { type: CUSTOM_PURPOSE_LABEL, detail: purposeDetail } : purpose,
     });
   };
 

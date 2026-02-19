@@ -81,7 +81,14 @@ export default function MypageEdit() {
       career: profileData.profile?.career,
       goal: profileData.profile?.goal,
       techStacks: profileData.profile?.techStacks,
-      purpose: profileData.profile?.purpose,
+      purpose:
+        typeof profileData.profile?.purpose === 'object'
+          ? CUSTOM_PURPOSE_LABEL
+          : profileData.profile?.purpose,
+      purposeDetail:
+        typeof profileData.profile?.purpose === 'object'
+          ? profileData.profile.purpose.detail
+          : undefined,
     } as ProfileEditFormValues,
   });
 
@@ -125,7 +132,7 @@ export default function MypageEdit() {
   };
 
   const onSubmit = async () => {
-    const { profileImage, ...rest } = getValues();
+    const { profileImage, purpose, purposeDetail, ...rest } = getValues();
 
     let profileImageUrl = profileData.profile?.profileImage;
 
@@ -162,7 +169,13 @@ export default function MypageEdit() {
       }
     }
 
-    updateProfile({ ...rest, profileImage: profileImageUrl });
+    updateProfile({
+      ...rest,
+      profileImage: profileImageUrl,
+      purpose: purposeDetail?.trim()
+        ? { type: CUSTOM_PURPOSE_LABEL, detail: purposeDetail }
+        : purpose,
+    });
   };
 
   return (
