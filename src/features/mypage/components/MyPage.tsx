@@ -5,7 +5,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { EditIcon, UserIcon } from '@/src/shared/assets/svg';
-import IconButton from '@/src/shared/components/button/IconButton';
 import { ROUTES } from '@/src/shared/constants/routes';
 import { cn } from '@/src/shared/utils/cn';
 import { getS3ImageUrl } from '@/src/shared/utils/url';
@@ -15,12 +14,16 @@ import { mypageQueries } from '../mypage.queries';
 const MyPage = () => {
   const { data: profileData } = useSuspenseQuery(mypageQueries.profile());
 
+  const { nickname, email, profile } = profileData;
+  const { profileImage, purpose, techStacks, career, goal } = profile || {};
+  const purposeString = typeof purpose === 'object' ? purpose.detail : purpose;
+
   return (
     <div className="bg-border-white flex gap-[56px] rounded-[12px] p-9">
       <div className="relative h-[180px] w-[180px] overflow-hidden rounded-[8px]">
-        {profileData?.profile?.profileImage ? (
+        {profileImage ? (
           <Image
-            src={getS3ImageUrl(profileData.profile?.profileImage)}
+            src={getS3ImageUrl(profileImage)}
             alt="profile"
             fill
             sizes="180px"
@@ -40,51 +43,31 @@ const MyPage = () => {
 
       <div className="flex flex-1 flex-col gap-12">
         <div className="flex flex-col gap-1">
-          <span className="label-s text-text-secondary">{profileData?.nickname}</span>
-          <p
-            className={cn(
-              'heading-b',
-              profileData?.profile?.goal ? 'text-text-secondary' : 'text-text-placeholder'
-            )}
-          >
-            {profileData?.profile?.goal || '아직 설정한 목표가 없어요.'}
+          <span className="label-s text-text-secondary">{nickname}</span>
+          <p className={cn('heading-b', goal ? 'text-text-secondary' : 'text-text-placeholder')}>
+            {goal || '아직 설정한 목표가 없어요.'}
           </p>
         </div>
 
         <dl className="flex flex-col gap-6">
           <div className="flex flex-col gap-1">
             <dt className="label-s text-text-g600">이메일 주소</dt>
-            <dd
-              className={cn(
-                'subtitle-s',
-                profileData?.email ? 'text-text-g800' : 'text-text-placeholder'
-              )}
-            >
-              {profileData?.email}
+            <dd className={cn('subtitle-s', email ? 'text-text-g800' : 'text-text-placeholder')}>
+              {email}
             </dd>
           </div>
 
           <div className="flex flex-col gap-1">
             <dt className="label-s text-text-g600">개발 경력</dt>
-            <dd
-              className={cn(
-                'subtitle-s',
-                profileData?.profile?.career ? 'text-text-g800' : 'text-text-placeholder'
-              )}
-            >
-              {profileData?.profile?.career || '개발 경력을 업데이트 해주세요.'}
+            <dd className={cn('subtitle-s', career ? 'text-text-g800' : 'text-text-placeholder')}>
+              {career || '개발 경력을 업데이트 해주세요.'}
             </dd>
           </div>
 
           <div className="flex flex-col gap-1">
             <dt className="label-s text-text-g600">공부 목적</dt>
-            <dd
-              className={cn(
-                'subtitle-s',
-                profileData?.profile?.purpose ? 'text-text-g800' : 'text-text-placeholder'
-              )}
-            >
-              {profileData?.profile?.purpose || '공부 목적을 업데이트 해주세요.'}
+            <dd className={cn('subtitle-s', purpose ? 'text-text-g800' : 'text-text-placeholder')}>
+              {purposeString || '공부 목적을 업데이트 해주세요.'}
             </dd>
           </div>
 
@@ -93,14 +76,12 @@ const MyPage = () => {
             <dd
               className={cn(
                 'subtitle-s',
-                profileData?.profile?.techStacks
-                  ? 'text-text-g800 body-m'
-                  : 'text-text-placeholder subtitle-s'
+                techStacks ? 'text-text-g800 body-m' : 'text-text-placeholder subtitle-s'
               )}
             >
-              {profileData?.profile?.techStacks ? (
+              {techStacks ? (
                 <div className="flex flex-wrap gap-2">
-                  {profileData?.profile.techStacks.map(stack => (
+                  {techStacks.map(stack => (
                     <span key={stack} className="bg-background-gray-dark rounded-[5px] px-2 py-1">
                       {stack}
                     </span>
