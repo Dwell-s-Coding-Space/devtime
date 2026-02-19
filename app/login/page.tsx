@@ -5,15 +5,16 @@ import { LoginForm } from '@/src/features/auth';
 export default async function Login() {
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-x-hidden">
-      <div
+      <Image
+        src="/symbol-logo.svg"
+        alt="배경"
         aria-hidden="true"
+        width={1090}
+        height={530}
+        priority
         className="absolute h-auto"
         style={{
-          backgroundImage: 'url(/symbol-logo.svg)',
-          backgroundSize: 'contain',
-          backgroundRepeat: 'no-repeat',
           width: `clamp(300px, calc(1090 / 1920 * 100vw), 1090px)`,
-          aspectRatio: '1090 / 530',
           top: 'calc(60 / 1080 * 100vh)',
           right: `calc(-218 / 1920 * 100vw)`,
         }}
