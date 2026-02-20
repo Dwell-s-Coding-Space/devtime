@@ -1,65 +1,28 @@
-'use client';
+import { dehydrate, HydrationBoundary, QueryErrorResetBoundary } from '@tanstack/react-query';
 
-import { QueryErrorResetBoundary } from '@tanstack/react-query';
-import { Suspense } from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
+import { DashboardBoundary } from '@/src/features/dashboard';
+import { createDashboardApi } from '@/src/features/dashboard/dashboard.api';
+import { dashboardQueries } from '@/src/features/dashboard/dashboard.queries';
+import { createServerApi } from '@/src/shared/api/server';
+import { getQueryClient } from '@/src/shared/providers/get-query-client';
 
-import { StatSummary, StudyLogList, WeeklyStatBar, YearlyStatGrid } from '@/src/features/dashboard';
-import ErrorBoundaryFallback from '@/src/shared/components/error-boundary/ErrorBoundaryFallback';
-import Skeleton from '@/src/shared/components/skeleton/Skeleton';
+export default async function Dashboard() {
+  const queryClient = getQueryClient();
+  const serverApi = await createServerApi();
+  const dashboardApi = createDashboardApi(serverApi);
 
-export default function Dashboard() {
+  await Promise.all([
+    queryClient.prefetchQuery({ ...dashboardQueries.stats(), queryFn: dashboardApi.getStats }),
+    queryClient.prefetchQuery({ ...dashboardQueries.heatmap(), queryFn: dashboardApi.getHeatmap }),
+    queryClient.prefetchQuery({
+      ...dashboardQueries.studyLogs({}),
+      queryFn: () => dashboardApi.getStudyLogs({}),
+    }),
+  ]);
+
   return (
-    <>
-      <div className="flex flex-col gap-4">
-        <QueryErrorResetBoundary>
-          {({ reset }) => (
-            <ErrorBoundary
-              onReset={reset}
-              fallbackRender={({ resetErrorBoundary }) => (
-                <ErrorBoundaryFallback onRetry={resetErrorBoundary} className="h-[264px]" />
-              )}
-            >
-              <Suspense fallback={<Skeleton className="h-[264px] bg-gray-300" />}>
-                <div className="flex items-center gap-4">
-                  <StatSummary />
-                  <WeeklyStatBar />
-                </div>
-              </Suspense>
-            </ErrorBoundary>
-          )}
-        </QueryErrorResetBoundary>
-
-        <QueryErrorResetBoundary>
-          {({ reset }) => (
-            <ErrorBoundary
-              onReset={reset}
-              fallbackRender={({ resetErrorBoundary }) => (
-                <ErrorBoundaryFallback onRetry={resetErrorBoundary} className="h-[300px]" />
-              )}
-            >
-              <Suspense fallback={<Skeleton className="h-[300px] bg-gray-300" />}>
-                <YearlyStatGrid />
-              </Suspense>
-            </ErrorBoundary>
-          )}
-        </QueryErrorResetBoundary>
-
-        <QueryErrorResetBoundary>
-          {({ reset }) => (
-            <ErrorBoundary
-              onReset={reset}
-              fallbackRender={({ resetErrorBoundary }) => (
-                <ErrorBoundaryFallback onRetry={resetErrorBoundary} className="h-[500px]" />
-              )}
-            >
-              <Suspense fallback={<Skeleton className="h-[500px] bg-gray-300" />}>
-                <StudyLogList />
-              </Suspense>
-            </ErrorBoundary>
-          )}
-        </QueryErrorResetBoundary>
-      </div>
-    </>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <DashboardBoundary />
+    </HydrationBoundary>
   );
 }
