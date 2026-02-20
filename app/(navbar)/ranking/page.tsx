@@ -1,12 +1,20 @@
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 
 import { RankingBoundary } from '@/src/features/ranking';
+import { createRankingApi } from '@/src/features/ranking/ranking.api';
 import { rankingQueries } from '@/src/features/ranking/ranking.queries';
-import { getQueryClient } from '@/src/shared/providers/QueryProvider';
+import { createServerApi } from '@/src/shared/api/server';
+import { getQueryClient } from '@/src/shared/providers/get-query-client';
 
 export default async function Ranking() {
   const queryClient = getQueryClient();
-  await queryClient.prefetchInfiniteQuery(rankingQueries.list({}));
+  const serverApi = await createServerApi();
+  const rankingApi = createRankingApi(serverApi);
+
+  await queryClient.prefetchInfiniteQuery({
+    ...rankingQueries.list({}),
+    queryFn: ({ pageParam }) => rankingApi.getList({ page: pageParam, limit: 5, sortBy: 'total' }),
+  });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
