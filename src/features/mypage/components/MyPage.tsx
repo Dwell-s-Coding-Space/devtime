@@ -28,7 +28,7 @@ const MyPage = () => {
               alt="profile"
               fill
               sizes="180px"
-              priority
+              preload
               className="object-cover"
             />
           ) : (

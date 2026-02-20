@@ -14,7 +14,7 @@ export default function OnboardingLayout({
             alt="logo"
             width={264}
             height={200}
-            priority
+            preload
             className="fill-background-white"
           />
           <span className="title-s text-text-white text-center">개발자를 위한 타이머</span>
