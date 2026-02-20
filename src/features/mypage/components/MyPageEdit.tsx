@@ -28,7 +28,7 @@ import {
   PURPOSE_OPTIONS,
 } from '../mypage.schema';
 
-export default function MypageEdit() {
+export default function MyPageEdit() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const onOpen = useModalStore(state => state.onOpen);

@@ -1,27 +1,21 @@
-'use client';
+import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 
-import { QueryErrorResetBoundary } from '@tanstack/react-query';
-import { Suspense } from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
+import { MyPageEditBoundary } from '@/src/features/mypage';
+import { createMyPageApi } from '@/src/features/mypage/mypage.api';
+import { mypageQueries } from '@/src/features/mypage/mypage.queries';
+import { createServerApi } from '@/src/shared/api/server';
+import { getQueryClient } from '@/src/shared/providers/get-query-client';
 
-import { MyPageEdit, MyPageEditLoading } from '@/src/features/mypage';
-import ErrorBoundaryFallback from '@/src/shared/components/error-boundary/ErrorBoundaryFallback';
+export default async function MyPageEdit() {
+  const queryClient = getQueryClient();
+  const serverApi = await createServerApi();
+  const mypageApi = createMyPageApi(serverApi);
 
-export default function MypageEdit() {
+  await queryClient.prefetchQuery({ ...mypageQueries.profile(), queryFn: mypageApi.getProfile });
+
   return (
-    <QueryErrorResetBoundary>
-      {({ reset }) => (
-        <ErrorBoundary
-          onReset={reset}
-          fallbackRender={({ resetErrorBoundary }) => (
-            <ErrorBoundaryFallback onRetry={resetErrorBoundary} className="h-[600px]" />
-          )}
-        >
-          <Suspense fallback={<MyPageEditLoading />}>
-            <MyPageEdit />
-          </Suspense>
-        </ErrorBoundary>
-      )}
-    </QueryErrorResetBoundary>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <MyPageEditBoundary />
+    </HydrationBoundary>
   );
 }
