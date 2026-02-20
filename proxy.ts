@@ -20,11 +20,16 @@ export function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Token states:
+  // - After login: accessToken + refreshToken
+  // - accessToken expired: refreshToken only
+  // - After refresh: accessToken only
   const accessToken = request.cookies.get('accessToken')?.value;
+  const refreshToken = request.cookies.get('refreshToken')?.value;
 
   // guest only route
   if (GUEST_ONLY_ROUTES.some(route => pathname.startsWith(route))) {
-    if (accessToken) {
+    if (accessToken || refreshToken) {
       const homeUrl = new URL(ROUTES.HOME, request.url);
       return NextResponse.redirect(homeUrl);
     }
@@ -33,10 +38,9 @@ export function proxy(request: NextRequest) {
   }
 
   // protected route
-  if (!accessToken) {
+  if (!accessToken && !refreshToken) {
     const loginUrl = new URL(ROUTES.LOGIN, request.url);
     loginUrl.searchParams.set('callbackUrl', pathname);
-
     return NextResponse.redirect(loginUrl);
   }
 
