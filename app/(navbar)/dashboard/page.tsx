@@ -1,4 +1,4 @@
-import { dehydrate, HydrationBoundary, QueryErrorResetBoundary } from '@tanstack/react-query';
+import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 
 import { DashboardBoundary } from '@/src/features/dashboard';
 import { createDashboardApi } from '@/src/features/dashboard/dashboard.api';
