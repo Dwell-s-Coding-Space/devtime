@@ -33,7 +33,7 @@ export default function MyPageEdit() {
   const queryClient = useQueryClient();
   const onOpen = useModalStore(state => state.onOpen);
 
-  const { data: techStacksData } = useQuery({
+  const { data: techStacksData } = useSuspenseQuery({
     ...mypageQueries.techStacks(),
     select: data => data.results.map(techStack => techStack.name),
   });
