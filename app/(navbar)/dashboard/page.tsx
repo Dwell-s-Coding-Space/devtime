@@ -21,8 +21,8 @@ export default async function Dashboard() {
         queryFn: dashboardApi.getHeatmap,
       }),
       queryClient.prefetchQuery({
-        ...dashboardQueries.studyLogs({}),
-        queryFn: () => dashboardApi.getStudyLogs({}),
+        ...dashboardQueries.studyLogs({ page: 1 }),
+        queryFn: () => dashboardApi.getStudyLogs({ page: 1 }),
       }),
     ]);
   }
