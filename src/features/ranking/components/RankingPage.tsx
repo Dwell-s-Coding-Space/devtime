@@ -22,8 +22,7 @@ const RankingPage = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const rankingOption = (searchParams.get('option') ||
-    RANKING_OPTION_MAP['총 학습 시간']) as (typeof RANKING_OPTION_MAP)[string];
+  const rankingOption = (searchParams.get('option') as RankingOption) ?? undefined;
 
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage } = useSuspenseInfiniteQuery(
     rankingQueries.list({ sortBy: rankingOption, limit: 5 })

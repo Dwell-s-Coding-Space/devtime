@@ -7,7 +7,7 @@ import { createRankingApi, RankingListProp } from './ranking.api';
 const rankingApi = createRankingApi(clientApi);
 
 export const rankingQueries = {
-  list: ({ limit, sortBy }: Omit<RankingListProp, 'page'>) =>
+  list: ({ limit = 5, sortBy = 'total' }: Omit<RankingListProp, 'page'>) =>
     infiniteQueryOptions({
       queryKey: ['ranking', 'list', sortBy, limit],
       queryFn: ({ pageParam }) => rankingApi.getList({ page: pageParam, limit, sortBy }),
