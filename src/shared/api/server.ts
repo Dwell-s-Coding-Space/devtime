@@ -1,14 +1,14 @@
-import { cookies } from 'next/headers';
+import { getTokens } from '@/src/features/auth/auth.utils';
 
 import Api from './core';
 
 export const createServerApi = async () => {
-  const cookieStore = await cookies();
+  const accessToken = (await getTokens()).accessToken;
 
-  return new Api(`${process.env.SITE_URL}/api/proxy`, {
+  return new Api(`${process.env.API_BASE_URL}`, {
     headers: {
       'Content-Type': 'application/json',
-      Cookie: cookieStore.toString(),
+      ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
     },
   });
 };
