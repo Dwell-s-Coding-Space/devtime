@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo } from 'react';
@@ -50,8 +50,20 @@ export default function MyPageEdit() {
 
   const { data: profileData } = useSuspenseQuery(mypageQueries.profile());
 
-  const { mutate: updateProfile, isPending } = useMutation({
+  const { mutate: updateProfile, isPending: isUpdatePending } = useMutation({
     ...mypageQueries.updateProfile(),
+    onSuccess: () => {
+      alert('저장이 성공적으로 완료되었습니다.');
+      queryClient.invalidateQueries({ queryKey: mypageQueries.profile().queryKey });
+      router.push(ROUTES.MYPAGE);
+    },
+    onError: err => {
+      alert(`저장하는데 실패하였습니다.\n${err.message}`);
+    },
+  });
+
+  const { mutate: createProfile, isPending: isCreatePending } = useMutation({
+    ...mypageQueries.createProfile(),
     onSuccess: () => {
       alert('저장이 성공적으로 완료되었습니다.');
       queryClient.invalidateQueries({ queryKey: mypageQueries.profile().queryKey });
@@ -169,13 +181,19 @@ export default function MyPageEdit() {
       }
     }
 
-    updateProfile({
+    const requestBody = {
       ...rest,
       profileImage: profileImageUrl,
       purpose: purposeDetail?.trim()
         ? { type: CUSTOM_PURPOSE_LABEL, detail: purposeDetail }
         : purpose,
-    });
+    };
+
+    if (profileData.profile) {
+      updateProfile(requestBody);
+    } else {
+      createProfile(requestBody);
+    }
   };
 
   return (
@@ -336,7 +354,7 @@ export default function MyPageEdit() {
             취소
           </Button>
           <Button variant="primary" onClick={handleSave} disabled={!isValid}>
-            {isPending ? '변경 사항 저장 중...' : '변경 사항 저장하기'}
+            {isCreatePending || isUpdatePending ? '변경 사항 저장 중...' : '변경 사항 저장하기'}
           </Button>
         </div>
       </div>
