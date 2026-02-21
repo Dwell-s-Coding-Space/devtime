@@ -1,6 +1,12 @@
 name: Lighthouse CI
 
-on: pull_request
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'app/**'
+      - 'public/**'
+      - 'lighthouserc.js'
 
 jobs:
   lighthouse-ci:
@@ -25,8 +31,24 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Cache Puppeteer browsers
+        id: cache-puppeteer
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/puppeteer
+          key: puppeteer-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+
       - name: Install Chrome
+        if: steps.cache-puppeteer.outputs.cache-hit != 'true'
         run: npx puppeteer browsers install chrome
+
+      - name: Cache Next.js build
+        uses: actions/cache@v4
+        with:
+          path: .next/cache
+          key: nextjs-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.ts', '**/*.tsx', '**/*.css') }}
+          restore-keys: |
+            nextjs-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}-
 
       - name: Build
         run: pnpm build
@@ -51,6 +73,7 @@ jobs:
             const fs = require('fs');
             const path = require('path');
             const upsert = require('./.github/scripts/upsert-pr-comment.js');
+            const { assertions } = require('./lighthouserc.js').ci.assert;
 
             if (!fs.existsSync('.lighthouseci')) return;
 
@@ -87,12 +110,12 @@ jobs:
               return `| [${pathname}](${reportUrl}) | ${score('performance')} | ${score('accessibility')} | ${score('best-practices')} | ${score('seo')} |`;
             })
 
-            const thresholds = {
-              performance: 80,
-              accessibility: 90,
-              'best-practices': 80,
-              seo: 80,
-            }
+            const thresholds = Object.fromEntries(
+              Object.entries(assertions).map(([key, [, { minScore }]]) => {
+                const category = key.replace('categories:', '');
+                return [category, Math.round(minScore * 100)];
+              })
+            );
 
             const title = '### Lighthouse CI Results'
 

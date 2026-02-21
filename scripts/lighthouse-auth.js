@@ -1,5 +1,12 @@
 const { LHCI_EMAIL, LHCI_NICKNAME, LHCI_PASSWORD } = process.env;
 
+if (!LHCI_EMAIL || !LHCI_NICKNAME || !LHCI_PASSWORD) {
+  throw new Error(
+    'Missing required env vars: LHCI_EMAIL, LHCI_NICKNAME, LHCI_PASSWORD\n' +
+      'Run: LHCI_EMAIL=... LHCI_NICKNAME=... LHCI_PASSWORD=... pnpm lhci autorun'
+  );
+}
+
 const PUBLIC_ROUTES = ['/home', '/login', '/signup'];
 
 /**
@@ -76,7 +83,8 @@ module.exports = async (browser, context) => {
   });
   console.log(`🟡 Login Success! Navigated to: ${page.url()}`);
 
-  // 4. Lighthouse 수집 URL로 이동
+  // 4. Lighthouse 수집 URL로 이동 (쿠키 안정화 대기)
+  await new Promise(resolve => setTimeout(resolve, 500));
   console.log(`🟡 Navigating to target: ${context.url}`);
   await page.goto(context.url, { waitUntil: 'networkidle0' });
   await page.close();
