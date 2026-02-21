@@ -10,11 +10,11 @@ export default function OnboardingLayout({
       <div className="bg-background-primary flex flex-1 items-center justify-center">
         <div className="flex flex-col gap-9">
           <Image
-            src={'/logo-vertical-white.svg'}
+            src="/logo-vertical-white.svg"
             alt="logo"
             width={264}
             height={200}
-            unoptimized
+            preload
             className="fill-background-white"
           />
           <span className="title-s text-text-white text-center">개발자를 위한 타이머</span>

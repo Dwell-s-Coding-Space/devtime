@@ -1,2 +1,1 @@
-export { default as RankingPage } from './components/RankingPage';
-export { default as RankingPageLoading } from './components/RankingPageLoading';
+export { default as RankingBoundary } from './components/RankingBoundary';

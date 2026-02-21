@@ -7,10 +7,12 @@ export default async function Login() {
     <div className="relative flex min-h-screen items-center justify-center overflow-x-hidden">
       <Image
         src="/symbol-logo.svg"
-        alt="symbol"
+        alt="배경"
+        aria-hidden="true"
         width={1090}
         height={530}
-        unoptimized
+        preload
+        fetchPriority="high"
         className="absolute h-auto"
         style={{
           width: `clamp(300px, calc(1090 / 1920 * 100vw), 1090px)`,
@@ -19,7 +21,7 @@ export default async function Login() {
         }}
       />
       <div className="flex h-[598px] w-[500px] flex-col items-center gap-12 rounded-[10px] bg-white/50 pt-18 shadow-[0_40px_100px_40px_rgba(3,104,255,0.05)] backdrop-blur-[25px]">
-        <Image src="/logo-vertical-primary.svg" alt="logo" width={132} height={100} unoptimized />
+        <Image src="/logo-vertical-primary.svg" alt="logo" width={132} height={100} />
         <LoginForm />
       </div>
     </div>

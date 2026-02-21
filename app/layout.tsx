@@ -6,13 +6,6 @@ import localFont from 'next/font/local';
 import Modal from '@/src/shared/components/modal/Modal';
 import QueryProvider from '@/src/shared/providers/QueryProvider';
 
-const pretendardVariable = localFont({
-  src: '../src/shared/styles/fonts/PretendardVariable.woff2',
-  weight: '100 900',
-  display: 'swap',
-  variable: '--font-pretendard',
-});
-
 const digitalNumbers = localFont({
   src: '../src/shared/styles/fonts/DigitalNumbers-Regular.ttf',
   weight: '400',
@@ -31,13 +24,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <QueryProvider>
-      <html lang="ko">
-        <body className={`${pretendardVariable.variable} ${digitalNumbers.variable}`}>
-          <div className="flex min-h-screen flex-col">{children}</div>
+    <html lang="ko">
+      <head>
+        <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+        />
+      </head>
+      <body className={`${digitalNumbers.variable}`}>
+        <QueryProvider>
+          <main className="flex min-h-screen flex-col">{children}</main>
           <Modal />
-        </body>
-      </html>
-    </QueryProvider>
+        </QueryProvider>
+      </body>
+    </html>
   );
 }

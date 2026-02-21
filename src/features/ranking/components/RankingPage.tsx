@@ -12,7 +12,7 @@ import { RankingOption } from '../ranking.api';
 import { rankingQueries } from '../ranking.queries';
 import RankingItem from './RankingItem';
 
-const RANKING_OPTION_MAP: Record<string, RankingOption> = {
+export const RANKING_OPTION_MAP: Record<string, RankingOption> = {
   '총 학습 시간': 'total',
   '일 평균 학습 시간': 'avg',
 };
@@ -23,7 +23,7 @@ const RankingPage = () => {
   const searchParams = useSearchParams();
 
   const rankingOption = (searchParams.get('option') ||
-    RANKING_OPTION_MAP['총 학습 시간']) as (typeof RANKING_OPTION_MAP)[string];
+    RANKING_OPTION_MAP['총 학습 시간']) as RankingOption;
 
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage } = useSuspenseInfiniteQuery(
     rankingQueries.list({ sortBy: rankingOption, limit: 5 })

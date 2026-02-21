@@ -1,5 +1,3 @@
-export { default as MyPage } from './components/MyPage';
-export { default as MyPageEdit } from './components/MyPageEdit';
-export { default as MyPageEditLoading } from './components/MyPageEditLoading';
-export { default as MyPageLoading } from './components/MyPageLoading';
+export { default as MyPageBoundary } from './components/MyPageBoundary';
+export { default as MyPageEditBoundary } from './components/MyPageEditBoundary';
 export { default as ProfileSettingForm } from './components/ProfileSettingForm';
