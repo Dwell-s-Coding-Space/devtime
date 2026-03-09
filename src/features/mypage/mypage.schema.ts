@@ -6,8 +6,8 @@ import {
   passwordSchema,
   PostSignUpBody,
 } from '@/src/features/auth/auth.schema';
-import { BaseResponse } from '@/src/shared/schema/common.schema';
 import { dateString } from '@/src/shared/schema/primitives/date';
+import { BaseResponse } from '@/src/shared/schema/response.schema';
 
 export const CUSTOM_PURPOSE_LABEL = '기타' as const;
 export const CAREER_OPTIONS = ['경력 없음', '0 - 3년', '4 - 7년', '8 - 10년', '11년 이상'] as const;

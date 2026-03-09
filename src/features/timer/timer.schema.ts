@@ -1,8 +1,9 @@
 import z from 'zod';
 
 import { TaskItem } from '@/src/features/dashboard/dashboard.schema';
-import { BaseResponse } from '@/src/shared/schema/common.schema';
 import { dateString } from '@/src/shared/schema/primitives/date';
+import { BaseResponse } from '@/src/shared/schema/response.schema';
+import { MillisecondsSchema } from '@/src/shared/schema/time.schema';
 
 /**
  * 활성화된 타이머 조회
@@ -11,7 +12,7 @@ import { dateString } from '@/src/shared/schema/primitives/date';
 
 const splitTimeItemSchema = z.object({
   date: dateString(),
-  timeSpent: z.number(),
+  timeSpent: MillisecondsSchema,
 });
 
 export const timerResponseSchema = z.object({

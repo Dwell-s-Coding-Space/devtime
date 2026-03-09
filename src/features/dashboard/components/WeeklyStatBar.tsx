@@ -2,7 +2,7 @@
 
 import { useSuspenseQuery } from '@tanstack/react-query';
 
-import { SECONDS_IN_HOUR } from '@/src/features/timer/utils/formatTime';
+import { Time } from '@/src/shared/utils/time';
 
 import { dashboardQueries } from '../dashboard.queries';
 
@@ -24,9 +24,9 @@ const WeeklyStatBar = () => {
         </div>
 
         {WEEKDAYS.map(weekday => {
-          const value = data.weekdayStudyTime[weekday as keyof typeof data.weekdayStudyTime];
+          const studyTime = data.weekdayStudyTime[weekday as keyof typeof data.weekdayStudyTime];
           const label = weekday.charAt(0);
-          const percent = (value / (24 * SECONDS_IN_HOUR)) * 100;
+          const percent = (Time.seconds.toHours(studyTime) / 24) * 100;
 
           return (
             <div className="flex flex-col gap-2" key={weekday}>

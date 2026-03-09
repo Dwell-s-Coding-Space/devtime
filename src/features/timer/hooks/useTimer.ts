@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { TimerStatus } from '../timer.types';
 
 const useTimer = () => {
-  const [time, setTime] = useState(0); //ms단위
+  const [msTime, setMsTime] = useState(0);
   const [mode, setMode] = useState<TimerStatus>('idle');
 
   const startedAt = useRef<number>(null);
@@ -13,7 +13,7 @@ const useTimer = () => {
   const updateTime = () => {
     if (!startedAt.current) return;
     const elapsedMs = Date.now() - startedAt.current - pausedDuration.current;
-    setTime(elapsedMs);
+    setMsTime(elapsedMs);
   };
 
   useEffect(() => {
@@ -56,11 +56,11 @@ const useTimer = () => {
     startedAt.current = null;
     pausedAt.current = null;
     pausedDuration.current = 0;
-    setTime(0);
+    setMsTime(0);
     setMode('idle');
   };
 
-  return { stopTimer, startTimer, pauseTimer, time, mode };
+  return { stopTimer, startTimer, pauseTimer, msTime, mode };
 };
 
 export default useTimer;

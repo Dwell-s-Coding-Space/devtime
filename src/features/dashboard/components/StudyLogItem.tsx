@@ -6,6 +6,7 @@ import { MouseEvent, useState } from 'react';
 import { TrashIcon } from '@/src/shared/assets/svg';
 import IconButton from '@/src/shared/components/button/IconButton';
 import { useModalStore } from '@/src/shared/store/useModalStore';
+import { formatDuration, secondsToDuration } from '@/src/shared/utils/formatTime';
 
 import { dashboardQueries } from '../dashboard.queries';
 import { StudyLogListResponse } from '../dashboard.schema';
@@ -34,6 +35,10 @@ const StudyLogItem = ({ data }: StudyLogItemProps) => {
   });
 
   const { id, date, todayGoal, studyTime, totalTasks, incompleteTasks, completionRate } = data;
+  const formattedStudyTime = formatDuration({
+    duration: secondsToDuration(studyTime),
+    format: ['hours', 'minutes'],
+  });
   const formattedDate = date?.toLocaleString().replaceAll('-', '.') || '-';
 
   const handleView = () => {
@@ -65,7 +70,7 @@ const StudyLogItem = ({ data }: StudyLogItemProps) => {
       >
         <div className="w-[90px]">{formattedDate}</div>
         <div className="flex-1">{todayGoal}</div>
-        <div className="w-[90px]">{studyTime}</div>
+        <div className="w-[90px]">{formattedStudyTime}</div>
         <div className="w-[90px]">{totalTasks}</div>
         <div className="w-[90px]">{incompleteTasks}</div>
         <div className="w-[90px]">{completionRate}%</div>

@@ -3,9 +3,11 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
+import { Hours } from '@/src/shared/schema/time.schema';
 import { cn } from '@/src/shared/utils/cn';
+import { formatDuration, secondsToDuration } from '@/src/shared/utils/formatTime';
+import { Time } from '@/src/shared/utils/time';
 
-import { formatTime, MS_IN_SECONDS, SECONDS_IN_HOUR } from '../../timer/utils/formatTime';
 import { dashboardQueries } from '../dashboard.queries';
 import { getYearlyDates } from '../utils/getYearlyDates';
 
@@ -45,7 +47,7 @@ const YearlyStatGrid = () => {
   }, [weeks, currentYear]);
 
   const dataObj = useMemo(() => {
-    const obj = {} as Record<string, { studyTimeHours: number; colorLevel: number }>;
+    const obj = {} as Record<string, { studyTimeHours: Hours; colorLevel: number }>;
     data.heatmap.map(
       d =>
         (obj[d.date?.toString() as string] = {
@@ -93,14 +95,13 @@ const YearlyStatGrid = () => {
                     ? SEA_LEVEL[cellData.colorLevel as keyof typeof SEA_LEVEL]
                     : undefined;
 
-                  const { hours, minutes, seconds } = formatTime(
-                    (cellData?.studyTimeHours || 0) * SECONDS_IN_HOUR * MS_IN_SECONDS
-                  );
-
-                  const timeString =
-                    (hours !== '00' ? `${hours}시간` : '') +
-                    (minutes !== '00' ? ` ${minutes}분` : '') +
-                    (seconds !== '00' ? `${seconds}초` : '');
+                  const formattedDuration = cellData
+                    ? formatDuration({
+                        duration: secondsToDuration(Time.hours.toSeconds(cellData.studyTimeHours)),
+                        format: ['hours', 'minutes'],
+                        defaultString: '기록 없음',
+                      })
+                    : '기록 없음';
 
                   return (
                     <div className="group relative" key={date}>
@@ -119,7 +120,7 @@ const YearlyStatGrid = () => {
                           }
                         )}
                       >
-                        {timeString || '기록 없음'}
+                        {formattedDuration}
                       </div>
                     </div>
                   );

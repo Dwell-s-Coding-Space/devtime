@@ -2,6 +2,7 @@ import Image from 'next/image';
 
 import { GetRankingListResponse } from '@/src/features/ranking/ranking.schema';
 import { cn } from '@/src/shared/utils/cn';
+import { formatDuration, secondsToDuration } from '@/src/shared/utils/formatTime';
 import { getS3ImageUrl } from '@/src/shared/utils/url';
 
 interface RankingItemProps {
@@ -19,6 +20,14 @@ const RankingItem = ({ data }: RankingItemProps) => {
   const isTop3 = rank >= 1 && rank <= 3;
 
   const purposeString = typeof purpose === 'object' ? purpose.detail : purpose;
+  const formattedTotalStudyTime = formatDuration({
+    duration: secondsToDuration(totalStudyTime),
+    format: ['hours', 'minutes'],
+  });
+  const formattedAverageStudyTime = formatDuration({
+    duration: secondsToDuration(averageStudyTime),
+    format: ['hours', 'minutes'],
+  });
 
   return (
     <div className="bg-background-white flex gap-9 rounded-[12px] px-6 py-3">
@@ -49,11 +58,11 @@ const RankingItem = ({ data }: RankingItemProps) => {
         <dl className="flex items-center gap-6">
           <div className="flex items-center gap-2">
             <dt className="text-text-g500 body-r">누적</dt>
-            <dd className="text-text-g700 body-s">{Math.floor(totalStudyTime)}시간</dd>
+            <dd className="text-text-g700 body-s">{formattedTotalStudyTime}</dd>
           </div>
           <div className="flex items-center gap-2">
             <dt className="text-text-g500 body-r">일 평균</dt>
-            <dd className="text-text-g700 body-s">{Math.floor(averageStudyTime)}시간</dd>
+            <dd className="text-text-g700 body-s">{formattedAverageStudyTime}</dd>
           </div>
           <div className="flex items-center gap-2">
             <dt className="text-text-g500 body-r">경력</dt>

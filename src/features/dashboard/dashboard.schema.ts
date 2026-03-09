@@ -1,7 +1,8 @@
 import z from 'zod';
 
-import { paginationSchema } from '@/src/shared/schema/common.schema';
 import { dateString } from '@/src/shared/schema/primitives/date';
+import { paginationSchema } from '@/src/shared/schema/response.schema';
+import { HoursSchema, SecondsSchema } from '@/src/shared/schema/time.schema';
 
 /**
  * 사용자의 공부 기록 통계 조회
@@ -9,19 +10,19 @@ import { dateString } from '@/src/shared/schema/primitives/date';
  */
 
 const weekdayStudyTimeSchema = z.object({
-  Monday: z.number().nonnegative(),
-  Tuesday: z.number().nonnegative(),
-  Wednesday: z.number().nonnegative(),
-  Thursday: z.number().nonnegative(),
-  Friday: z.number().nonnegative(),
-  Saturday: z.number().nonnegative(),
-  Sunday: z.number().nonnegative(),
+  Monday: SecondsSchema,
+  Tuesday: SecondsSchema,
+  Wednesday: SecondsSchema,
+  Thursday: SecondsSchema,
+  Friday: SecondsSchema,
+  Saturday: SecondsSchema,
+  Sunday: SecondsSchema,
 });
 
 export const studyStatResponseSchema = z.object({
   consecutiveDays: z.number().int().nonnegative(),
-  totalStudyTime: z.number().nonnegative(),
-  averageDailyStudyTime: z.number().nonnegative(),
+  totalStudyTime: SecondsSchema,
+  averageDailyStudyTime: SecondsSchema,
   taskCompletionRate: z.number().min(0).max(100),
   weekdayStudyTime: weekdayStudyTimeSchema,
 });
@@ -35,7 +36,7 @@ export type GetStudyStatResponse = z.infer<typeof studyStatResponseSchema>;
 
 const heatmapItemSchema = z.object({
   date: dateString(),
-  studyTimeHours: z.number().nonnegative(),
+  studyTimeHours: HoursSchema,
   colorLevel: z.number().int().min(0).max(5),
 });
 
@@ -54,7 +55,7 @@ const studyLogItemSchema = z.object({
   id: z.string(),
   date: dateString(),
   todayGoal: z.string(),
-  studyTime: z.number().nonnegative(),
+  studyTime: SecondsSchema,
   totalTasks: z.number().int().nonnegative(),
   incompleteTasks: z.number().int().nonnegative(),
   completionRate: z.number().min(0).max(100),

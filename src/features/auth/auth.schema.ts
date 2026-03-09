@@ -1,6 +1,6 @@
 import z from 'zod';
 
-import { BaseResponse } from '@/src/shared/schema/common.schema';
+import { BaseResponse } from '@/src/shared/schema/response.schema';
 
 /**
  * 회원가입
