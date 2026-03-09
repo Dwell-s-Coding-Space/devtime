@@ -31,6 +31,11 @@ export default defineConfig({
         },
       },
       {
+        resolve: {
+          alias: {
+            '@': path.resolve(dirname, '.'),
+          },
+        },
         test: {
           name: 'unit',
           environment: 'jsdom',
