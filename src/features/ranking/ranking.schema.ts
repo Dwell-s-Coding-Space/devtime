@@ -1,7 +1,8 @@
 import z from 'zod';
 
 import { profileSchema, techStackItemSchema } from '@/src/features/mypage/mypage.schema';
-import { paginationSchema } from '@/src/shared/schema/common.schema';
+import { paginationSchema } from '@/src/shared/schema/response.schema';
+import { SecondsSchema } from '@/src/shared/schema/time.schema';
 
 /**
  * 전체 유저의 학습 시간 랭킹 조회
@@ -19,8 +20,8 @@ const rankingItemSchema = z.object({
   rank: z.number().int(),
   userId: z.string(),
   nickname: z.string(),
-  totalStudyTime: z.number().nonnegative(),
-  averageStudyTime: z.number().nonnegative(),
+  totalStudyTime: SecondsSchema,
+  averageStudyTime: SecondsSchema,
   profile: rankingProfileSchema,
 });
 

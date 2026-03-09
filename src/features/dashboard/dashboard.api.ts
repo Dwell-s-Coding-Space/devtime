@@ -1,5 +1,5 @@
 import type Api from '@/src/shared/api/core';
-import { BaseResponse } from '@/src/shared/schema/common.schema';
+import { BaseResponse } from '@/src/shared/schema/response.schema';
 
 import {
   GetHeatmapListResponse,
